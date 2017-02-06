@@ -16,7 +16,7 @@
   -->
 
 <manifest
-    package="com.example.android.architecture.blueprints.todoapp"
+    package="com.Groove9.android.architecture.blueprints.todoapp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
@@ -26,16 +26,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-                android:name="com.example.android.architecture.blueprints.todoapp.tasks.TasksActivity"
+                android:name="com.Groove9.android.architecture.blueprints.todoapp.tasks.TasksActivity"
                 android:theme="@style/AppTheme.OverlapSystemBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.android.architecture.blueprints.todoapp.taskdetail.TaskDetailActivity" />
-        <activity android:name="com.example.android.architecture.blueprints.todoapp.addedittask.AddEditTaskActivity" />
-        <activity android:name="com.example.android.architecture.blueprints.todoapp.statistics.StatisticsActivity" />
+        <activity android:name="com.Groove9.android.architecture.blueprints.todoapp.taskdetail.TaskDetailActivity" />
+        <activity android:name="com.Groove9.android.architecture.blueprints.todoapp.addedittask.AddEditTaskActivity" />
+        <activity android:name="com.Groove9.android.architecture.blueprints.todoapp.statistics.StatisticsActivity" />
     </application>
 
 </manifest>

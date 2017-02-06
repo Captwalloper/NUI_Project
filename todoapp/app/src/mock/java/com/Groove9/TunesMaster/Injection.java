@@ -24,10 +24,10 @@ import android.support.annotation.NonNull;
 import com.Groove9.TunesMaster.addedittask.domain.usecase.DeleteTask;
 import com.Groove9.TunesMaster.addedittask.domain.usecase.GetTask;
 import com.Groove9.TunesMaster.addedittask.domain.usecase.SaveTask;
+import com.Groove9.TunesMaster.data.FakeTasksRemoteDataSource;
 import com.Groove9.TunesMaster.data.source.TasksDataSource;
 import com.Groove9.TunesMaster.data.source.TasksRepository;
 import com.Groove9.TunesMaster.data.source.local.TasksLocalDataSource;
-import com.Groove9.TunesMaster.data.source.remote.TasksRemoteDataSource;
 import com.Groove9.TunesMaster.statistics.domain.usecase.GetStatistics;
 import com.Groove9.TunesMaster.tasks.domain.filter.FilterFactory;
 import com.Groove9.TunesMaster.tasks.domain.usecase.ActivateTask;
@@ -36,14 +36,15 @@ import com.Groove9.TunesMaster.tasks.domain.usecase.CompleteTask;
 import com.Groove9.TunesMaster.tasks.domain.usecase.GetTasks;
 
 /**
- * Enables injection of production implementations for
- * {@link TasksDataSource} at compile time.
+ * Enables injection of mock implementations for
+ * {@link TasksDataSource} at compile time. This is useful for testing, since it allows us to use
+ * a fake instance of the class to isolate the dependencies and run a test hermetically.
  */
 public class Injection {
 
     public static TasksRepository provideTasksRepository(@NonNull Context context) {
         checkNotNull(context);
-        return TasksRepository.getInstance(TasksRemoteDataSource.getInstance(),
+        return TasksRepository.getInstance(FakeTasksRemoteDataSource.getInstance(),
                 TasksLocalDataSource.getInstance(context));
     }
 
@@ -55,31 +56,31 @@ public class Injection {
         return UseCaseHandler.getInstance();
     }
 
-    public static GetTask provideGetTask(Context context) {
+    public static GetTask provideGetTask(@NonNull Context context) {
         return new GetTask(Injection.provideTasksRepository(context));
     }
 
-    public static SaveTask provideSaveTask(Context context) {
+    public static SaveTask provideSaveTask(@NonNull Context context) {
         return new SaveTask(Injection.provideTasksRepository(context));
     }
 
-    public static CompleteTask provideCompleteTasks(Context context) {
+    public static CompleteTask provideCompleteTasks(@NonNull Context context) {
         return new CompleteTask(Injection.provideTasksRepository(context));
     }
 
-    public static ActivateTask provideActivateTask(Context context) {
+    public static ActivateTask provideActivateTask(@NonNull Context context) {
         return new ActivateTask(Injection.provideTasksRepository(context));
     }
 
-    public static ClearCompleteTasks provideClearCompleteTasks(Context context) {
+    public static ClearCompleteTasks provideClearCompleteTasks(@NonNull Context context) {
         return new ClearCompleteTasks(Injection.provideTasksRepository(context));
     }
 
-    public static DeleteTask provideDeleteTask(Context context) {
+    public static DeleteTask provideDeleteTask(@NonNull Context context) {
         return new DeleteTask(Injection.provideTasksRepository(context));
     }
 
-    public static GetStatistics provideGetStatistics(Context context) {
+    public static GetStatistics provideGetStatistics(@NonNull Context context) {
         return new GetStatistics(Injection.provideTasksRepository(context));
     }
 }

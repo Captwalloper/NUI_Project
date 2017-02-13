@@ -26,7 +26,7 @@ import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.TestUtils;
 import edu.Groove9.TunesMaster.data.FakeTasksRemoteDataSource;
 
-import edu.Groove9.TunesMaster.tasks.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Task;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 
 import org.junit.Rule;

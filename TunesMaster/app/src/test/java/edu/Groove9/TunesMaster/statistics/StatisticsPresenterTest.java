@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 import edu.Groove9.TunesMaster.TestUseCaseScheduler;
 import edu.Groove9.TunesMaster.UseCaseHandler;
-import edu.Groove9.TunesMaster.tasks.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Task;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 import edu.Groove9.TunesMaster.statistics.domain.usecase.GetStatistics;

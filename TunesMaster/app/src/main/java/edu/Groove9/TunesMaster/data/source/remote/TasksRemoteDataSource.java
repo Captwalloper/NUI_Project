@@ -20,7 +20,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 
-import edu.Groove9.TunesMaster.tasks.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Task;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import com.google.common.collect.Lists;
 

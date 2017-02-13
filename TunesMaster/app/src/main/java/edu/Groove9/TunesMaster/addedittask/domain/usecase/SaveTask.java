@@ -19,7 +19,7 @@ package edu.Groove9.TunesMaster.addedittask.domain.usecase;
 import android.support.annotation.NonNull;
 
 import edu.Groove9.TunesMaster.UseCase;
-import edu.Groove9.TunesMaster.tasks.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Task;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 
 import static com.google.common.base.Preconditions.checkNotNull;

@@ -14,42 +14,43 @@
  * limitations under the License.
  */
 
-package edu.Groove9.TunesMaster.addedittask.domain.usecase;
+package edu.Groove9.TunesMaster.playlist.domain.usecase;
 
 import android.support.annotation.NonNull;
 
 import edu.Groove9.TunesMaster.UseCase;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Deletes a {@link Task} from the {@link TasksRepository}.
+ * Marks a task as active (not completed yet).
  */
-public class DeleteTask extends UseCase<DeleteTask.RequestValues, DeleteTask.ResponseValue> {
+public class ActivateTask extends UseCase<ActivateTask.RequestValues, ActivateTask.ResponseValue> {
 
     private final TasksRepository mTasksRepository;
 
-    public DeleteTask(@NonNull TasksRepository tasksRepository) {
+    public ActivateTask(@NonNull TasksRepository tasksRepository) {
         mTasksRepository = checkNotNull(tasksRepository, "tasksRepository cannot be null!");
     }
 
     @Override
     protected void executeUseCase(final RequestValues values) {
-        mTasksRepository.deleteTask(values.getTaskId());
+        String activeTask = values.getActivateTask();
+        mTasksRepository.activateTask(activeTask);
         getUseCaseCallback().onSuccess(new ResponseValue());
     }
 
     public static final class RequestValues implements UseCase.RequestValues {
-        private final String mTaskId;
 
-        public RequestValues(@NonNull String taskId) {
-            mTaskId = checkNotNull(taskId, "taskId cannot be null!");
+        private final String mActivateTask;
+
+        public RequestValues(@NonNull String activateTask) {
+            mActivateTask = checkNotNull(activateTask, "activateTask cannot be null!");
         }
 
-        public String getTaskId() {
-            return mTaskId;
+        public String getActivateTask() {
+            return mActivateTask;
         }
     }
 

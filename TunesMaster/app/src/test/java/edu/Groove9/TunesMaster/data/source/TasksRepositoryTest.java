@@ -27,9 +27,7 @@ import static org.mockito.Mockito.verify;
 
 import android.content.Context;
 
-import edu.Groove9.TunesMaster.data.source.TasksDataSource;
-import edu.Groove9.TunesMaster.data.source.TasksRepository;
-import edu.Groove9.TunesMaster.tasks.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Task;
 import com.google.common.collect.Lists;
 
 import org.junit.After;

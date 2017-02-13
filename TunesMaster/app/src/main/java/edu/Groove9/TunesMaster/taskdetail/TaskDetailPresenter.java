@@ -23,9 +23,9 @@ import edu.Groove9.TunesMaster.UseCase;
 import edu.Groove9.TunesMaster.UseCaseHandler;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.DeleteTask;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.GetTask;
-import edu.Groove9.TunesMaster.tasks.domain.model.Task;
-import edu.Groove9.TunesMaster.tasks.domain.usecase.ActivateTask;
-import edu.Groove9.TunesMaster.tasks.domain.usecase.CompleteTask;
+import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.usecase.ActivateTask;
+import edu.Groove9.TunesMaster.playlist.domain.usecase.CompleteTask;
 import com.google.common.base.Strings;
 
 import static com.google.common.base.Preconditions.checkNotNull;

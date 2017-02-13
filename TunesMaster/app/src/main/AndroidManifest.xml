@@ -26,7 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-                android:name="edu.Groove9.TunesMaster.tasks.TasksActivity"
+                android:name="edu.Groove9.TunesMaster.playlist.PlaylistActivity"
                 android:theme="@style/AppTheme.OverlapSystemBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

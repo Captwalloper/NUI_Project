@@ -23,7 +23,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import edu.Groove9.TunesMaster.data.source.local.TasksDbHelper;
 import edu.Groove9.TunesMaster.data.source.local.TasksLocalDataSource;
-import edu.Groove9.TunesMaster.tasks.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Task;
 
 import org.junit.After;
 import org.junit.Before;

@@ -33,8 +33,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.data.FakeTasksRemoteDataSource;
 
-import edu.Groove9.TunesMaster.statistics.StatisticsActivity;
-import edu.Groove9.TunesMaster.tasks.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Task;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 import edu.Groove9.TunesMaster.taskdetail.TaskDetailActivity;
 

@@ -29,11 +29,11 @@ import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 import edu.Groove9.TunesMaster.data.source.local.TasksLocalDataSource;
 import edu.Groove9.TunesMaster.statistics.domain.usecase.GetStatistics;
-import edu.Groove9.TunesMaster.tasks.domain.filter.FilterFactory;
-import edu.Groove9.TunesMaster.tasks.domain.usecase.ActivateTask;
-import edu.Groove9.TunesMaster.tasks.domain.usecase.ClearCompleteTasks;
-import edu.Groove9.TunesMaster.tasks.domain.usecase.CompleteTask;
-import edu.Groove9.TunesMaster.tasks.domain.usecase.GetTasks;
+import edu.Groove9.TunesMaster.playlist.domain.filter.FilterFactory;
+import edu.Groove9.TunesMaster.playlist.domain.usecase.ActivateTask;
+import edu.Groove9.TunesMaster.playlist.domain.usecase.ClearCompleteTasks;
+import edu.Groove9.TunesMaster.playlist.domain.usecase.CompleteTask;
+import edu.Groove9.TunesMaster.playlist.domain.usecase.GetTasks;
 
 /**
  * Enables injection of mock implementations for

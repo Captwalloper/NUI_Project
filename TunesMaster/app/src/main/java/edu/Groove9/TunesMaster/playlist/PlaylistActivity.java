@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package edu.Groove9.TunesMaster.statistics;
+package edu.Groove9.TunesMaster.playlist;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
@@ -30,28 +31,27 @@ import android.view.MenuItem;
 
 import edu.Groove9.TunesMaster.Injection;
 import edu.Groove9.TunesMaster.R;
-import edu.Groove9.TunesMaster.playlist.PlaylistActivity;
+import edu.Groove9.TunesMaster.statistics.StatisticsActivity;
 import edu.Groove9.TunesMaster.util.ActivityUtils;
 import edu.Groove9.TunesMaster.util.EspressoIdlingResource;
 
-/**
- * Show statistics for tasks.
- */
-public class StatisticsActivity extends AppCompatActivity {
+public class PlaylistActivity extends AppCompatActivity {
+
+    private static final String CURRENT_FILTERING_KEY = "CURRENT_FILTERING_KEY";
 
     private DrawerLayout mDrawerLayout;
+
+    private PlaylistPresenter mPlaylistPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.statistics_act);
+        setContentView(R.layout.playlist_act);
 
         // Set up the toolbar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar ab = getSupportActionBar();
-        ab.setTitle(R.string.song_player_title);
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
         ab.setDisplayHomeAsUpEnabled(true);
 
@@ -63,17 +63,38 @@ public class StatisticsActivity extends AppCompatActivity {
             setupDrawerContent(navigationView);
         }
 
-        StatisticsFragment statisticsFragment = (StatisticsFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.contentFrame);
-        if (statisticsFragment == null) {
-            statisticsFragment = StatisticsFragment.newInstance();
-            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-                    statisticsFragment, R.id.contentFrame);
+        PlaylistFragment playlistFragment =
+                (PlaylistFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
+        if (playlistFragment == null) {
+            // Create the fragment
+            playlistFragment = PlaylistFragment.newInstance();
+            ActivityUtils.addFragmentToActivity(
+                    getSupportFragmentManager(), playlistFragment, R.id.contentFrame);
         }
 
-        new StatisticsPresenter(Injection.provideUseCaseHandler(),
-                statisticsFragment,
-                Injection.provideGetStatistics(getApplicationContext()));
+        // Create the presenter
+        mPlaylistPresenter = new PlaylistPresenter(
+                Injection.provideUseCaseHandler(),
+                playlistFragment,
+                Injection.provideGetTasks(getApplicationContext()),
+                Injection.provideCompleteTasks(getApplicationContext()),
+                Injection.provideActivateTask(getApplicationContext()),
+                Injection.provideClearCompleteTasks(getApplicationContext())
+                );
+
+        // Load previously saved state, if available.
+        if (savedInstanceState != null) {
+            PlaylistFilterType currentFiltering =
+                    (PlaylistFilterType) savedInstanceState.getSerializable(CURRENT_FILTERING_KEY);
+            mPlaylistPresenter.setFiltering(currentFiltering);
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(CURRENT_FILTERING_KEY, mPlaylistPresenter.getFiltering());
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override
@@ -88,20 +109,21 @@ public class StatisticsActivity extends AppCompatActivity {
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
+        final Activity act = this;
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
                         switch (menuItem.getItemId()) {
                             case R.id.list_navigation_menu_item:
+                                // Do nothing, we're already on that screen
+                                break;
+                            case R.id.statistics_navigation_menu_item:
                                 Intent intent =
-                                        new Intent(StatisticsActivity.this, PlaylistActivity.class);
+                                        new Intent(PlaylistActivity.this, StatisticsActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                                         | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
-                                break;
-                            case R.id.statistics_navigation_menu_item:
-                                // Do nothing, we're already on that screen
                                 break;
                             default:
                                 break;

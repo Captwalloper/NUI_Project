@@ -22,9 +22,9 @@ import edu.Groove9.TunesMaster.addedittask.domain.usecase.DeleteTask;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.GetTask;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
-import edu.Groove9.TunesMaster.tasks.domain.model.Task;
-import edu.Groove9.TunesMaster.tasks.domain.usecase.ActivateTask;
-import edu.Groove9.TunesMaster.tasks.domain.usecase.CompleteTask;
+import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.usecase.ActivateTask;
+import edu.Groove9.TunesMaster.playlist.domain.usecase.CompleteTask;
 
 import org.junit.Before;
 import org.junit.Test;

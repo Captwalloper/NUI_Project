@@ -16,6 +16,8 @@
 
 package edu.Groove9.TunesMaster.addedittask;
 
+import android.net.Uri;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -40,6 +42,8 @@ import org.mockito.MockitoAnnotations;
  * Unit tests for the implementation of {@link AddEditTaskPresenter}.
  */
 public class AddEditSongPresenterTest {
+
+    private static final Uri SOURCE = Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0");
 
     @Mock
     private TasksRepository mTasksRepository;
@@ -72,7 +76,7 @@ public class AddEditSongPresenterTest {
         mAddEditTaskPresenter = givenEditTaskPresenter("1");
 
         // When the presenter is asked to save a task
-        mAddEditTaskPresenter.saveTask("New Song Title", "Some Song Description");
+        mAddEditTaskPresenter.saveTask("New Song Title", "Some Song Description", SOURCE);
 
         // Then a task is saved in the repository and the view updated
         verify(mTasksRepository).saveTask(any(Song.class)); // saved to the model
@@ -86,7 +90,7 @@ public class AddEditSongPresenterTest {
         mAddEditTaskPresenter = givenEditTaskPresenter(null);
 
         // When the presenter is asked to save an empty task
-        mAddEditTaskPresenter.saveTask("", "");
+        mAddEditTaskPresenter.saveTask("", "", SOURCE);
 
         // Then an empty not error is shown in the UI
         verify(mAddEditTaskView).showEmptyTaskError();
@@ -98,7 +102,7 @@ public class AddEditSongPresenterTest {
         mAddEditTaskPresenter = givenEditTaskPresenter("1");
 
         // When the presenter is asked to save an existing task
-        mAddEditTaskPresenter.saveTask("New Song Title", "Some Song Description");
+        mAddEditTaskPresenter.saveTask("New Song Title", "Some Song Description", SOURCE);
 
         // Then a task is saved in the repository and the view updated
         verify(mTasksRepository).saveTask(any(Song.class)); // saved to the model
@@ -107,7 +111,7 @@ public class AddEditSongPresenterTest {
 
     @Test
     public void populateTask_callsRepoAndUpdatesView() {
-        Song testSong = new Song("TITLE", "DESCRIPTION");
+        Song testSong = new Song("TITLE", "DESCRIPTION", SOURCE);
         // Get a reference to the class under test
         mAddEditTaskPresenter = givenEditTaskPresenter(testSong.getId());
 

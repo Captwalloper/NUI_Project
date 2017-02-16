@@ -16,6 +16,8 @@
 
 package edu.Groove9.TunesMaster.statistics;
 
+import android.net.Uri;
+
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -42,6 +44,8 @@ import java.util.List;
 public class StatisticsPresenterTest {
 
     private static List<Song> TASKS;
+
+    private static final Uri SOURCE = Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0");
 
     @Mock
     private TasksRepository mTasksRepository;
@@ -72,8 +76,8 @@ public class StatisticsPresenterTest {
         when(mStatisticsView.isActive()).thenReturn(true);
 
         // We start the tasks to 3, with one active and two completed
-        TASKS = Lists.newArrayList(new Song("Title1", "Description1"),
-                new Song("Title2", "Description2", true), new Song("Title3", "Description3", true));
+        TASKS = Lists.newArrayList(new Song("Title1", "Description1", SOURCE),
+                new Song("Title2", "Description2", true, SOURCE), new Song("Title3", "Description3", true, SOURCE));
     }
 
     @Test

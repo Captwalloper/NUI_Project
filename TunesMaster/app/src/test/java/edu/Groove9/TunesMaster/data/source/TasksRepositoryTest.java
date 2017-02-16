@@ -26,6 +26,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import android.content.Context;
+import android.net.Uri;
 
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 
@@ -52,8 +53,10 @@ public class TasksRepositoryTest {
 
     private static final String TASK_TITLE3 = "title3";
 
-    private static List<Song> TASKS = Lists.newArrayList(new Song("Title1", "Description1"),
-            new Song("Title2", "Description2"));
+    private static final Uri SOURCE = Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0");
+
+    private static List<Song> TASKS = Lists.newArrayList(new Song("Title1", "Description1", SOURCE),
+            new Song("Title2", "Description2", SOURCE));
 
     private TasksRepository mTasksRepository;
 
@@ -124,7 +127,7 @@ public class TasksRepositoryTest {
     @Test
     public void saveTask_savesTaskToServiceAPI() {
         // Given a stub task with title and description
-        Song newSong = new Song(TASK_TITLE, "Some Song Description");
+        Song newSong = new Song(TASK_TITLE, "Some Song Description", SOURCE);
 
         // When a task is saved to the tasks repository
         mTasksRepository.saveTask(newSong);
@@ -138,7 +141,7 @@ public class TasksRepositoryTest {
     @Test
     public void completeTask_completesTaskToServiceAPIUpdatesCache() {
         // Given a stub active task with title and description added in the repository
-        Song newSong = new Song(TASK_TITLE, "Some Song Description");
+        Song newSong = new Song(TASK_TITLE, "Some Song Description", SOURCE);
         mTasksRepository.saveTask(newSong);
 
         // When a task is completed to the tasks repository
@@ -154,7 +157,7 @@ public class TasksRepositoryTest {
     @Test
     public void completeTaskId_completesTaskToServiceAPIUpdatesCache() {
         // Given a stub active task with title and description added in the repository
-        Song newSong = new Song(TASK_TITLE, "Some Song Description");
+        Song newSong = new Song(TASK_TITLE, "Some Song Description", SOURCE);
         mTasksRepository.saveTask(newSong);
 
         // When a task is completed using its id to the tasks repository
@@ -170,7 +173,7 @@ public class TasksRepositoryTest {
     @Test
     public void activateTask_activatesTaskToServiceAPIUpdatesCache() {
         // Given a stub completed task with title and description in the repository
-        Song newSong = new Song(TASK_TITLE, "Some Song Description", true);
+        Song newSong = new Song(TASK_TITLE, "Some Song Description", true, SOURCE);
         mTasksRepository.saveTask(newSong);
 
         // When a completed task is activated to the tasks repository
@@ -186,7 +189,7 @@ public class TasksRepositoryTest {
     @Test
     public void activateTaskId_activatesTaskToServiceAPIUpdatesCache() {
         // Given a stub completed task with title and description in the repository
-        Song newSong = new Song(TASK_TITLE, "Some Song Description", true);
+        Song newSong = new Song(TASK_TITLE, "Some Song Description", true, SOURCE);
         mTasksRepository.saveTask(newSong);
 
         // When a completed task is activated with its id to the tasks repository
@@ -212,11 +215,11 @@ public class TasksRepositoryTest {
     @Test
     public void deleteCompletedTasks_deleteCompletedTasksToServiceAPIUpdatesCache() {
         // Given 2 stub completed tasks and 1 stub active tasks in the repository
-        Song newSong = new Song(TASK_TITLE, "Some Song Description", true);
+        Song newSong = new Song(TASK_TITLE, "Some Song Description", true, SOURCE);
         mTasksRepository.saveTask(newSong);
-        Song newSong2 = new Song(TASK_TITLE2, "Some Song Description");
+        Song newSong2 = new Song(TASK_TITLE2, "Some Song Description", SOURCE);
         mTasksRepository.saveTask(newSong2);
-        Song newSong3 = new Song(TASK_TITLE3, "Some Song Description", true);
+        Song newSong3 = new Song(TASK_TITLE3, "Some Song Description", true, SOURCE);
         mTasksRepository.saveTask(newSong3);
 
         // When a completed tasks are cleared to the tasks repository
@@ -235,11 +238,11 @@ public class TasksRepositoryTest {
     @Test
     public void deleteAllTasks_deleteTasksToServiceAPIUpdatesCache() {
         // Given 2 stub completed tasks and 1 stub active tasks in the repository
-        Song newSong = new Song(TASK_TITLE, "Some Song Description", true);
+        Song newSong = new Song(TASK_TITLE, "Some Song Description", true, SOURCE);
         mTasksRepository.saveTask(newSong);
-        Song newSong2 = new Song(TASK_TITLE2, "Some Song Description");
+        Song newSong2 = new Song(TASK_TITLE2, "Some Song Description", SOURCE);
         mTasksRepository.saveTask(newSong2);
-        Song newSong3 = new Song(TASK_TITLE3, "Some Song Description", true);
+        Song newSong3 = new Song(TASK_TITLE3, "Some Song Description", true, SOURCE);
         mTasksRepository.saveTask(newSong3);
 
         // When all tasks are deleted to the tasks repository
@@ -255,7 +258,7 @@ public class TasksRepositoryTest {
     @Test
     public void deleteTask_deleteTaskToServiceAPIRemovedFromCache() {
         // Given a task in the repository
-        Song newSong = new Song(TASK_TITLE, "Some Song Description", true);
+        Song newSong = new Song(TASK_TITLE, "Some Song Description", true, SOURCE);
         mTasksRepository.saveTask(newSong);
         assertThat(mTasksRepository.mCachedTasks.containsKey(newSong.getId()), is(true));
 

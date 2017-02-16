@@ -16,6 +16,7 @@
 
 package edu.Groove9.TunesMaster.data.source.remote;
 
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
@@ -41,8 +42,8 @@ public class TasksRemoteDataSource implements TasksDataSource {
 
     static {
         TASKS_SERVICE_DATA = new LinkedHashMap<>(2);
-        addTask("Build tower in Pisa", "Ground looks good, no foundation work required.");
-        addTask("Finish bridge in Tacoma", "Found awesome girders at half the cost!");
+        addTask("One Punch Man Theme", "1st song on OST.", Uri.parse("https://www.youtube.com/watch?v=E8XaV1yjabk"));
+        addTask("Transistor OST", "Full soundtrack to the game Transistor.", Uri.parse("https://www.youtube.com/watch?v=-zA1jRmAYfU&t"));
     }
 
     public static TasksRemoteDataSource getInstance() {
@@ -55,8 +56,8 @@ public class TasksRemoteDataSource implements TasksDataSource {
     // Prevent direct instantiation.
     private TasksRemoteDataSource() {}
 
-    private static void addTask(String title, String description) {
-        Song newSong = new Song(title, description);
+    private static void addTask(String title, String description, Uri source) {
+        Song newSong = new Song(title, description, source);
         TASKS_SERVICE_DATA.put(newSong.getId(), newSong);
     }
 
@@ -103,7 +104,7 @@ public class TasksRemoteDataSource implements TasksDataSource {
 
     @Override
     public void completeTask(@NonNull Song song) {
-        Song completedSong = new Song(song.getTitle(), song.getDescription(), song.getId(), true);
+        Song completedSong = new Song(song.getTitle(), song.getDescription(), song.getId(), true, song.getSource());
         TASKS_SERVICE_DATA.put(song.getId(), completedSong);
     }
 
@@ -115,7 +116,7 @@ public class TasksRemoteDataSource implements TasksDataSource {
 
     @Override
     public void activateTask(@NonNull Song song) {
-        Song activeSong = new Song(song.getTitle(), song.getDescription(), song.getId());
+        Song activeSong = new Song(song.getTitle(), song.getDescription(), song.getId(), song.getSource());
         TASKS_SERVICE_DATA.put(song.getId(), activeSong);
     }
 

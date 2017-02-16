@@ -18,6 +18,7 @@ package edu.Groove9.TunesMaster.taskdetail;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -52,15 +53,17 @@ public class SongDetailScreenTest {
 
     private static String TASK_DESCRIPTION = "Rocks";
 
-    /**
-     * {@link Song} stub that is added to the fake service API layer.
-     */
-    private static Song activeSong = new Song(TASK_TITLE, TASK_DESCRIPTION, false);
+    private static Uri SONG_SOURCE = Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0");
 
     /**
      * {@link Song} stub that is added to the fake service API layer.
      */
-    private static Song completedSong = new Song(TASK_TITLE, TASK_DESCRIPTION, true);
+    private static Song activeSong = new Song(TASK_TITLE, TASK_DESCRIPTION, false, SONG_SOURCE);
+
+    /**
+     * {@link Song} stub that is added to the fake service API layer.
+     */
+    private static Song completedSong = new Song(TASK_TITLE, TASK_DESCRIPTION, true, SONG_SOURCE);
 
     /**
      * {@link ActivityTestRule} is a JUnit {@link Rule @Rule} to launch your activity under test.

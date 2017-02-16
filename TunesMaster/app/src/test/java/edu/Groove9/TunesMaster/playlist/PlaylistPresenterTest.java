@@ -16,6 +16,8 @@
 
 package edu.Groove9.TunesMaster.playlist;
 
+import android.net.Uri;
+
 import edu.Groove9.TunesMaster.TestUseCaseScheduler;
 import edu.Groove9.TunesMaster.UseCaseHandler;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource.LoadTasksCallback;
@@ -50,6 +52,8 @@ import static org.mockito.Mockito.when;
  */
 public class PlaylistPresenterTest {
 
+    private static final Uri SOURCE = Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0");
+
     private static List<Song> TASKS;
 
     @Mock
@@ -80,8 +84,8 @@ public class PlaylistPresenterTest {
         when(mTasksView.isActive()).thenReturn(true);
 
         // We start the tasks to 3, with one active and two completed
-        TASKS = Lists.newArrayList(new Song("Title1", "Description1"),
-                new Song("Title2", "Description2", true), new Song("Title3", "Description3", true));
+        TASKS = Lists.newArrayList(new Song("Title1", "Description1", SOURCE),
+                new Song("Title2", "Description2", true, SOURCE), new Song("Title3", "Description3", true, SOURCE));
     }
 
     private PlaylistPresenter givenTasksPresenter() {
@@ -164,7 +168,7 @@ public class PlaylistPresenterTest {
     @Test
     public void clickOnTask_ShowsDetailUi() {
         // Given a stubbed active task
-        Song requestedSong = new Song("Details Requested", "For this task");
+        Song requestedSong = new Song("Details Requested", "For this task", SOURCE);
 
         // When open task details is requested
         mPlaylistPresenter.openTaskDetails(requestedSong);
@@ -176,7 +180,7 @@ public class PlaylistPresenterTest {
     @Test
     public void completeTask_ShowsTaskMarkedComplete() {
         // Given a stubbed song
-        Song song = new Song("Details Requested", "For this song");
+        Song song = new Song("Details Requested", "For this song", SOURCE);
 
         // When song is marked as complete
         mPlaylistPresenter.completeTask(song);
@@ -189,7 +193,7 @@ public class PlaylistPresenterTest {
     @Test
     public void activateTask_ShowsTaskMarkedActive() {
         // Given a stubbed completed song
-        Song song = new Song("Details Requested", "For this song", true);
+        Song song = new Song("Details Requested", "For this song", true, SOURCE);
         mPlaylistPresenter.loadTasks(true);
 
         // When song is marked as activated

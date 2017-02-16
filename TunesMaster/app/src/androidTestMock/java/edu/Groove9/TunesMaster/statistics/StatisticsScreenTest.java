@@ -24,6 +24,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.containsString;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
@@ -73,8 +74,8 @@ public class StatisticsScreenTest {
     public void intentWithStubbedTaskId() {
         // Given some tasks
         TasksRepository.destroyInstance();
-        FakeTasksRemoteDataSource.getInstance().addTasks(new Song("Title1", "", false));
-        FakeTasksRemoteDataSource.getInstance().addTasks(new Song("Title2", "", true));
+        FakeTasksRemoteDataSource.getInstance().addTasks(new Song("Title1", "", false, Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0")));
+        FakeTasksRemoteDataSource.getInstance().addTasks(new Song("Title2", "", true, Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0")));
 
         // Lazily start the Activity from the ActivityTestRule
         Intent startIntent = new Intent();

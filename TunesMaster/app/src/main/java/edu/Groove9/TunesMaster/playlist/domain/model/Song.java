@@ -16,6 +16,7 @@
 
 package edu.Groove9.TunesMaster.playlist.domain.model;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -32,6 +33,9 @@ public final class Song {
     @NonNull
     private final String mId;
 
+    @NonNull
+    private final Uri mSource;
+
     @Nullable
     private final String mTitle;
 
@@ -46,8 +50,8 @@ public final class Song {
      * @param title       title of the task
      * @param description description of the task
      */
-    public Song(@Nullable String title, @Nullable String description) {
-        this(title, description, UUID.randomUUID().toString(), false);
+    public Song(@Nullable String title, @Nullable String description, @NonNull Uri source) {
+        this(title, description, UUID.randomUUID().toString(), false, source);
     }
 
     /**
@@ -58,8 +62,8 @@ public final class Song {
      * @param description description of the task
      * @param id          id of the task
      */
-    public Song(@Nullable String title, @Nullable String description, @NonNull String id) {
-        this(title, description, id, false);
+    public Song(@Nullable String title, @Nullable String description, @NonNull String id, @NonNull Uri source) {
+        this(title, description, id, false, source);
     }
 
     /**
@@ -69,8 +73,8 @@ public final class Song {
      * @param description description of the task
      * @param completed   true if the task is completed, false if it's active
      */
-    public Song(@Nullable String title, @Nullable String description, boolean completed) {
-        this(title, description, UUID.randomUUID().toString(), completed);
+    public Song(@Nullable String title, @Nullable String description, boolean completed, @NonNull Uri source) {
+        this(title, description, UUID.randomUUID().toString(), completed, source);
     }
 
     /**
@@ -83,17 +87,21 @@ public final class Song {
      * @param completed   true if the task is completed, false if it's active
      */
     public Song(@Nullable String title, @Nullable String description,
-                @NonNull String id, boolean completed) {
+                @NonNull String id, boolean completed, @NonNull Uri source) {
         mId = id;
         mTitle = title;
         mDescription = description;
         mCompleted = completed;
+        mSource = source;
     }
 
     @NonNull
     public String getId() {
         return mId;
     }
+
+    @NonNull
+    public Uri getSource() { return mSource; }
 
     @Nullable
     public String getTitle() {

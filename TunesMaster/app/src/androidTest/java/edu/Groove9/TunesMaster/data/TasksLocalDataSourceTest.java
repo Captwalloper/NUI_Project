@@ -16,12 +16,13 @@
 
 package edu.Groove9.TunesMaster.data;
 
+import android.net.Uri;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
-import edu.Groove9.TunesMaster.data.source.local.TasksDbHelper;
+import edu.Groove9.TunesMaster.data.source.local.SongsDbHelper;
 import edu.Groove9.TunesMaster.data.source.local.TasksLocalDataSource;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 
@@ -43,7 +44,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 /**
- * Integration test for the {@link TasksDataSource}, which uses the {@link TasksDbHelper}.
+ * Integration test for the {@link TasksDataSource}, which uses the {@link SongsDbHelper}.
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
@@ -54,6 +55,8 @@ public class TasksLocalDataSourceTest {
     private static final String TITLE2 = "title2";
 
     private static final String TITLE3 = "title3";
+
+    private static final Uri SOURCE = Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0");
 
     private TasksLocalDataSource mLocalDataSource;
 
@@ -76,7 +79,7 @@ public class TasksLocalDataSourceTest {
     @Test
     public void saveTask_retrievesTask() {
         // Given a new task
-        final Song newSong = new Song(TITLE, "");
+        final Song newSong = new Song(TITLE, "", SOURCE);
 
         // When saved into the persistent repository
         mLocalDataSource.saveTask(newSong);
@@ -100,7 +103,7 @@ public class TasksLocalDataSourceTest {
         // Initialize mock for the callback.
         TasksDataSource.GetTaskCallback callback = mock(TasksDataSource.GetTaskCallback.class);
         // Given a new task in the persistent repository
-        final Song newSong = new Song(TITLE, "");
+        final Song newSong = new Song(TITLE, "", SOURCE);
         mLocalDataSource.saveTask(newSong);
 
         // When completed in the persistent repository
@@ -127,7 +130,7 @@ public class TasksLocalDataSourceTest {
         TasksDataSource.GetTaskCallback callback = mock(TasksDataSource.GetTaskCallback.class);
 
         // Given a new completed task in the persistent repository
-        final Song newSong = new Song(TITLE, "");
+        final Song newSong = new Song(TITLE, "", SOURCE);
         mLocalDataSource.saveTask(newSong);
         mLocalDataSource.completeTask(newSong);
 
@@ -151,13 +154,13 @@ public class TasksLocalDataSourceTest {
         TasksDataSource.GetTaskCallback callback3 = mock(TasksDataSource.GetTaskCallback.class);
 
         // Given 2 new completed tasks and 1 active task in the persistent repository
-        final Song newSong1 = new Song(TITLE, "");
+        final Song newSong1 = new Song(TITLE, "", SOURCE);
         mLocalDataSource.saveTask(newSong1);
         mLocalDataSource.completeTask(newSong1);
-        final Song newSong2 = new Song(TITLE2, "");
+        final Song newSong2 = new Song(TITLE2, "", SOURCE);
         mLocalDataSource.saveTask(newSong2);
         mLocalDataSource.completeTask(newSong2);
-        final Song newSong3 = new Song(TITLE3, "");
+        final Song newSong3 = new Song(TITLE3, "", SOURCE);
         mLocalDataSource.saveTask(newSong3);
 
         // When completed tasks are cleared in the repository
@@ -183,7 +186,7 @@ public class TasksLocalDataSourceTest {
     @Test
     public void deleteAllTasks_emptyListOfRetrievedTask() {
         // Given a new task in the persistent repository and a mocked callback
-        Song newSong = new Song(TITLE, "");
+        Song newSong = new Song(TITLE, "", SOURCE);
         mLocalDataSource.saveTask(newSong);
         TasksDataSource.LoadTasksCallback callback = mock(TasksDataSource.LoadTasksCallback.class);
 
@@ -200,9 +203,9 @@ public class TasksLocalDataSourceTest {
     @Test
     public void getTasks_retrieveSavedTasks() {
         // Given 2 new tasks in the persistent repository
-        final Song newSong1 = new Song(TITLE, "");
+        final Song newSong1 = new Song(TITLE, "", SOURCE);
         mLocalDataSource.saveTask(newSong1);
-        final Song newSong2 = new Song(TITLE, "");
+        final Song newSong2 = new Song(TITLE, "", SOURCE);
         mLocalDataSource.saveTask(newSong2);
 
         // Then the tasks can be retrieved from the persistent repository

@@ -17,18 +17,22 @@
 package edu.Groove9.TunesMaster.addedittask;
 
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import edu.Groove9.TunesMaster.R;
+import ir.sohreco.androidfilechooser.ExternalStorageNotAvailableException;
+import ir.sohreco.androidfilechooser.FileChooserDialog;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -44,6 +48,8 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     private TextView mTitle;
 
     private TextView mDescription;
+
+    private TextView mSource;
 
     public static AddEditTaskFragment newInstance() {
         return new AddEditTaskFragment();
@@ -71,10 +77,28 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task_done);
         fab.setImageResource(R.drawable.ic_done);
+        final Uri derpSongSource = Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0");
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.saveTask(mTitle.getText().toString(), mDescription.getText().toString());
+                mPresenter.saveTask(mTitle.getText().toString(), mDescription.getText().toString(), Uri.parse(mSource.getText().toString()));
+            }
+        });
+
+        mSource.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FileChooserDialog.Builder builder = new FileChooserDialog.Builder(FileChooserDialog.ChooserType.FILE_CHOOSER, new FileChooserDialog.ChooserListener() {
+                    @Override
+                    public void onSelect(String path) {
+                        setSource(Uri.parse(path));
+                    }
+                });
+                try {
+                    builder.build().show(getActivity().getSupportFragmentManager(), null); // launch file picker
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -86,6 +110,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         View root = inflater.inflate(R.layout.addtask_frag, container, false);
         mTitle = (TextView) root.findViewById(R.id.add_task_title);
         mDescription = (TextView) root.findViewById(R.id.add_task_description);
+        mSource = (TextView) root.findViewById(R.id.add_task_source);
 
         setHasOptionsMenu(true);
         setRetainInstance(true);
@@ -112,6 +137,9 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     public void setDescription(String description) {
         mDescription.setText(description);
     }
+
+    @Override
+    public void setSource(Uri source) { mSource.setText(source.toString()); }
 
     @Override
     public boolean isActive() {

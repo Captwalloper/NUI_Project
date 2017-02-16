@@ -20,6 +20,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
@@ -37,12 +38,12 @@ public class TasksLocalDataSource implements TasksDataSource {
 
     private static TasksLocalDataSource INSTANCE;
 
-    private TasksDbHelper mDbHelper;
+    private SongsDbHelper mDbHelper;
 
     // Prevent direct instantiation.
     private TasksLocalDataSource(@NonNull Context context) {
         checkNotNull(context);
-        mDbHelper = new TasksDbHelper(context);
+        mDbHelper = new SongsDbHelper(context);
     }
 
     public static TasksLocalDataSource getInstance(@NonNull Context context) {
@@ -63,6 +64,7 @@ public class TasksLocalDataSource implements TasksDataSource {
 
         String[] projection = {
                 TasksPersistenceContract.TaskEntry.COLUMN_NAME_ENTRY_ID,
+                TasksPersistenceContract.TaskEntry.COLUMN_NAME_SOURCE,
                 TasksPersistenceContract.TaskEntry.COLUMN_NAME_TITLE,
                 TasksPersistenceContract.TaskEntry.COLUMN_NAME_DESCRIPTION,
                 TasksPersistenceContract.TaskEntry.COLUMN_NAME_COMPLETED
@@ -74,12 +76,13 @@ public class TasksLocalDataSource implements TasksDataSource {
         if (c != null && c.getCount() > 0) {
             while (c.moveToNext()) {
                 String itemId = c.getString(c.getColumnIndexOrThrow(TasksPersistenceContract.TaskEntry.COLUMN_NAME_ENTRY_ID));
+                Uri source = Uri.parse(c.getString(c.getColumnIndexOrThrow(TasksPersistenceContract.TaskEntry.COLUMN_NAME_SOURCE)));
                 String title = c.getString(c.getColumnIndexOrThrow(TasksPersistenceContract.TaskEntry.COLUMN_NAME_TITLE));
                 String description =
                         c.getString(c.getColumnIndexOrThrow(TasksPersistenceContract.TaskEntry.COLUMN_NAME_DESCRIPTION));
                 boolean completed =
                         c.getInt(c.getColumnIndexOrThrow(TasksPersistenceContract.TaskEntry.COLUMN_NAME_COMPLETED)) == 1;
-                Song song = new Song(title, description, itemId, completed);
+                Song song = new Song(title, description, itemId, completed, source);
                 songs.add(song);
             }
         }
@@ -108,6 +111,7 @@ public class TasksLocalDataSource implements TasksDataSource {
 
         String[] projection = {
                 TasksPersistenceContract.TaskEntry.COLUMN_NAME_ENTRY_ID,
+                TasksPersistenceContract.TaskEntry.COLUMN_NAME_SOURCE,
                 TasksPersistenceContract.TaskEntry.COLUMN_NAME_TITLE,
                 TasksPersistenceContract.TaskEntry.COLUMN_NAME_DESCRIPTION,
                 TasksPersistenceContract.TaskEntry.COLUMN_NAME_COMPLETED
@@ -124,12 +128,13 @@ public class TasksLocalDataSource implements TasksDataSource {
         if (c != null && c.getCount() > 0) {
             c.moveToFirst();
             String itemId = c.getString(c.getColumnIndexOrThrow(TasksPersistenceContract.TaskEntry.COLUMN_NAME_ENTRY_ID));
+            Uri source = Uri.parse(c.getString(c.getColumnIndexOrThrow(TasksPersistenceContract.TaskEntry.COLUMN_NAME_SOURCE)));
             String title = c.getString(c.getColumnIndexOrThrow(TasksPersistenceContract.TaskEntry.COLUMN_NAME_TITLE));
             String description =
                     c.getString(c.getColumnIndexOrThrow(TasksPersistenceContract.TaskEntry.COLUMN_NAME_DESCRIPTION));
             boolean completed =
                     c.getInt(c.getColumnIndexOrThrow(TasksPersistenceContract.TaskEntry.COLUMN_NAME_COMPLETED)) == 1;
-            song = new Song(title, description, itemId, completed);
+            song = new Song(title, description, itemId, completed, source);
         }
         if (c != null) {
             c.close();
@@ -151,6 +156,7 @@ public class TasksLocalDataSource implements TasksDataSource {
 
         ContentValues values = new ContentValues();
         values.put(TasksPersistenceContract.TaskEntry.COLUMN_NAME_ENTRY_ID, song.getId());
+        values.put(TasksPersistenceContract.TaskEntry.COLUMN_NAME_SOURCE, song.getSource().toString());
         values.put(TasksPersistenceContract.TaskEntry.COLUMN_NAME_TITLE, song.getTitle());
         values.put(TasksPersistenceContract.TaskEntry.COLUMN_NAME_DESCRIPTION, song.getDescription());
         values.put(TasksPersistenceContract.TaskEntry.COLUMN_NAME_COMPLETED, song.isCompleted());

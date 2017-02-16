@@ -27,7 +27,8 @@
     <string name="menu_delete_task">Delete song</string>
     <string name="navigation_view_header_title">Songs</string>
     <string name="title_hint">Title</string>
-    <string name="description_hint">Enter your TO-DO here.</string>
+    <string name="description_hint">Enter Description here.</string>
+    <string name="source_hint">Enter source here.</string>
     <string name="empty_task_message">TO DOs cannot be empty</string>
     <string name="successfully_saved_task_message">TO-DO saved</string>
     <string name="playlist_title">Playlist</string>
@@ -47,7 +48,7 @@
     <string name="nav_all">All</string>
     <string name="nav_active">Active</string>
     <string name="nav_completed">Completed</string>
-    <string name="label_all">All TO-DOs</string>
+    <string name="label_all">All Songs</string>
     <string name="label_active">Active TO-DOs</string>
     <string name="label_completed">Completed TO-DOs</string>
     <string name="no_tasks_all">You have no songs in playlist!</string>

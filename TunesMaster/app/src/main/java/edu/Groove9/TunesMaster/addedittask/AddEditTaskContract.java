@@ -16,6 +16,8 @@
 
 package edu.Groove9.TunesMaster.addedittask;
 
+import android.net.Uri;
+
 import edu.Groove9.TunesMaster.BasePresenter;
 import edu.Groove9.TunesMaster.BaseView;
 
@@ -34,12 +36,14 @@ public interface AddEditTaskContract {
 
         void setDescription(String description);
 
+        void setSource(Uri source);
+
         boolean isActive();
     }
 
     interface Presenter extends BasePresenter {
 
-        void saveTask(String title, String description);
+        void saveTask(String title, String description, Uri source);
 
         void populateTask();
     }

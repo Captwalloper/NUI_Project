@@ -32,15 +32,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/title_hint"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
         <EditText
             android:id="@+id/add_task_description"
             android:layout_width="match_parent"
-            android:layout_height="350dp"
+            android:layout_height="100dp"
             android:gravity="top"
             android:hint="@string/description_hint" />
+
+        <TextView
+            android:id="@+id/add_task_source"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:gravity="top"
+            android:hint="@string/source_hint" />
 
     </LinearLayout>
 </ScrollView>

@@ -16,6 +16,8 @@
 
 package edu.Groove9.TunesMaster.taskdetail;
 
+import android.net.Uri;
+
 import edu.Groove9.TunesMaster.TestUseCaseScheduler;
 import edu.Groove9.TunesMaster.UseCaseHandler;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.DeleteTask;
@@ -51,9 +53,11 @@ public class SongDetailPresenterTest {
 
     public static final String INVALID_TASK_ID = "";
 
-    public static final Song ACTIVE_SONG = new Song(TITLE_TEST, DESCRIPTION_TEST);
+    private static final Uri SOURCE = Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0");
 
-    public static final Song COMPLETED_SONG = new Song(TITLE_TEST, DESCRIPTION_TEST, true);
+    public static final Song ACTIVE_SONG = new Song(TITLE_TEST, DESCRIPTION_TEST, SOURCE);
+
+    public static final Song COMPLETED_SONG = new Song(TITLE_TEST, DESCRIPTION_TEST, true, SOURCE);
 
     @Mock
     private TasksRepository mTasksRepository;
@@ -135,7 +139,7 @@ public class SongDetailPresenterTest {
     @Test
     public void deleteTask() {
         // Given an initialized TaskDetailPresenter with stubbed song
-        Song song = new Song(TITLE_TEST, DESCRIPTION_TEST);
+        Song song = new Song(TITLE_TEST, DESCRIPTION_TEST, SOURCE);
 
         // When the deletion of a song is requested
         mTaskDetailPresenter = givenTaskDetailPresenter(song.getId());
@@ -149,7 +153,7 @@ public class SongDetailPresenterTest {
     @Test
     public void completeTask() {
         // Given an initialized presenter with an active song
-        Song song = new Song(TITLE_TEST, DESCRIPTION_TEST);
+        Song song = new Song(TITLE_TEST, DESCRIPTION_TEST, SOURCE);
         mTaskDetailPresenter = givenTaskDetailPresenter(song.getId());
         mTaskDetailPresenter.start();
 
@@ -164,7 +168,7 @@ public class SongDetailPresenterTest {
     @Test
     public void activateTask() {
         // Given an initialized presenter with a completed song
-        Song song = new Song(TITLE_TEST, DESCRIPTION_TEST, true);
+        Song song = new Song(TITLE_TEST, DESCRIPTION_TEST, true, SOURCE);
         mTaskDetailPresenter = givenTaskDetailPresenter(song.getId());
         mTaskDetailPresenter.start();
 

@@ -65,7 +65,7 @@ public class FakeTasksRemoteDataSource implements TasksDataSource {
 
     @Override
     public void completeTask(@NonNull Song song) {
-        Song completedSong = new Song(song.getTitle(), song.getDescription(), song.getId(), true);
+        Song completedSong = new Song(song.getTitle(), song.getDescription(), song.getId(), true, song.getSource());
         TASKS_SERVICE_DATA.put(song.getId(), completedSong);
     }
 
@@ -76,7 +76,7 @@ public class FakeTasksRemoteDataSource implements TasksDataSource {
 
     @Override
     public void activateTask(@NonNull Song song) {
-        Song activeSong = new Song(song.getTitle(), song.getDescription(), song.getId());
+        Song activeSong = new Song(song.getTitle(), song.getDescription(), song.getId(), song.getSource());
         TASKS_SERVICE_DATA.put(song.getId(), activeSong);
     }
 

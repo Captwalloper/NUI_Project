@@ -18,6 +18,7 @@ package edu.Groove9.TunesMaster.addedittask;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
@@ -71,11 +72,11 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     }
 
     @Override
-    public void saveTask(String title, String description) {
+    public void saveTask(String title, String description, Uri source) {
         if (isNewTask()) {
-            createTask(title, description);
+            createTask(title, description, source);
         } else {
-            updateTask(title, description);
+            updateTask(title, description, source);
         }
     }
 
@@ -104,6 +105,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
         if (mAddTaskView.isActive()) {
             mAddTaskView.setTitle(song.getTitle());
             mAddTaskView.setDescription(song.getDescription());
+            mAddTaskView.setSource(song.getSource());
         }
     }
 
@@ -122,8 +124,8 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
         return mTaskId == null;
     }
 
-    private void createTask(String title, String description) {
-        Song newSong = new Song(title, description);
+    private void createTask(String title, String description, Uri source) {
+        Song newSong = new Song(title, description, source);
         if (newSong.isEmpty()) {
             mAddTaskView.showEmptyTaskError();
         } else {
@@ -142,11 +144,11 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
         }
     }
 
-    private void updateTask(String title, String description) {
+    private void updateTask(String title, String description, Uri source) {
         if (mTaskId == null) {
             throw new RuntimeException("updateTask() was called but task is new.");
         }
-        Song newSong = new Song(title, description, mTaskId);
+        Song newSong = new Song(title, description, mTaskId, source);
         mUseCaseHandler.execute(mSaveTask, new SaveTask.RequestValues(newSong),
                 new UseCase.UseCaseCallback<SaveTask.ResponseValue>() {
                     @Override

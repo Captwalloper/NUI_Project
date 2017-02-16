@@ -22,7 +22,7 @@ import edu.Groove9.TunesMaster.addedittask.domain.usecase.DeleteTask;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.GetTask;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.ActivateTask;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.CompleteTask;
 
@@ -43,7 +43,7 @@ import static org.mockito.Mockito.when;
 /**
  * Unit tests for the implementation of {@link TaskDetailPresenter}
  */
-public class TaskDetailPresenterTest {
+public class SongDetailPresenterTest {
 
     public static final String TITLE_TEST = "title";
 
@@ -51,9 +51,9 @@ public class TaskDetailPresenterTest {
 
     public static final String INVALID_TASK_ID = "";
 
-    public static final Task ACTIVE_TASK = new Task(TITLE_TEST, DESCRIPTION_TEST);
+    public static final Song ACTIVE_SONG = new Song(TITLE_TEST, DESCRIPTION_TEST);
 
-    public static final Task COMPLETED_TASK = new Task(TITLE_TEST, DESCRIPTION_TEST, true);
+    public static final Song COMPLETED_SONG = new Song(TITLE_TEST, DESCRIPTION_TEST, true);
 
     @Mock
     private TasksRepository mTasksRepository;
@@ -83,16 +83,16 @@ public class TaskDetailPresenterTest {
     @Test
     public void getActiveTaskFromRepositoryAndLoadIntoView() {
         // When tasks presenter is asked to open a task
-        mTaskDetailPresenter = givenTaskDetailPresenter(ACTIVE_TASK.getId());
+        mTaskDetailPresenter = givenTaskDetailPresenter(ACTIVE_SONG.getId());
         mTaskDetailPresenter.start();
 
         // Then task is loaded from model, callback is captured and progress indicator is shown
-        verify(mTasksRepository).getTask(eq(ACTIVE_TASK.getId()), mGetTaskCallbackCaptor.capture());
+        verify(mTasksRepository).getTask(eq(ACTIVE_SONG.getId()), mGetTaskCallbackCaptor.capture());
         InOrder inOrder = inOrder(mTaskDetailView);
         inOrder.verify(mTaskDetailView).setLoadingIndicator(true);
 
         // When task is finally loaded
-        mGetTaskCallbackCaptor.getValue().onTaskLoaded(ACTIVE_TASK); // Trigger callback
+        mGetTaskCallbackCaptor.getValue().onTaskLoaded(ACTIVE_SONG); // Trigger callback
 
         // Then progress indicator is hidden and title, description and completion status are shown
         // in UI
@@ -104,17 +104,17 @@ public class TaskDetailPresenterTest {
 
     @Test
     public void getCompletedTaskFromRepositoryAndLoadIntoView() {
-        mTaskDetailPresenter = givenTaskDetailPresenter(COMPLETED_TASK.getId());
+        mTaskDetailPresenter = givenTaskDetailPresenter(COMPLETED_SONG.getId());
         mTaskDetailPresenter.start();
 
         // Then task is loaded from model, callback is captured and progress indicator is shown
         verify(mTasksRepository).getTask(
-                eq(COMPLETED_TASK.getId()), mGetTaskCallbackCaptor.capture());
+                eq(COMPLETED_SONG.getId()), mGetTaskCallbackCaptor.capture());
         InOrder inOrder = inOrder(mTaskDetailView);
         inOrder.verify(mTaskDetailView).setLoadingIndicator(true);
 
         // When task is finally loaded
-        mGetTaskCallbackCaptor.getValue().onTaskLoaded(COMPLETED_TASK); // Trigger callback
+        mGetTaskCallbackCaptor.getValue().onTaskLoaded(COMPLETED_SONG); // Trigger callback
 
         // Then progress indicator is hidden and title, description and completion status are shown
         // in UI
@@ -134,56 +134,56 @@ public class TaskDetailPresenterTest {
 
     @Test
     public void deleteTask() {
-        // Given an initialized TaskDetailPresenter with stubbed task
-        Task task = new Task(TITLE_TEST, DESCRIPTION_TEST);
+        // Given an initialized TaskDetailPresenter with stubbed song
+        Song song = new Song(TITLE_TEST, DESCRIPTION_TEST);
 
-        // When the deletion of a task is requested
-        mTaskDetailPresenter = givenTaskDetailPresenter(task.getId());
+        // When the deletion of a song is requested
+        mTaskDetailPresenter = givenTaskDetailPresenter(song.getId());
         mTaskDetailPresenter.deleteTask();
 
         // Then the repository and the view are notified
-        verify(mTasksRepository).deleteTask(task.getId());
+        verify(mTasksRepository).deleteTask(song.getId());
         verify(mTaskDetailView).showTaskDeleted();
     }
 
     @Test
     public void completeTask() {
-        // Given an initialized presenter with an active task
-        Task task = new Task(TITLE_TEST, DESCRIPTION_TEST);
-        mTaskDetailPresenter = givenTaskDetailPresenter(task.getId());
+        // Given an initialized presenter with an active song
+        Song song = new Song(TITLE_TEST, DESCRIPTION_TEST);
+        mTaskDetailPresenter = givenTaskDetailPresenter(song.getId());
         mTaskDetailPresenter.start();
 
-        // When the presenter is asked to complete the task
+        // When the presenter is asked to complete the song
         mTaskDetailPresenter.completeTask();
 
-        // Then a request is sent to the task repository and the UI is updated
-        verify(mTasksRepository).completeTask(task.getId());
+        // Then a request is sent to the song repository and the UI is updated
+        verify(mTasksRepository).completeTask(song.getId());
         verify(mTaskDetailView).showTaskMarkedComplete();
     }
 
     @Test
     public void activateTask() {
-        // Given an initialized presenter with a completed task
-        Task task = new Task(TITLE_TEST, DESCRIPTION_TEST, true);
-        mTaskDetailPresenter = givenTaskDetailPresenter(task.getId());
+        // Given an initialized presenter with a completed song
+        Song song = new Song(TITLE_TEST, DESCRIPTION_TEST, true);
+        mTaskDetailPresenter = givenTaskDetailPresenter(song.getId());
         mTaskDetailPresenter.start();
 
-        // When the presenter is asked to activate the task
+        // When the presenter is asked to activate the song
         mTaskDetailPresenter.activateTask();
 
-        // Then a request is sent to the task repository and the UI is updated
-        verify(mTasksRepository).activateTask(task.getId());
+        // Then a request is sent to the song repository and the UI is updated
+        verify(mTasksRepository).activateTask(song.getId());
         verify(mTaskDetailView).showTaskMarkedActive();
     }
 
     @Test
     public void activeTaskIsShownWhenEditing() {
-        // When the edit of an ACTIVE_TASK is requested
-        mTaskDetailPresenter = givenTaskDetailPresenter(ACTIVE_TASK.getId());
+        // When the edit of an ACTIVE_SONG is requested
+        mTaskDetailPresenter = givenTaskDetailPresenter(ACTIVE_SONG.getId());
         mTaskDetailPresenter.editTask();
 
         // Then the view is notified
-        verify(mTaskDetailView).showEditTask(ACTIVE_TASK.getId());
+        verify(mTaskDetailView).showEditTask(ACTIVE_SONG.getId());
     }
 
     @Test

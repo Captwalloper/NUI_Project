@@ -20,11 +20,11 @@
     <string name="edit_task">Edit TO-DO</string>
     <string name="task_marked_complete">Task marked complete</string>
     <string name="task_marked_active">Task marked active</string>
-    <string name="loading_tasks_error">Error while loading tasks</string>
-    <string name="completed_tasks_cleared">Completed tasks cleared</string>
+    <string name="loading_tasks_error">Error while loading songs</string>
+    <string name="completed_tasks_cleared">Completed songs cleared</string>
     <string name="menu_filter">Filter</string>
     <string name="menu_clear">Clear completed</string>
-    <string name="menu_delete_task">Delete task</string>
+    <string name="menu_delete_task">Delete song</string>
     <string name="navigation_view_header_title">Songs</string>
     <string name="title_hint">Title</string>
     <string name="description_hint">Enter your TO-DO here.</string>
@@ -32,9 +32,9 @@
     <string name="successfully_saved_task_message">TO-DO saved</string>
     <string name="playlist_title">Playlist</string>
     <string name="song_player_title">Song Player</string>
-    <string name="statistics_no_tasks">You have no tasks.</string>
-    <string name="statistics_active_tasks">Active tasks:</string>
-    <string name="statistics_completed_tasks">Completed tasks:</string>
+    <string name="statistics_no_tasks">You have no songs.</string>
+    <string name="statistics_active_tasks">Active songs:</string>
+    <string name="statistics_completed_tasks">Completed songs:</string>
     <string name="statistics_error">Error loading statistics.</string>
     <string name="no_data">No data</string>
     <string name="loading">LOADING</string>

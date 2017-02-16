@@ -109,7 +109,6 @@ public class PlaylistActivity extends AppCompatActivity {
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
-        final Activity act = this;
         navigationView.setNavigationItemSelectedListener(
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
@@ -119,8 +118,7 @@ public class PlaylistActivity extends AppCompatActivity {
                                 // Do nothing, we're already on that screen
                                 break;
                             case R.id.statistics_navigation_menu_item:
-                                Intent intent =
-                                        new Intent(PlaylistActivity.this, StatisticsActivity.class);
+                                Intent intent = new Intent(PlaylistActivity.this, StatisticsActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                                         | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);

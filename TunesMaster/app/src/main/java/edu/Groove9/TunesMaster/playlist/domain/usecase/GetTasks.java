@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import android.support.annotation.NonNull;
 
 import edu.Groove9.TunesMaster.UseCase;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 import edu.Groove9.TunesMaster.playlist.PlaylistFilterType;
@@ -52,11 +52,11 @@ public class GetTasks extends UseCase<GetTasks.RequestValues, GetTasks.ResponseV
 
         mTasksRepository.getTasks(new TasksDataSource.LoadTasksCallback() {
             @Override
-            public void onTasksLoaded(List<Task> tasks) {
+            public void onTasksLoaded(List<Song> songs) {
                 PlaylistFilterType currentFiltering = values.getCurrentFiltering();
                 TaskFilter taskFilter = mFilterFactory.create(currentFiltering);
 
-                List<Task> tasksFiltered = taskFilter.filter(tasks);
+                List<Song> tasksFiltered = taskFilter.filter(songs);
                 ResponseValue responseValue = new ResponseValue(tasksFiltered);
                 getUseCaseCallback().onSuccess(responseValue);
             }
@@ -90,14 +90,14 @@ public class GetTasks extends UseCase<GetTasks.RequestValues, GetTasks.ResponseV
 
     public static final class ResponseValue implements UseCase.ResponseValue {
 
-        private final List<Task> mTasks;
+        private final List<Song> mSongs;
 
-        public ResponseValue(@NonNull List<Task> tasks) {
-            mTasks = checkNotNull(tasks, "tasks cannot be null!");
+        public ResponseValue(@NonNull List<Song> songs) {
+            mSongs = checkNotNull(songs, "songs cannot be null!");
         }
 
-        public List<Task> getTasks() {
-            return mTasks;
+        public List<Song> getTasks() {
+            return mSongs;
         }
     }
 }

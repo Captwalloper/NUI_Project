@@ -20,7 +20,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
+
 import com.google.common.collect.Lists;
 
 import java.util.Iterator;
@@ -34,7 +35,7 @@ public class FakeTasksRemoteDataSource implements TasksDataSource {
 
     private static FakeTasksRemoteDataSource INSTANCE;
 
-    private static final Map<String, Task> TASKS_SERVICE_DATA = new LinkedHashMap<>();
+    private static final Map<String, Song> TASKS_SERVICE_DATA = new LinkedHashMap<>();
 
     // Prevent direct instantiation.
     private FakeTasksRemoteDataSource() {}
@@ -53,19 +54,19 @@ public class FakeTasksRemoteDataSource implements TasksDataSource {
 
     @Override
     public void getTask(@NonNull String taskId, @NonNull GetTaskCallback callback) {
-        Task task = TASKS_SERVICE_DATA.get(taskId);
-        callback.onTaskLoaded(task);
+        Song song = TASKS_SERVICE_DATA.get(taskId);
+        callback.onTaskLoaded(song);
     }
 
     @Override
-    public void saveTask(@NonNull Task task) {
-        TASKS_SERVICE_DATA.put(task.getId(), task);
+    public void saveTask(@NonNull Song song) {
+        TASKS_SERVICE_DATA.put(song.getId(), song);
     }
 
     @Override
-    public void completeTask(@NonNull Task task) {
-        Task completedTask = new Task(task.getTitle(), task.getDescription(), task.getId(), true);
-        TASKS_SERVICE_DATA.put(task.getId(), completedTask);
+    public void completeTask(@NonNull Song song) {
+        Song completedSong = new Song(song.getTitle(), song.getDescription(), song.getId(), true);
+        TASKS_SERVICE_DATA.put(song.getId(), completedSong);
     }
 
     @Override
@@ -74,9 +75,9 @@ public class FakeTasksRemoteDataSource implements TasksDataSource {
     }
 
     @Override
-    public void activateTask(@NonNull Task task) {
-        Task activeTask = new Task(task.getTitle(), task.getDescription(), task.getId());
-        TASKS_SERVICE_DATA.put(task.getId(), activeTask);
+    public void activateTask(@NonNull Song song) {
+        Song activeSong = new Song(song.getTitle(), song.getDescription(), song.getId());
+        TASKS_SERVICE_DATA.put(song.getId(), activeSong);
     }
 
     @Override
@@ -86,9 +87,9 @@ public class FakeTasksRemoteDataSource implements TasksDataSource {
 
     @Override
     public void clearCompletedTasks() {
-        Iterator<Map.Entry<String, Task>> it = TASKS_SERVICE_DATA.entrySet().iterator();
+        Iterator<Map.Entry<String, Song>> it = TASKS_SERVICE_DATA.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<String, Task> entry = it.next();
+            Map.Entry<String, Song> entry = it.next();
             if (entry.getValue().isCompleted()) {
                 it.remove();
             }
@@ -111,9 +112,9 @@ public class FakeTasksRemoteDataSource implements TasksDataSource {
     }
 
     @VisibleForTesting
-    public void addTasks(Task... tasks) {
-        for (Task task : tasks) {
-            TASKS_SERVICE_DATA.put(task.getId(), task);
+    public void addTasks(Song... songs) {
+        for (Song song : songs) {
+            TASKS_SERVICE_DATA.put(song.getId(), song);
         }
     }
 }

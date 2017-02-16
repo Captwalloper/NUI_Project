@@ -23,7 +23,7 @@ import edu.Groove9.TunesMaster.UseCase;
 import edu.Groove9.TunesMaster.UseCaseHandler;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.DeleteTask;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.GetTask;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.ActivateTask;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.CompleteTask;
 import com.google.common.base.Strings;
@@ -80,14 +80,14 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
                 new UseCase.UseCaseCallback<GetTask.ResponseValue>() {
                     @Override
                     public void onSuccess(GetTask.ResponseValue response) {
-                        Task task = response.getTask();
+                        Song song = response.getTask();
 
                         // The view may not be able to handle UI updates anymore
                         if (!mTaskDetailView.isActive()) {
                             return;
                         }
                         mTaskDetailView.setLoadingIndicator(false);
-                        showTask(task);
+                        showTask(song);
                     }
 
                     @Override
@@ -167,9 +167,9 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
                 });
     }
 
-    private void showTask(@NonNull Task task) {
-        String title = task.getTitle();
-        String description = task.getDescription();
+    private void showTask(@NonNull Song song) {
+        String title = song.getTitle();
+        String description = song.getDescription();
 
         if (Strings.isNullOrEmpty(title)) {
             mTaskDetailView.hideTitle();
@@ -182,6 +182,6 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
         } else {
             mTaskDetailView.showDescription(description);
         }
-        mTaskDetailView.showCompletionStatus(task.isCompleted());
+        mTaskDetailView.showCompletionStatus(song.isCompleted());
     }
 }

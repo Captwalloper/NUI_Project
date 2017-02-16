@@ -20,7 +20,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import com.google.common.collect.Lists;
 
@@ -37,7 +37,7 @@ public class TasksRemoteDataSource implements TasksDataSource {
 
     private static final int SERVICE_LATENCY_IN_MILLIS = 5000;
 
-    private static final Map<String, Task> TASKS_SERVICE_DATA;
+    private static final Map<String, Song> TASKS_SERVICE_DATA;
 
     static {
         TASKS_SERVICE_DATA = new LinkedHashMap<>(2);
@@ -56,8 +56,8 @@ public class TasksRemoteDataSource implements TasksDataSource {
     private TasksRemoteDataSource() {}
 
     private static void addTask(String title, String description) {
-        Task newTask = new Task(title, description);
-        TASKS_SERVICE_DATA.put(newTask.getId(), newTask);
+        Song newSong = new Song(title, description);
+        TASKS_SERVICE_DATA.put(newSong.getId(), newSong);
     }
 
     /**
@@ -84,27 +84,27 @@ public class TasksRemoteDataSource implements TasksDataSource {
      */
     @Override
     public void getTask(@NonNull String taskId, final @NonNull GetTaskCallback callback) {
-        final Task task = TASKS_SERVICE_DATA.get(taskId);
+        final Song song = TASKS_SERVICE_DATA.get(taskId);
 
         // Simulate network by delaying the execution.
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                callback.onTaskLoaded(task);
+                callback.onTaskLoaded(song);
             }
         }, SERVICE_LATENCY_IN_MILLIS);
     }
 
     @Override
-    public void saveTask(@NonNull Task task) {
-        TASKS_SERVICE_DATA.put(task.getId(), task);
+    public void saveTask(@NonNull Song song) {
+        TASKS_SERVICE_DATA.put(song.getId(), song);
     }
 
     @Override
-    public void completeTask(@NonNull Task task) {
-        Task completedTask = new Task(task.getTitle(), task.getDescription(), task.getId(), true);
-        TASKS_SERVICE_DATA.put(task.getId(), completedTask);
+    public void completeTask(@NonNull Song song) {
+        Song completedSong = new Song(song.getTitle(), song.getDescription(), song.getId(), true);
+        TASKS_SERVICE_DATA.put(song.getId(), completedSong);
     }
 
     @Override
@@ -114,9 +114,9 @@ public class TasksRemoteDataSource implements TasksDataSource {
     }
 
     @Override
-    public void activateTask(@NonNull Task task) {
-        Task activeTask = new Task(task.getTitle(), task.getDescription(), task.getId());
-        TASKS_SERVICE_DATA.put(task.getId(), activeTask);
+    public void activateTask(@NonNull Song song) {
+        Song activeSong = new Song(song.getTitle(), song.getDescription(), song.getId());
+        TASKS_SERVICE_DATA.put(song.getId(), activeSong);
     }
 
     @Override
@@ -127,9 +127,9 @@ public class TasksRemoteDataSource implements TasksDataSource {
 
     @Override
     public void clearCompletedTasks() {
-        Iterator<Map.Entry<String, Task>> it = TASKS_SERVICE_DATA.entrySet().iterator();
+        Iterator<Map.Entry<String, Song>> it = TASKS_SERVICE_DATA.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<String, Task> entry = it.next();
+            Map.Entry<String, Song> entry = it.next();
             if (entry.getValue().isCompleted()) {
                 it.remove();
             }

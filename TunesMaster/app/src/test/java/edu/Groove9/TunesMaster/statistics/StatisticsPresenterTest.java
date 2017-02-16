@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 import edu.Groove9.TunesMaster.TestUseCaseScheduler;
 import edu.Groove9.TunesMaster.UseCaseHandler;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 import edu.Groove9.TunesMaster.statistics.domain.usecase.GetStatistics;
@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class StatisticsPresenterTest {
 
-    private static List<Task> TASKS;
+    private static List<Song> TASKS;
 
     @Mock
     private TasksRepository mTasksRepository;
@@ -72,8 +72,8 @@ public class StatisticsPresenterTest {
         when(mStatisticsView.isActive()).thenReturn(true);
 
         // We start the tasks to 3, with one active and two completed
-        TASKS = Lists.newArrayList(new Task("Title1", "Description1"),
-                new Task("Title2", "Description2", true), new Task("Title3", "Description3", true));
+        TASKS = Lists.newArrayList(new Song("Title1", "Description1"),
+                new Song("Title2", "Description2", true), new Song("Title3", "Description3", true));
     }
 
     @Test

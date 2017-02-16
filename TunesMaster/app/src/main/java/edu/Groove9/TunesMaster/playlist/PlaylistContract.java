@@ -19,7 +19,7 @@ package edu.Groove9.TunesMaster.playlist;
 import android.support.annotation.NonNull;
 
 import edu.Groove9.TunesMaster.BaseView;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.BasePresenter;
 
 import java.util.List;
@@ -33,7 +33,7 @@ public interface PlaylistContract {
 
         void setLoadingIndicator(boolean active);
 
-        void showTasks(List<Task> tasks);
+        void showTasks(List<Song> songs);
 
         void showAddTask();
 
@@ -74,11 +74,11 @@ public interface PlaylistContract {
 
         void addNewTask();
 
-        void openTaskDetails(@NonNull Task requestedTask);
+        void openTaskDetails(@NonNull Song requestedSong);
 
-        void completeTask(@NonNull Task completedTask);
+        void completeTask(@NonNull Song completedSong);
 
-        void activateTask(@NonNull Task activeTask);
+        void activateTask(@NonNull Song activeSong);
 
         void clearCompletedTasks();
 

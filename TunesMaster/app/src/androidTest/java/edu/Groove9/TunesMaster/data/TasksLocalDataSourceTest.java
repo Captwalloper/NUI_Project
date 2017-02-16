@@ -23,7 +23,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import edu.Groove9.TunesMaster.data.source.local.TasksDbHelper;
 import edu.Groove9.TunesMaster.data.source.local.TasksLocalDataSource;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 
 import org.junit.After;
 import org.junit.Before;
@@ -76,16 +76,16 @@ public class TasksLocalDataSourceTest {
     @Test
     public void saveTask_retrievesTask() {
         // Given a new task
-        final Task newTask = new Task(TITLE, "");
+        final Song newSong = new Song(TITLE, "");
 
         // When saved into the persistent repository
-        mLocalDataSource.saveTask(newTask);
+        mLocalDataSource.saveTask(newSong);
 
         // Then the task can be retrieved from the persistent repository
-        mLocalDataSource.getTask(newTask.getId(), new TasksDataSource.GetTaskCallback() {
+        mLocalDataSource.getTask(newSong.getId(), new TasksDataSource.GetTaskCallback() {
             @Override
-            public void onTaskLoaded(Task task) {
-                assertThat(task, is(newTask));
+            public void onTaskLoaded(Song song) {
+                assertThat(song, is(newSong));
             }
 
             @Override
@@ -100,18 +100,18 @@ public class TasksLocalDataSourceTest {
         // Initialize mock for the callback.
         TasksDataSource.GetTaskCallback callback = mock(TasksDataSource.GetTaskCallback.class);
         // Given a new task in the persistent repository
-        final Task newTask = new Task(TITLE, "");
-        mLocalDataSource.saveTask(newTask);
+        final Song newSong = new Song(TITLE, "");
+        mLocalDataSource.saveTask(newSong);
 
         // When completed in the persistent repository
-        mLocalDataSource.completeTask(newTask);
+        mLocalDataSource.completeTask(newSong);
 
         // Then the task can be retrieved from the persistent repository and is complete
-        mLocalDataSource.getTask(newTask.getId(), new TasksDataSource.GetTaskCallback() {
+        mLocalDataSource.getTask(newSong.getId(), new TasksDataSource.GetTaskCallback() {
             @Override
-            public void onTaskLoaded(Task task) {
-                assertThat(task, is(newTask));
-                assertThat(task.isCompleted(), is(true));
+            public void onTaskLoaded(Song song) {
+                assertThat(song, is(newSong));
+                assertThat(song.isCompleted(), is(true));
             }
 
             @Override
@@ -127,20 +127,20 @@ public class TasksLocalDataSourceTest {
         TasksDataSource.GetTaskCallback callback = mock(TasksDataSource.GetTaskCallback.class);
 
         // Given a new completed task in the persistent repository
-        final Task newTask = new Task(TITLE, "");
-        mLocalDataSource.saveTask(newTask);
-        mLocalDataSource.completeTask(newTask);
+        final Song newSong = new Song(TITLE, "");
+        mLocalDataSource.saveTask(newSong);
+        mLocalDataSource.completeTask(newSong);
 
         // When activated in the persistent repository
-        mLocalDataSource.activateTask(newTask);
+        mLocalDataSource.activateTask(newSong);
 
         // Then the task can be retrieved from the persistent repository and is active
-        mLocalDataSource.getTask(newTask.getId(), callback);
+        mLocalDataSource.getTask(newSong.getId(), callback);
 
         verify(callback, never()).onDataNotAvailable();
-        verify(callback).onTaskLoaded(newTask);
+        verify(callback).onTaskLoaded(newSong);
 
-        assertThat(newTask.isCompleted(), is(false));
+        assertThat(newSong.isCompleted(), is(false));
     }
 
     @Test
@@ -151,40 +151,40 @@ public class TasksLocalDataSourceTest {
         TasksDataSource.GetTaskCallback callback3 = mock(TasksDataSource.GetTaskCallback.class);
 
         // Given 2 new completed tasks and 1 active task in the persistent repository
-        final Task newTask1 = new Task(TITLE, "");
-        mLocalDataSource.saveTask(newTask1);
-        mLocalDataSource.completeTask(newTask1);
-        final Task newTask2 = new Task(TITLE2, "");
-        mLocalDataSource.saveTask(newTask2);
-        mLocalDataSource.completeTask(newTask2);
-        final Task newTask3 = new Task(TITLE3, "");
-        mLocalDataSource.saveTask(newTask3);
+        final Song newSong1 = new Song(TITLE, "");
+        mLocalDataSource.saveTask(newSong1);
+        mLocalDataSource.completeTask(newSong1);
+        final Song newSong2 = new Song(TITLE2, "");
+        mLocalDataSource.saveTask(newSong2);
+        mLocalDataSource.completeTask(newSong2);
+        final Song newSong3 = new Song(TITLE3, "");
+        mLocalDataSource.saveTask(newSong3);
 
         // When completed tasks are cleared in the repository
         mLocalDataSource.clearCompletedTasks();
 
         // Then the completed tasks cannot be retrieved and the active one can
-        mLocalDataSource.getTask(newTask1.getId(), callback1);
+        mLocalDataSource.getTask(newSong1.getId(), callback1);
 
         verify(callback1).onDataNotAvailable();
-        verify(callback1, never()).onTaskLoaded(newTask1);
+        verify(callback1, never()).onTaskLoaded(newSong1);
 
-        mLocalDataSource.getTask(newTask2.getId(), callback2);
+        mLocalDataSource.getTask(newSong2.getId(), callback2);
 
         verify(callback2).onDataNotAvailable();
-        verify(callback2, never()).onTaskLoaded(newTask1);
+        verify(callback2, never()).onTaskLoaded(newSong1);
 
-        mLocalDataSource.getTask(newTask3.getId(), callback3);
+        mLocalDataSource.getTask(newSong3.getId(), callback3);
 
         verify(callback3, never()).onDataNotAvailable();
-        verify(callback3).onTaskLoaded(newTask3);
+        verify(callback3).onTaskLoaded(newSong3);
     }
 
     @Test
     public void deleteAllTasks_emptyListOfRetrievedTask() {
         // Given a new task in the persistent repository and a mocked callback
-        Task newTask = new Task(TITLE, "");
-        mLocalDataSource.saveTask(newTask);
+        Song newSong = new Song(TITLE, "");
+        mLocalDataSource.saveTask(newSong);
         TasksDataSource.LoadTasksCallback callback = mock(TasksDataSource.LoadTasksCallback.class);
 
         // When all tasks are deleted
@@ -200,25 +200,25 @@ public class TasksLocalDataSourceTest {
     @Test
     public void getTasks_retrieveSavedTasks() {
         // Given 2 new tasks in the persistent repository
-        final Task newTask1 = new Task(TITLE, "");
-        mLocalDataSource.saveTask(newTask1);
-        final Task newTask2 = new Task(TITLE, "");
-        mLocalDataSource.saveTask(newTask2);
+        final Song newSong1 = new Song(TITLE, "");
+        mLocalDataSource.saveTask(newSong1);
+        final Song newSong2 = new Song(TITLE, "");
+        mLocalDataSource.saveTask(newSong2);
 
         // Then the tasks can be retrieved from the persistent repository
         mLocalDataSource.getTasks(new TasksDataSource.LoadTasksCallback() {
             @Override
-            public void onTasksLoaded(List<Task> tasks) {
-                assertNotNull(tasks);
-                assertTrue(tasks.size() >= 2);
+            public void onTasksLoaded(List<Song> songs) {
+                assertNotNull(songs);
+                assertTrue(songs.size() >= 2);
 
                 boolean newTask1IdFound = false;
                 boolean newTask2IdFound = false;
-                for (Task task: tasks) {
-                    if (task.getId().equals(newTask1.getId())) {
+                for (Song song : songs) {
+                    if (song.getId().equals(newSong1.getId())) {
                         newTask1IdFound = true;
                     }
-                    if (task.getId().equals(newTask2.getId())) {
+                    if (song.getId().equals(newSong2.getId())) {
                         newTask2IdFound = true;
                     }
                 }

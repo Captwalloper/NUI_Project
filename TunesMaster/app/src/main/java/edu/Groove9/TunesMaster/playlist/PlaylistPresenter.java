@@ -24,7 +24,7 @@ import android.support.annotation.NonNull;
 import edu.Groove9.TunesMaster.UseCase;
 import edu.Groove9.TunesMaster.UseCaseHandler;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.ActivateTask;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.ClearCompleteTasks;
@@ -105,7 +105,7 @@ public class PlaylistPresenter implements PlaylistContract.Presenter {
                 new UseCase.UseCaseCallback<GetTasks.ResponseValue>() {
                     @Override
                     public void onSuccess(GetTasks.ResponseValue response) {
-                        List<Task> tasks = response.getTasks();
+                        List<Song> songs = response.getTasks();
                         // The view may not be able to handle UI updates anymore
                         if (!mTasksView.isActive()) {
                             return;
@@ -114,7 +114,7 @@ public class PlaylistPresenter implements PlaylistContract.Presenter {
                             mTasksView.setLoadingIndicator(false);
                         }
 
-                        processTasks(tasks);
+                        processTasks(songs);
                     }
 
                     @Override
@@ -128,13 +128,13 @@ public class PlaylistPresenter implements PlaylistContract.Presenter {
                 });
     }
 
-    private void processTasks(List<Task> tasks) {
-        if (tasks.isEmpty()) {
-            // Show a message indicating there are no tasks for that filter type.
+    private void processTasks(List<Song> songs) {
+        if (songs.isEmpty()) {
+            // Show a message indicating there are no songs for that filter type.
             processEmptyTasks();
         } else {
-            // Show the list of tasks
-            mTasksView.showTasks(tasks);
+            // Show the list of songs
+            mTasksView.showTasks(songs);
             // Set the filter label's text.
             showFilterLabel();
         }
@@ -174,16 +174,16 @@ public class PlaylistPresenter implements PlaylistContract.Presenter {
     }
 
     @Override
-    public void openTaskDetails(@NonNull Task requestedTask) {
-        checkNotNull(requestedTask, "requestedTask cannot be null!");
-        mTasksView.showTaskDetailsUi(requestedTask.getId());
+    public void openTaskDetails(@NonNull Song requestedSong) {
+        checkNotNull(requestedSong, "requestedSong cannot be null!");
+        mTasksView.showTaskDetailsUi(requestedSong.getId());
     }
 
     @Override
-    public void completeTask(@NonNull Task completedTask) {
-        checkNotNull(completedTask, "completedTask cannot be null!");
+    public void completeTask(@NonNull Song completedSong) {
+        checkNotNull(completedSong, "completedSong cannot be null!");
         mUseCaseHandler.execute(mCompleteTask, new CompleteTask.RequestValues(
-                        completedTask.getId()),
+                        completedSong.getId()),
                 new UseCase.UseCaseCallback<CompleteTask.ResponseValue>() {
                     @Override
                     public void onSuccess(CompleteTask.ResponseValue response) {
@@ -199,9 +199,9 @@ public class PlaylistPresenter implements PlaylistContract.Presenter {
     }
 
     @Override
-    public void activateTask(@NonNull Task activeTask) {
-        checkNotNull(activeTask, "activeTask cannot be null!");
-        mUseCaseHandler.execute(mActivateTask, new ActivateTask.RequestValues(activeTask.getId()),
+    public void activateTask(@NonNull Song activeSong) {
+        checkNotNull(activeSong, "activeSong cannot be null!");
+        mUseCaseHandler.execute(mActivateTask, new ActivateTask.RequestValues(activeSong.getId()),
                 new UseCase.UseCaseCallback<ActivateTask.ResponseValue>() {
                     @Override
                     public void onSuccess(ActivateTask.ResponseValue response) {

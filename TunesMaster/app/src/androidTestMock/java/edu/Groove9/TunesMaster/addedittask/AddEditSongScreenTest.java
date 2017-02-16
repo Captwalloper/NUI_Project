@@ -44,7 +44,7 @@ import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class AddEditTaskScreenTest {
+public class AddEditSongScreenTest {
 
     /**
      * {@link IntentsTestRule} is an {@link ActivityTestRule} which inits and releases Espresso

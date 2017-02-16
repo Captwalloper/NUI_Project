@@ -22,7 +22,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class TasksLocalDataSource implements TasksDataSource {
      */
     @Override
     public void getTasks(@NonNull LoadTasksCallback callback) {
-        List<Task> tasks = new ArrayList<Task>();
+        List<Song> songs = new ArrayList<Song>();
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         String[] projection = {
@@ -79,8 +79,8 @@ public class TasksLocalDataSource implements TasksDataSource {
                         c.getString(c.getColumnIndexOrThrow(TasksPersistenceContract.TaskEntry.COLUMN_NAME_DESCRIPTION));
                 boolean completed =
                         c.getInt(c.getColumnIndexOrThrow(TasksPersistenceContract.TaskEntry.COLUMN_NAME_COMPLETED)) == 1;
-                Task task = new Task(title, description, itemId, completed);
-                tasks.add(task);
+                Song song = new Song(title, description, itemId, completed);
+                songs.add(song);
             }
         }
         if (c != null) {
@@ -89,17 +89,17 @@ public class TasksLocalDataSource implements TasksDataSource {
 
         db.close();
 
-        if (tasks.isEmpty()) {
+        if (songs.isEmpty()) {
             // This will be called if the table is new or just empty.
             callback.onDataNotAvailable();
         } else {
-            callback.onTasksLoaded(tasks);
+            callback.onTasksLoaded(songs);
         }
 
     }
 
     /**
-     * Note: {@link GetTaskCallback#onDataNotAvailable()} is fired if the {@link Task} isn't
+     * Note: {@link GetTaskCallback#onDataNotAvailable()} is fired if the {@link Song} isn't
      * found.
      */
     @Override
@@ -119,7 +119,7 @@ public class TasksLocalDataSource implements TasksDataSource {
         Cursor c = db.query(
                 TasksPersistenceContract.TaskEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, null);
 
-        Task task = null;
+        Song song = null;
 
         if (c != null && c.getCount() > 0) {
             c.moveToFirst();
@@ -129,7 +129,7 @@ public class TasksLocalDataSource implements TasksDataSource {
                     c.getString(c.getColumnIndexOrThrow(TasksPersistenceContract.TaskEntry.COLUMN_NAME_DESCRIPTION));
             boolean completed =
                     c.getInt(c.getColumnIndexOrThrow(TasksPersistenceContract.TaskEntry.COLUMN_NAME_COMPLETED)) == 1;
-            task = new Task(title, description, itemId, completed);
+            song = new Song(title, description, itemId, completed);
         }
         if (c != null) {
             c.close();
@@ -137,23 +137,23 @@ public class TasksLocalDataSource implements TasksDataSource {
 
         db.close();
 
-        if (task != null) {
-            callback.onTaskLoaded(task);
+        if (song != null) {
+            callback.onTaskLoaded(song);
         } else {
             callback.onDataNotAvailable();
         }
     }
 
     @Override
-    public void saveTask(@NonNull Task task) {
-        checkNotNull(task);
+    public void saveTask(@NonNull Song song) {
+        checkNotNull(song);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(TasksPersistenceContract.TaskEntry.COLUMN_NAME_ENTRY_ID, task.getId());
-        values.put(TasksPersistenceContract.TaskEntry.COLUMN_NAME_TITLE, task.getTitle());
-        values.put(TasksPersistenceContract.TaskEntry.COLUMN_NAME_DESCRIPTION, task.getDescription());
-        values.put(TasksPersistenceContract.TaskEntry.COLUMN_NAME_COMPLETED, task.isCompleted());
+        values.put(TasksPersistenceContract.TaskEntry.COLUMN_NAME_ENTRY_ID, song.getId());
+        values.put(TasksPersistenceContract.TaskEntry.COLUMN_NAME_TITLE, song.getTitle());
+        values.put(TasksPersistenceContract.TaskEntry.COLUMN_NAME_DESCRIPTION, song.getDescription());
+        values.put(TasksPersistenceContract.TaskEntry.COLUMN_NAME_COMPLETED, song.isCompleted());
 
         db.insert(TasksPersistenceContract.TaskEntry.TABLE_NAME, null, values);
 
@@ -161,14 +161,14 @@ public class TasksLocalDataSource implements TasksDataSource {
     }
 
     @Override
-    public void completeTask(@NonNull Task task) {
+    public void completeTask(@NonNull Song song) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(TasksPersistenceContract.TaskEntry.COLUMN_NAME_COMPLETED, true);
 
         String selection = TasksPersistenceContract.TaskEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?";
-        String[] selectionArgs = { task.getId() };
+        String[] selectionArgs = { song.getId() };
 
         db.update(TasksPersistenceContract.TaskEntry.TABLE_NAME, values, selection, selectionArgs);
 
@@ -182,14 +182,14 @@ public class TasksLocalDataSource implements TasksDataSource {
     }
 
     @Override
-    public void activateTask(@NonNull Task task) {
+    public void activateTask(@NonNull Song song) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
         ContentValues values = new ContentValues();
         values.put(TasksPersistenceContract.TaskEntry.COLUMN_NAME_COMPLETED, false);
 
         String selection = TasksPersistenceContract.TaskEntry.COLUMN_NAME_ENTRY_ID + " LIKE ?";
-        String[] selectionArgs = { task.getId() };
+        String[] selectionArgs = { song.getId() };
 
         db.update(TasksPersistenceContract.TaskEntry.TABLE_NAME, values, selection, selectionArgs);
 

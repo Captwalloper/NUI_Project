@@ -19,13 +19,13 @@ package edu.Groove9.TunesMaster.addedittask.domain.usecase;
 import android.support.annotation.NonNull;
 
 import edu.Groove9.TunesMaster.UseCase;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Updates or creates a new {@link Task} in the {@link TasksRepository}.
+ * Updates or creates a new {@link Song} in the {@link TasksRepository}.
  */
 public class SaveTask extends UseCase<SaveTask.RequestValues, SaveTask.ResponseValue> {
 
@@ -37,35 +37,35 @@ public class SaveTask extends UseCase<SaveTask.RequestValues, SaveTask.ResponseV
 
     @Override
     protected void executeUseCase(final RequestValues values) {
-        Task task = values.getTask();
-        mTasksRepository.saveTask(task);
+        Song song = values.getTask();
+        mTasksRepository.saveTask(song);
 
-        getUseCaseCallback().onSuccess(new ResponseValue(task));
+        getUseCaseCallback().onSuccess(new ResponseValue(song));
     }
 
     public static final class RequestValues implements UseCase.RequestValues {
 
-        private final Task mTask;
+        private final Song mSong;
 
-        public RequestValues(@NonNull Task task) {
-            mTask = checkNotNull(task, "task cannot be null!");
+        public RequestValues(@NonNull Song song) {
+            mSong = checkNotNull(song, "song cannot be null!");
         }
 
-        public Task getTask() {
-            return mTask;
+        public Song getTask() {
+            return mSong;
         }
     }
 
     public static final class ResponseValue implements UseCase.ResponseValue {
 
-        private final Task mTask;
+        private final Song mSong;
 
-        public ResponseValue(@NonNull Task task) {
-            mTask = checkNotNull(task, "task cannot be null!");
+        public ResponseValue(@NonNull Song song) {
+            mSong = checkNotNull(song, "song cannot be null!");
         }
 
-        public Task getTask() {
-            return mTask;
+        public Song getTask() {
+            return mSong;
         }
     }
 }

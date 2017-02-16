@@ -26,7 +26,7 @@ import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.TestUtils;
 import edu.Groove9.TunesMaster.data.FakeTasksRemoteDataSource;
 
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 
 import org.junit.Rule;
@@ -46,21 +46,21 @@ import static org.hamcrest.core.IsNot.not;
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
-public class TaskDetailScreenTest {
+public class SongDetailScreenTest {
 
     private static String TASK_TITLE = "ATSL";
 
     private static String TASK_DESCRIPTION = "Rocks";
 
     /**
-     * {@link Task} stub that is added to the fake service API layer.
+     * {@link Song} stub that is added to the fake service API layer.
      */
-    private static Task ACTIVE_TASK = new Task(TASK_TITLE, TASK_DESCRIPTION, false);
+    private static Song activeSong = new Song(TASK_TITLE, TASK_DESCRIPTION, false);
 
     /**
-     * {@link Task} stub that is added to the fake service API layer.
+     * {@link Song} stub that is added to the fake service API layer.
      */
-    private static Task COMPLETED_TASK = new Task(TASK_TITLE, TASK_DESCRIPTION, true);
+    private static Song completedSong = new Song(TASK_TITLE, TASK_DESCRIPTION, true);
 
     /**
      * {@link ActivityTestRule} is a JUnit {@link Rule @Rule} to launch your activity under test.
@@ -80,30 +80,30 @@ public class TaskDetailScreenTest {
                     false /* Lazily launch activity */);
 
     private void loadActiveTask() {
-        startActivityWithWithStubbedTask(ACTIVE_TASK);
+        startActivityWithWithStubbedTask(activeSong);
     }
 
     private void loadCompletedTask() {
-        startActivityWithWithStubbedTask(COMPLETED_TASK);
+        startActivityWithWithStubbedTask(completedSong);
     }
 
     /**
-     * Setup your test fixture with a fake task id. The {@link TaskDetailActivity} is started with
-     * a particular task id, which is then loaded from the service API.
+     * Setup your test fixture with a fake song id. The {@link TaskDetailActivity} is started with
+     * a particular song id, which is then loaded from the service API.
      *
      * <p>
      * Note that this test runs hermetically and is fully isolated using a fake implementation of
      * the service API. This is a great way to make your tests more reliable and faster at the same
      * time, since they are isolated from any outside dependencies.
      */
-    private void startActivityWithWithStubbedTask(Task task) {
-        // Add a task stub to the fake service api layer.
+    private void startActivityWithWithStubbedTask(Song song) {
+        // Add a song stub to the fake service api layer.
         TasksRepository.destroyInstance();
-        FakeTasksRemoteDataSource.getInstance().addTasks(task);
+        FakeTasksRemoteDataSource.getInstance().addTasks(song);
 
         // Lazily start the Activity from the ActivityTestRule this time to inject the start Intent
         Intent startIntent = new Intent();
-        startIntent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, task.getId());
+        startIntent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, song.getId());
         mTaskDetailActivityTestRule.launchActivity(startIntent);
     }
 

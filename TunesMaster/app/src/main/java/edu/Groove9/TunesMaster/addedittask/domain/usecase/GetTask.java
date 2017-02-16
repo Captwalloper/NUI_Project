@@ -21,12 +21,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import android.support.annotation.NonNull;
 
 import edu.Groove9.TunesMaster.UseCase;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 
 /**
- * Retrieves a {@link Task} from the {@link TasksRepository}.
+ * Retrieves a {@link Song} from the {@link TasksRepository}.
  */
 public class GetTask extends UseCase<GetTask.RequestValues, GetTask.ResponseValue> {
 
@@ -40,9 +40,9 @@ public class GetTask extends UseCase<GetTask.RequestValues, GetTask.ResponseValu
     protected void executeUseCase(final RequestValues values) {
         mTasksRepository.getTask(values.getTaskId(), new TasksDataSource.GetTaskCallback() {
             @Override
-            public void onTaskLoaded(Task task) {
-                if (task != null) {
-                    ResponseValue responseValue = new ResponseValue(task);
+            public void onTaskLoaded(Song song) {
+                if (song != null) {
+                    ResponseValue responseValue = new ResponseValue(song);
                     getUseCaseCallback().onSuccess(responseValue);
                 } else {
                     getUseCaseCallback().onError();
@@ -71,14 +71,14 @@ public class GetTask extends UseCase<GetTask.RequestValues, GetTask.ResponseValu
 
     public static final class ResponseValue implements UseCase.ResponseValue {
 
-        private Task mTask;
+        private Song mSong;
 
-        public ResponseValue(@NonNull Task task) {
-            mTask = checkNotNull(task, "task cannot be null!");
+        public ResponseValue(@NonNull Song song) {
+            mSong = checkNotNull(song, "song cannot be null!");
         }
 
-        public Task getTask() {
-            return mTask;
+        public Song getTask() {
+            return mSong;
         }
     }
 }

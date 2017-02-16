@@ -16,23 +16,23 @@
 
 package edu.Groove9.TunesMaster.playlist.domain.filter;
 
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Returns the active tasks from a list of {@link Task}s.
+ * Returns the active tasks from a list of {@link Song}s.
  */
 class ActiveTaskFilter implements TaskFilter {
     @Override
-    public List<Task> filter(List<Task> tasks) {
-        List<Task> filteredTasks = new ArrayList<>();
-        for (Task task : tasks) {
-            if (task.isActive()) {
-                filteredTasks.add(task);
+    public List<Song> filter(List<Song> songs) {
+        List<Song> filteredSongs = new ArrayList<>();
+        for (Song song : songs) {
+            if (song.isActive()) {
+                filteredSongs.add(song);
             }
         }
-        return filteredTasks;
+        return filteredSongs;
     }
 }

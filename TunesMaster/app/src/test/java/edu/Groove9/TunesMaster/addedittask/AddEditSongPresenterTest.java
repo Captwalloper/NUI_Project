@@ -25,7 +25,7 @@ import edu.Groove9.TunesMaster.TestUseCaseScheduler;
 import edu.Groove9.TunesMaster.UseCaseHandler;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.GetTask;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.SaveTask;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 
@@ -39,7 +39,7 @@ import org.mockito.MockitoAnnotations;
 /**
  * Unit tests for the implementation of {@link AddEditTaskPresenter}.
  */
-public class AddEditTaskPresenterTest {
+public class AddEditSongPresenterTest {
 
     @Mock
     private TasksRepository mTasksRepository;
@@ -72,10 +72,10 @@ public class AddEditTaskPresenterTest {
         mAddEditTaskPresenter = givenEditTaskPresenter("1");
 
         // When the presenter is asked to save a task
-        mAddEditTaskPresenter.saveTask("New Task Title", "Some Task Description");
+        mAddEditTaskPresenter.saveTask("New Song Title", "Some Song Description");
 
         // Then a task is saved in the repository and the view updated
-        verify(mTasksRepository).saveTask(any(Task.class)); // saved to the model
+        verify(mTasksRepository).saveTask(any(Song.class)); // saved to the model
         verify(mAddEditTaskView).showTasksList(); // shown in the UI
     }
 
@@ -98,30 +98,30 @@ public class AddEditTaskPresenterTest {
         mAddEditTaskPresenter = givenEditTaskPresenter("1");
 
         // When the presenter is asked to save an existing task
-        mAddEditTaskPresenter.saveTask("New Task Title", "Some Task Description");
+        mAddEditTaskPresenter.saveTask("New Song Title", "Some Song Description");
 
         // Then a task is saved in the repository and the view updated
-        verify(mTasksRepository).saveTask(any(Task.class)); // saved to the model
+        verify(mTasksRepository).saveTask(any(Song.class)); // saved to the model
         verify(mAddEditTaskView).showTasksList(); // shown in the UI
     }
 
     @Test
     public void populateTask_callsRepoAndUpdatesView() {
-        Task testTask = new Task("TITLE", "DESCRIPTION");
+        Song testSong = new Song("TITLE", "DESCRIPTION");
         // Get a reference to the class under test
-        mAddEditTaskPresenter = givenEditTaskPresenter(testTask.getId());
+        mAddEditTaskPresenter = givenEditTaskPresenter(testSong.getId());
 
         // When the presenter is asked to populate an existing task
         mAddEditTaskPresenter.populateTask();
 
         // Then the task repository is queried and the view updated
-        verify(mTasksRepository).getTask(eq(testTask.getId()), mGetTaskCallbackCaptor.capture());
+        verify(mTasksRepository).getTask(eq(testSong.getId()), mGetTaskCallbackCaptor.capture());
 
         // Simulate callback
-        mGetTaskCallbackCaptor.getValue().onTaskLoaded(testTask);
+        mGetTaskCallbackCaptor.getValue().onTaskLoaded(testSong);
 
-        verify(mAddEditTaskView).setTitle(testTask.getTitle());
-        verify(mAddEditTaskView).setDescription(testTask.getDescription());
+        verify(mAddEditTaskView).setTitle(testSong.getTitle());
+        verify(mAddEditTaskView).setDescription(testSong.getDescription());
     }
 
     private AddEditTaskPresenter givenEditTaskPresenter(String taskId) {

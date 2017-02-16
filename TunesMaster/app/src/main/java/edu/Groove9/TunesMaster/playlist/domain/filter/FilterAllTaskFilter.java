@@ -16,17 +16,17 @@
 
 package edu.Groove9.TunesMaster.playlist.domain.filter;
 
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Returns all the tasks from a list of {@link Task}s.
+ * Returns all the tasks from a list of {@link Song}s.
  */
 class FilterAllTaskFilter implements TaskFilter {
     @Override
-    public List<Task> filter(List<Task> tasks) {
-        return new ArrayList<>(tasks);
+    public List<Song> filter(List<Song> songs) {
+        return new ArrayList<>(songs);
     }
 }

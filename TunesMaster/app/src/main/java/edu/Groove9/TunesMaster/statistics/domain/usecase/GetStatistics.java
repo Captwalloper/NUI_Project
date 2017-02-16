@@ -3,7 +3,7 @@ package edu.Groove9.TunesMaster.statistics.domain.usecase;
 import android.support.annotation.NonNull;
 
 import edu.Groove9.TunesMaster.UseCase;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 import edu.Groove9.TunesMaster.statistics.domain.model.Statistics;
@@ -13,7 +13,7 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Calculate statistics of active and completed Tasks {@link Task} in the {@link TasksRepository}.
+ * Calculate statistics of active and completed Tasks {@link Song} in the {@link TasksRepository}.
  */
 public class GetStatistics extends UseCase<GetStatistics.RequestValues, GetStatistics.ResponseValue> {
 
@@ -27,14 +27,14 @@ public class GetStatistics extends UseCase<GetStatistics.RequestValues, GetStati
     protected void executeUseCase(RequestValues requestValues) {
         mTasksRepository.getTasks(new TasksDataSource.LoadTasksCallback() {
             @Override
-            public void onTasksLoaded(List<Task> tasks) {
+            public void onTasksLoaded(List<Song> songs) {
 
                 int activeTasks = 0;
                 int completedTasks = 0;
 
-                // We calculate number of active and completed tasks
-                for (Task task : tasks) {
-                    if (task.isCompleted()) {
+                // We calculate number of active and completed songs
+                for (Song song : songs) {
+                    if (song.isCompleted()) {
                         completedTasks += 1;
                     } else {
                         activeTasks += 1;

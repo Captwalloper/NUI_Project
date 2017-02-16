@@ -18,7 +18,7 @@ package edu.Groove9.TunesMaster.data.source;
 
 import android.support.annotation.NonNull;
 
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 
 import java.util.List;
 
@@ -34,14 +34,14 @@ public interface TasksDataSource {
 
     interface LoadTasksCallback {
 
-        void onTasksLoaded(List<Task> tasks);
+        void onTasksLoaded(List<Song> songs);
 
         void onDataNotAvailable();
     }
 
     interface GetTaskCallback {
 
-        void onTaskLoaded(Task task);
+        void onTaskLoaded(Song song);
 
         void onDataNotAvailable();
     }
@@ -50,13 +50,13 @@ public interface TasksDataSource {
 
     void getTask(@NonNull String taskId, @NonNull GetTaskCallback callback);
 
-    void saveTask(@NonNull Task task);
+    void saveTask(@NonNull Song song);
 
-    void completeTask(@NonNull Task task);
+    void completeTask(@NonNull Song song);
 
     void completeTask(@NonNull String taskId);
 
-    void activateTask(@NonNull Task task);
+    void activateTask(@NonNull Song song);
 
     void activateTask(@NonNull String taskId);
 

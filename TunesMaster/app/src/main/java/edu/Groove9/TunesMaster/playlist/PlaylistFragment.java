@@ -41,7 +41,7 @@ import android.widget.TextView;
 
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.taskdetail.TaskDetailActivity;
 
 import java.util.ArrayList;
@@ -50,7 +50,7 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Display a grid of {@link Task}s. User can choose to view all, active or completed tasks.
+ * Display a grid of {@link Song}s. User can choose to view all, active or completed tasks.
  */
 public class PlaylistFragment extends Fragment implements PlaylistContract.View {
 
@@ -58,17 +58,37 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
 
     private TasksAdapter mListAdapter;
 
-    private View mNoTasksView;
+    private View mNoSongsView;
 
-    private ImageView mNoTaskIcon;
+    private ImageView mNoSongIcon;
 
-    private TextView mNoTaskMainView;
+    private TextView mNoSongMainView;
 
-    private TextView mNoTaskAddView;
+    private TextView mNoSongAddView;
 
-    private LinearLayout mTasksView;
+    private LinearLayout mSongsView;
 
     private TextView mFilteringLabelView;
+
+    /**
+     * Listener for clicks on tasks in the ListView.
+     */
+    private TaskItemListener mItemListener = new TaskItemListener() {
+        @Override
+        public void onTaskClick(Song clickedSong) {
+            mPresenter.openTaskDetails(clickedSong);
+        }
+
+        @Override
+        public void onCompleteTaskClick(Song completedSong) {
+            mPresenter.completeTask(completedSong);
+        }
+
+        @Override
+        public void onActivateTaskClick(Song activatedSong) {
+            mPresenter.activateTask(activatedSong);
+        }
+    };
 
     public PlaylistFragment() {
         // Requires empty public constructor
@@ -81,7 +101,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListAdapter = new TasksAdapter(new ArrayList<Task>(0), mItemListener);
+        mListAdapter = new TasksAdapter(new ArrayList<Song>(0), mItemListener);
     }
 
     @Override
@@ -110,14 +130,14 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
         ListView listView = (ListView) root.findViewById(R.id.tasks_list);
         listView.setAdapter(mListAdapter);
         mFilteringLabelView = (TextView) root.findViewById(R.id.filteringLabel);
-        mTasksView = (LinearLayout) root.findViewById(R.id.tasksLL);
+        mSongsView = (LinearLayout) root.findViewById(R.id.tasksLL);
 
         // Set up  no tasks view
-        mNoTasksView = root.findViewById(R.id.noTasks);
-        mNoTaskIcon = (ImageView) root.findViewById(R.id.noTasksIcon);
-        mNoTaskMainView = (TextView) root.findViewById(R.id.noTasksMain);
-        mNoTaskAddView = (TextView) root.findViewById(R.id.noTasksAdd);
-        mNoTaskAddView.setOnClickListener(new View.OnClickListener() {
+        mNoSongsView = root.findViewById(R.id.noTasks);
+        mNoSongIcon = (ImageView) root.findViewById(R.id.noTasksIcon);
+        mNoSongMainView = (TextView) root.findViewById(R.id.noTasksMain);
+        mNoSongAddView = (TextView) root.findViewById(R.id.noTasksAdd);
+        mNoSongAddView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showAddTask();
@@ -206,25 +226,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
         popup.show();
     }
 
-    /**
-     * Listener for clicks on tasks in the ListView.
-     */
-    TaskItemListener mItemListener = new TaskItemListener() {
-        @Override
-        public void onTaskClick(Task clickedTask) {
-            mPresenter.openTaskDetails(clickedTask);
-        }
 
-        @Override
-        public void onCompleteTaskClick(Task completedTask) {
-            mPresenter.completeTask(completedTask);
-        }
-
-        @Override
-        public void onActivateTaskClick(Task activatedTask) {
-            mPresenter.activateTask(activatedTask);
-        }
-    };
 
     @Override
     public void setLoadingIndicator(final boolean active) {
@@ -245,11 +247,11 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
     }
 
     @Override
-    public void showTasks(List<Task> tasks) {
-        mListAdapter.replaceData(tasks);
+    public void showTasks(List<Song> songs) {
+        mListAdapter.replaceData(songs);
 
-        mTasksView.setVisibility(View.VISIBLE);
-        mNoTasksView.setVisibility(View.GONE);
+        mSongsView.setVisibility(View.VISIBLE);
+        mNoSongsView.setVisibility(View.GONE);
     }
 
     @Override
@@ -285,12 +287,12 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
     }
 
     private void showNoTasksViews(String mainText, int iconRes, boolean showAddView) {
-        mTasksView.setVisibility(View.GONE);
-        mNoTasksView.setVisibility(View.VISIBLE);
+        mSongsView.setVisibility(View.GONE);
+        mNoSongsView.setVisibility(View.VISIBLE);
 
-        mNoTaskMainView.setText(mainText);
-        mNoTaskIcon.setImageDrawable(getResources().getDrawable(iconRes));
-        mNoTaskAddView.setVisibility(showAddView ? View.VISIBLE : View.GONE);
+        mNoSongMainView.setText(mainText);
+        mNoSongIcon.setImageDrawable(getResources().getDrawable(iconRes));
+        mNoSongAddView.setVisibility(showAddView ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -354,31 +356,31 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
 
     private static class TasksAdapter extends BaseAdapter {
 
-        private List<Task> mTasks;
+        private List<Song> mSongs;
         private TaskItemListener mItemListener;
 
-        public TasksAdapter(List<Task> tasks, TaskItemListener itemListener) {
-            setList(tasks);
+        public TasksAdapter(List<Song> songs, TaskItemListener itemListener) {
+            setList(songs);
             mItemListener = itemListener;
         }
 
-        public void replaceData(List<Task> tasks) {
-            setList(tasks);
+        public void replaceData(List<Song> songs) {
+            setList(songs);
             notifyDataSetChanged();
         }
 
-        private void setList(List<Task> tasks) {
-            mTasks = checkNotNull(tasks);
+        private void setList(List<Song> songs) {
+            mSongs = checkNotNull(songs);
         }
 
         @Override
         public int getCount() {
-            return mTasks.size();
+            return mSongs.size();
         }
 
         @Override
-        public Task getItem(int i) {
-            return mTasks.get(i);
+        public Song getItem(int i) {
+            return mSongs.get(i);
         }
 
         @Override
@@ -394,16 +396,16 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
                 rowView = inflater.inflate(R.layout.task_item, viewGroup, false);
             }
 
-            final Task task = getItem(i);
+            final Song song = getItem(i);
 
             TextView titleTV = (TextView) rowView.findViewById(R.id.title);
-            titleTV.setText(task.getTitleForList());
+            titleTV.setText(song.getTitleForList());
 
             CheckBox completeCB = (CheckBox) rowView.findViewById(R.id.complete);
 
-            // Active/completed task UI
-            completeCB.setChecked(task.isCompleted());
-            if (task.isCompleted()) {
+            // Active/completed song UI
+            completeCB.setChecked(song.isCompleted());
+            if (song.isCompleted()) {
                 rowView.setBackgroundDrawable(viewGroup.getContext()
                         .getResources().getDrawable(R.drawable.list_completed_touch_feedback));
             } else {
@@ -414,10 +416,10 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
             completeCB.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (!task.isCompleted()) {
-                        mItemListener.onCompleteTaskClick(task);
+                    if (!song.isCompleted()) {
+                        mItemListener.onCompleteTaskClick(song);
                     } else {
-                        mItemListener.onActivateTaskClick(task);
+                        mItemListener.onActivateTaskClick(song);
                     }
                 }
             });
@@ -425,7 +427,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mItemListener.onTaskClick(task);
+                    mItemListener.onTaskClick(song);
                 }
             });
 
@@ -435,11 +437,11 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
 
     public interface TaskItemListener {
 
-        void onTaskClick(Task clickedTask);
+        void onTaskClick(Song clickedSong);
 
-        void onCompleteTaskClick(Task completedTask);
+        void onCompleteTaskClick(Song completedSong);
 
-        void onActivateTaskClick(Task activatedTask);
+        void onActivateTaskClick(Song activatedSong);
     }
 
 }

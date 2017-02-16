@@ -21,7 +21,7 @@ import edu.Groove9.TunesMaster.UseCaseHandler;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource.LoadTasksCallback;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 import edu.Groove9.TunesMaster.playlist.domain.filter.FilterFactory;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.ActivateTask;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.ClearCompleteTasks;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.CompleteTask;
@@ -50,7 +50,7 @@ import static org.mockito.Mockito.when;
  */
 public class PlaylistPresenterTest {
 
-    private static List<Task> TASKS;
+    private static List<Song> TASKS;
 
     @Mock
     private TasksRepository mTasksRepository;
@@ -80,8 +80,8 @@ public class PlaylistPresenterTest {
         when(mTasksView.isActive()).thenReturn(true);
 
         // We start the tasks to 3, with one active and two completed
-        TASKS = Lists.newArrayList(new Task("Title1", "Description1"),
-                new Task("Title2", "Description2", true), new Task("Title3", "Description3", true));
+        TASKS = Lists.newArrayList(new Song("Title1", "Description1"),
+                new Song("Title2", "Description2", true), new Song("Title3", "Description3", true));
     }
 
     private PlaylistPresenter givenTasksPresenter() {
@@ -164,10 +164,10 @@ public class PlaylistPresenterTest {
     @Test
     public void clickOnTask_ShowsDetailUi() {
         // Given a stubbed active task
-        Task requestedTask = new Task("Details Requested", "For this task");
+        Song requestedSong = new Song("Details Requested", "For this task");
 
         // When open task details is requested
-        mPlaylistPresenter.openTaskDetails(requestedTask);
+        mPlaylistPresenter.openTaskDetails(requestedSong);
 
         // Then task detail UI is shown
         verify(mTasksView).showTaskDetailsUi(any(String.class));
@@ -175,28 +175,28 @@ public class PlaylistPresenterTest {
 
     @Test
     public void completeTask_ShowsTaskMarkedComplete() {
-        // Given a stubbed task
-        Task task = new Task("Details Requested", "For this task");
+        // Given a stubbed song
+        Song song = new Song("Details Requested", "For this song");
 
-        // When task is marked as complete
-        mPlaylistPresenter.completeTask(task);
+        // When song is marked as complete
+        mPlaylistPresenter.completeTask(song);
 
-        // Then repository is called and task marked complete UI is shown
-        verify(mTasksRepository).completeTask(eq(task.getId()));
+        // Then repository is called and song marked complete UI is shown
+        verify(mTasksRepository).completeTask(eq(song.getId()));
         verify(mTasksView).showTaskMarkedComplete();
     }
 
     @Test
     public void activateTask_ShowsTaskMarkedActive() {
-        // Given a stubbed completed task
-        Task task = new Task("Details Requested", "For this task", true);
+        // Given a stubbed completed song
+        Song song = new Song("Details Requested", "For this song", true);
         mPlaylistPresenter.loadTasks(true);
 
-        // When task is marked as activated
-        mPlaylistPresenter.activateTask(task);
+        // When song is marked as activated
+        mPlaylistPresenter.activateTask(song);
 
-        // Then repository is called and task marked active UI is shown
-        verify(mTasksRepository).activateTask(eq(task.getId()));
+        // Then repository is called and song marked active UI is shown
+        verify(mTasksRepository).activateTask(eq(song.getId()));
         verify(mTasksView).showTaskMarkedActive();
     }
 

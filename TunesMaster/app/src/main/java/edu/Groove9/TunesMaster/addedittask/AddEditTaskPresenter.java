@@ -25,7 +25,7 @@ import edu.Groove9.TunesMaster.UseCase;
 import edu.Groove9.TunesMaster.UseCaseHandler;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.GetTask;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.SaveTask;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 
 /**
  * Listens to user actions from the UI ({@link AddEditTaskFragment}), retrieves the data and
@@ -99,11 +99,11 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
                 });
     }
 
-    private void showTask(Task task) {
+    private void showTask(Song song) {
         // The view may not be able to handle UI updates anymore
         if (mAddTaskView.isActive()) {
-            mAddTaskView.setTitle(task.getTitle());
-            mAddTaskView.setDescription(task.getDescription());
+            mAddTaskView.setTitle(song.getTitle());
+            mAddTaskView.setDescription(song.getDescription());
         }
     }
 
@@ -123,11 +123,11 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     }
 
     private void createTask(String title, String description) {
-        Task newTask = new Task(title, description);
-        if (newTask.isEmpty()) {
+        Song newSong = new Song(title, description);
+        if (newSong.isEmpty()) {
             mAddTaskView.showEmptyTaskError();
         } else {
-            mUseCaseHandler.execute(mSaveTask, new SaveTask.RequestValues(newTask),
+            mUseCaseHandler.execute(mSaveTask, new SaveTask.RequestValues(newSong),
                     new UseCase.UseCaseCallback<SaveTask.ResponseValue>() {
                         @Override
                         public void onSuccess(SaveTask.ResponseValue response) {
@@ -146,8 +146,8 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
         if (mTaskId == null) {
             throw new RuntimeException("updateTask() was called but task is new.");
         }
-        Task newTask = new Task(title, description, mTaskId);
-        mUseCaseHandler.execute(mSaveTask, new SaveTask.RequestValues(newTask),
+        Song newSong = new Song(title, description, mTaskId);
+        mUseCaseHandler.execute(mSaveTask, new SaveTask.RequestValues(newSong),
                 new UseCase.UseCaseCallback<SaveTask.ResponseValue>() {
                     @Override
                     public void onSuccess(SaveTask.ResponseValue response) {

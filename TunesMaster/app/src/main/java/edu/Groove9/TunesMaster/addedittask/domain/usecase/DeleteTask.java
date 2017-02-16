@@ -19,13 +19,13 @@ package edu.Groove9.TunesMaster.addedittask.domain.usecase;
 import android.support.annotation.NonNull;
 
 import edu.Groove9.TunesMaster.UseCase;
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Deletes a {@link Task} from the {@link TasksRepository}.
+ * Deletes a {@link Song} from the {@link TasksRepository}.
  */
 public class DeleteTask extends UseCase<DeleteTask.RequestValues, DeleteTask.ResponseValue> {
 

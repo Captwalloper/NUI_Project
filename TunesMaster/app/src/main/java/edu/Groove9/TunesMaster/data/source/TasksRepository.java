@@ -21,7 +21,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -47,13 +47,18 @@ public class TasksRepository implements TasksDataSource {
     /**
      * This variable has package local visibility so it can be accessed from tests.
      */
-    Map<String, Task> mCachedTasks;
+    Map<String, Song> mCachedTasks;
 
     /**
      * Marks the cache as invalid, to force an update the next time data is requested. This variable
      * has package local visibility so it can be accessed from tests.
      */
     boolean mCacheIsDirty = false;
+
+    /**
+     * Enables/Disables use of remote repository
+     */
+    private static final boolean mUseRemoteRepository = false;
 
     // Prevent direct instantiation.
     private TasksRepository(@NonNull TasksDataSource tasksRemoteDataSource,
@@ -102,15 +107,15 @@ public class TasksRepository implements TasksDataSource {
             return;
         }
 
-        if (mCacheIsDirty) {
+        if (mCacheIsDirty && mUseRemoteRepository) {
             // If the cache is dirty we need to fetch new data from the network.
             getTasksFromRemoteDataSource(callback);
         } else {
             // Query the local storage if available. If not, query the network.
             mTasksLocalDataSource.getTasks(new LoadTasksCallback() {
                 @Override
-                public void onTasksLoaded(List<Task> tasks) {
-                    refreshCache(tasks);
+                public void onTasksLoaded(List<Song> songs) {
+                    refreshCache(songs);
                     callback.onTasksLoaded(new ArrayList<>(mCachedTasks.values()));
                 }
 
@@ -123,31 +128,31 @@ public class TasksRepository implements TasksDataSource {
     }
 
     @Override
-    public void saveTask(@NonNull Task task) {
-        checkNotNull(task);
-        mTasksRemoteDataSource.saveTask(task);
-        mTasksLocalDataSource.saveTask(task);
+    public void saveTask(@NonNull Song song) {
+        checkNotNull(song);
+        mTasksRemoteDataSource.saveTask(song);
+        mTasksLocalDataSource.saveTask(song);
 
         // Do in memory cache update to keep the app UI up to date
         if (mCachedTasks == null) {
             mCachedTasks = new LinkedHashMap<>();
         }
-        mCachedTasks.put(task.getId(), task);
+        mCachedTasks.put(song.getId(), song);
     }
 
     @Override
-    public void completeTask(@NonNull Task task) {
-        checkNotNull(task);
-        mTasksRemoteDataSource.completeTask(task);
-        mTasksLocalDataSource.completeTask(task);
+    public void completeTask(@NonNull Song song) {
+        checkNotNull(song);
+        mTasksRemoteDataSource.completeTask(song);
+        mTasksLocalDataSource.completeTask(song);
 
-        Task completedTask = new Task(task.getTitle(), task.getDescription(), task.getId(), true);
+        Song completedSong = new Song(song.getTitle(), song.getDescription(), song.getId(), true);
 
         // Do in memory cache update to keep the app UI up to date
         if (mCachedTasks == null) {
             mCachedTasks = new LinkedHashMap<>();
         }
-        mCachedTasks.put(task.getId(), completedTask);
+        mCachedTasks.put(song.getId(), completedSong);
     }
 
     @Override
@@ -157,18 +162,18 @@ public class TasksRepository implements TasksDataSource {
     }
 
     @Override
-    public void activateTask(@NonNull Task task) {
-        checkNotNull(task);
-        mTasksRemoteDataSource.activateTask(task);
-        mTasksLocalDataSource.activateTask(task);
+    public void activateTask(@NonNull Song song) {
+        checkNotNull(song);
+        mTasksRemoteDataSource.activateTask(song);
+        mTasksLocalDataSource.activateTask(song);
 
-        Task activeTask = new Task(task.getTitle(), task.getDescription(), task.getId());
+        Song activeSong = new Song(song.getTitle(), song.getDescription(), song.getId());
 
         // Do in memory cache update to keep the app UI up to date
         if (mCachedTasks == null) {
             mCachedTasks = new LinkedHashMap<>();
         }
-        mCachedTasks.put(task.getId(), activeTask);
+        mCachedTasks.put(song.getId(), activeSong);
     }
 
     @Override
@@ -186,9 +191,9 @@ public class TasksRepository implements TasksDataSource {
         if (mCachedTasks == null) {
             mCachedTasks = new LinkedHashMap<>();
         }
-        Iterator<Map.Entry<String, Task>> it = mCachedTasks.entrySet().iterator();
+        Iterator<Map.Entry<String, Song>> it = mCachedTasks.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<String, Task> entry = it.next();
+            Map.Entry<String, Song> entry = it.next();
             if (entry.getValue().isCompleted()) {
                 it.remove();
             }
@@ -207,11 +212,11 @@ public class TasksRepository implements TasksDataSource {
         checkNotNull(taskId);
         checkNotNull(callback);
 
-        Task cachedTask = getTaskWithId(taskId);
+        Song cachedSong = getTaskWithId(taskId);
 
         // Respond immediately with cache if available
-        if (cachedTask != null) {
-            callback.onTaskLoaded(cachedTask);
+        if (cachedSong != null) {
+            callback.onTaskLoaded(cachedSong);
             return;
         }
 
@@ -220,16 +225,16 @@ public class TasksRepository implements TasksDataSource {
         // Is the task in the local data source? If not, query the network.
         mTasksLocalDataSource.getTask(taskId, new GetTaskCallback() {
             @Override
-            public void onTaskLoaded(Task task) {
-                callback.onTaskLoaded(task);
+            public void onTaskLoaded(Song song) {
+                callback.onTaskLoaded(song);
             }
 
             @Override
             public void onDataNotAvailable() {
                 mTasksRemoteDataSource.getTask(taskId, new GetTaskCallback() {
                     @Override
-                    public void onTaskLoaded(Task task) {
-                        callback.onTaskLoaded(task);
+                    public void onTaskLoaded(Song song) {
+                        callback.onTaskLoaded(song);
                     }
 
                     @Override
@@ -268,9 +273,9 @@ public class TasksRepository implements TasksDataSource {
     private void getTasksFromRemoteDataSource(@NonNull final LoadTasksCallback callback) {
         mTasksRemoteDataSource.getTasks(new LoadTasksCallback() {
             @Override
-            public void onTasksLoaded(List<Task> tasks) {
-                refreshCache(tasks);
-                refreshLocalDataSource(tasks);
+            public void onTasksLoaded(List<Song> songs) {
+                refreshCache(songs);
+                refreshLocalDataSource(songs);
                 callback.onTasksLoaded(new ArrayList<>(mCachedTasks.values()));
             }
 
@@ -281,26 +286,26 @@ public class TasksRepository implements TasksDataSource {
         });
     }
 
-    private void refreshCache(List<Task> tasks) {
+    private void refreshCache(List<Song> songs) {
         if (mCachedTasks == null) {
             mCachedTasks = new LinkedHashMap<>();
         }
         mCachedTasks.clear();
-        for (Task task : tasks) {
-            mCachedTasks.put(task.getId(), task);
+        for (Song song : songs) {
+            mCachedTasks.put(song.getId(), song);
         }
         mCacheIsDirty = false;
     }
 
-    private void refreshLocalDataSource(List<Task> tasks) {
+    private void refreshLocalDataSource(List<Song> songs) {
         mTasksLocalDataSource.deleteAllTasks();
-        for (Task task : tasks) {
-            mTasksLocalDataSource.saveTask(task);
+        for (Song song : songs) {
+            mTasksLocalDataSource.saveTask(song);
         }
     }
 
     @Nullable
-    private Task getTaskWithId(@NonNull String id) {
+    private Song getTaskWithId(@NonNull String id) {
         checkNotNull(id);
         if (mCachedTasks == null || mCachedTasks.isEmpty()) {
             return null;

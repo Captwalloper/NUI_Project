@@ -33,7 +33,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.data.FakeTasksRemoteDataSource;
 
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 import edu.Groove9.TunesMaster.taskdetail.TaskDetailActivity;
 
@@ -73,8 +73,8 @@ public class StatisticsScreenTest {
     public void intentWithStubbedTaskId() {
         // Given some tasks
         TasksRepository.destroyInstance();
-        FakeTasksRemoteDataSource.getInstance().addTasks(new Task("Title1", "", false));
-        FakeTasksRemoteDataSource.getInstance().addTasks(new Task("Title2", "", true));
+        FakeTasksRemoteDataSource.getInstance().addTasks(new Song("Title1", "", false));
+        FakeTasksRemoteDataSource.getInstance().addTasks(new Song("Title2", "", true));
 
         // Lazily start the Activity from the ActivityTestRule
         Intent startIntent = new Intent();

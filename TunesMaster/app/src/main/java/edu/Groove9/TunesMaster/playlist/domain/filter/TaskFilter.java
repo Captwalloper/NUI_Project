@@ -16,10 +16,10 @@
 
 package edu.Groove9.TunesMaster.playlist.domain.filter;
 
-import edu.Groove9.TunesMaster.playlist.domain.model.Task;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 
 import java.util.List;
 
 public interface TaskFilter {
-    List<Task> filter(List<Task> tasks);
+    List<Song> filter(List<Song> songs);
 }

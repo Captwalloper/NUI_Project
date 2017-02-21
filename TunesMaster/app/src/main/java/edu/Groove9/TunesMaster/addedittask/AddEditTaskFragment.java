@@ -16,22 +16,27 @@
 
 package edu.Groove9.TunesMaster.addedittask;
 
+import android.Manifest;
 import android.app.Activity;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.io.File;
+
 import edu.Groove9.TunesMaster.R;
-import ir.sohreco.androidfilechooser.ExternalStorageNotAvailableException;
 import ir.sohreco.androidfilechooser.FileChooserDialog;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -85,22 +90,29 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
             }
         });
 
+//        ensureReadExternalStoragePermission();
         mSource.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FileChooserDialog.Builder builder = new FileChooserDialog.Builder(FileChooserDialog.ChooserType.FILE_CHOOSER, new FileChooserDialog.ChooserListener() {
-                    @Override
-                    public void onSelect(String path) {
-                        setSource(Uri.parse(path));
-                    }
-                });
-                try {
-                    builder.build().show(getActivity().getSupportFragmentManager(), null); // launch file picker
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+//                FileChooserDialog.Builder builder = new FileChooserDialog.Builder(FileChooserDialog.ChooserType.FILE_CHOOSER, new FileChooserDialog.ChooserListener() {
+//                    @Override
+//                    public void onSelect(String path) {
+//                        setSource(Uri.parse(path));
+//                    }
+//                });
+//                try {
+//                    builder.build().show(getActivity().getSupportFragmentManager(), null); // launch file picker
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
             }
         });
+    }
+
+    private void ensureReadExternalStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+        }
     }
 
     @Nullable

@@ -27,6 +27,7 @@ import edu.Groove9.TunesMaster.addedittask.domain.usecase.SaveTask;
 import edu.Groove9.TunesMaster.data.FakeTasksRemoteDataSource;
 import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
+import edu.Groove9.TunesMaster.data.source.local.PrototypeSongsLocalDataSource;
 import edu.Groove9.TunesMaster.data.source.local.TasksLocalDataSource;
 import edu.Groove9.TunesMaster.statistics.domain.usecase.GetStatistics;
 import edu.Groove9.TunesMaster.playlist.domain.filter.FilterFactory;
@@ -45,7 +46,7 @@ public class Injection {
     public static TasksRepository provideTasksRepository(@NonNull Context context) {
         checkNotNull(context);
         return TasksRepository.getInstance(FakeTasksRemoteDataSource.getInstance(),
-                TasksLocalDataSource.getInstance(context));
+                PrototypeSongsLocalDataSource.getInstance(context));
     }
 
     public static GetTasks provideGetTasks(@NonNull Context context) {

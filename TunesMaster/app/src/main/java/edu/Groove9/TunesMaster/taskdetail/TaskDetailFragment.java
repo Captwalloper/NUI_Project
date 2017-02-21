@@ -84,7 +84,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
         mDetailDescription = (TextView) root.findViewById(R.id.task_detail_description);
         mDetailCompleteStatus = (CheckBox) root.findViewById(R.id.task_detail_complete);
 
-        // Set up floating action button
+        //Set up floating action button
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task);
 

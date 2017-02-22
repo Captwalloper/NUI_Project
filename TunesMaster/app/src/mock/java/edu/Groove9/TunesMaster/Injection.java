@@ -29,6 +29,9 @@ import edu.Groove9.TunesMaster.data.source.TasksDataSource;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
 import edu.Groove9.TunesMaster.data.source.local.PrototypeSongsLocalDataSource;
 import edu.Groove9.TunesMaster.data.source.local.TasksLocalDataSource;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.PlayPauseSong;
+import edu.Groove9.TunesMaster.songplayer.player.AudioPlayerContract;
+import edu.Groove9.TunesMaster.songplayer.player.PrototypeAudioPlayer;
 import edu.Groove9.TunesMaster.statistics.domain.usecase.GetStatistics;
 import edu.Groove9.TunesMaster.playlist.domain.filter.FilterFactory;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.ActivateTask;
@@ -47,6 +50,12 @@ public class Injection {
         checkNotNull(context);
         return TasksRepository.getInstance(FakeTasksRemoteDataSource.getInstance(),
                 PrototypeSongsLocalDataSource.getInstance(context));
+    }
+
+
+    public static AudioPlayerContract provideAudioPlayer(@NonNull Context context) {
+        checkNotNull(context);
+        return PrototypeAudioPlayer.getInstance(context);
     }
 
     public static GetTasks provideGetTasks(@NonNull Context context) {
@@ -83,5 +92,9 @@ public class Injection {
 
     public static GetStatistics provideGetStatistics(@NonNull Context context) {
         return new GetStatistics(Injection.provideTasksRepository(context));
+    }
+
+    public static PlayPauseSong providePlayPauseSong(@NonNull Context context) {
+        return new PlayPauseSong(Injection.provideAudioPlayer(context));
     }
 }

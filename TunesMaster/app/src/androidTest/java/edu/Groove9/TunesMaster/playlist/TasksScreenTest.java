@@ -434,7 +434,7 @@ public class TasksScreenTest {
     }
 
     @Test
-    public void orientationChange_DuringEdit() throws IllegalStateException {
+    public void jorientationChange_DuringEdit() throws IllegalStateException {
         // Add a completed task
         createTask(TITLE1, DESCRIPTION);
 

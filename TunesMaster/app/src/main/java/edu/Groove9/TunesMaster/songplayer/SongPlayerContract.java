@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package edu.Groove9.TunesMaster.taskdetail;
+package edu.Groove9.TunesMaster.songplayer;
 
 import edu.Groove9.TunesMaster.BasePresenter;
 import edu.Groove9.TunesMaster.BaseView;
@@ -22,13 +22,12 @@ import edu.Groove9.TunesMaster.BaseView;
 /**
  * This specifies the contract between the view and the presenter.
  */
-public interface TaskDetailContract {
+public interface SongPlayerContract {
 
     interface View extends BaseView<Presenter> {
-
         void setLoadingIndicator(boolean active);
 
-        void showMissingTask();
+        void showMissingSong();
 
         void hideTitle();
 
@@ -38,27 +37,25 @@ public interface TaskDetailContract {
 
         void showDescription(String description);
 
-        void showCompletionStatus(boolean complete);
+        void showEditSong(String taskId);
 
-        void showEditTask(String taskId);
+        void showSongDeleted();
 
-        void showTaskDeleted();
-
-        void showTaskMarkedComplete();
-
-        void showTaskMarkedActive();
-
-        boolean isActive();
     }
 
     interface Presenter extends BasePresenter {
+        void editSong();
 
-        void editTask();
+        void deleteSong();
 
-        void deleteTask();
 
-        void completeTask();
+        //
+        void shuffleSong();
 
-        void activateTask();
+        void lastSong();
+
+        void playPauseSong();
+
+        void nextSong();
     }
 }

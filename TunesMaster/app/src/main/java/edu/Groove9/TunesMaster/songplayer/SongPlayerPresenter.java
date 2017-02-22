@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package edu.Groove9.TunesMaster.taskdetail;
+package edu.Groove9.TunesMaster.songplayer;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,40 +26,41 @@ import edu.Groove9.TunesMaster.addedittask.domain.usecase.GetTask;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.ActivateTask;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.CompleteTask;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.PlayPauseSong;
+
 import com.google.common.base.Strings;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Listens to user actions from the UI ({@link TaskDetailFragment}), retrieves the data and updates
+ * Listens to user actions from the UI ({@link SongPlayerFragment}), retrieves the data and updates
  * the UI as required.
  */
-public class TaskDetailPresenter implements TaskDetailContract.Presenter {
+public class SongPlayerPresenter implements SongPlayerContract.Presenter {
 
-    private final TaskDetailContract.View mTaskDetailView;
+    private final SongPlayerContract.View mTaskDetailView;
     private final UseCaseHandler mUseCaseHandler;
     private final GetTask mGetTask;
-    private final CompleteTask mCompleteTask;
-    private final ActivateTask mActivateTask;
     private final DeleteTask mDeleteTask;
+    private final PlayPauseSong mPlayPauseSong;
 
     @Nullable
-    private String mTaskId;
+    private Song mSong;
 
-    public TaskDetailPresenter(@NonNull UseCaseHandler useCaseHandler,
-            @Nullable String taskId,
-            @NonNull TaskDetailContract.View taskDetailView,
-            @NonNull GetTask getTask,
-            @NonNull CompleteTask completeTask,
-            @NonNull ActivateTask activateTask,
-            @NonNull DeleteTask deleteTask) {
-        mTaskId = taskId;
+    public SongPlayerPresenter(@NonNull UseCaseHandler useCaseHandler,
+                               @Nullable Song song,
+                               @NonNull SongPlayerContract.View taskDetailView,
+                               @NonNull GetTask getTask,
+                               @NonNull CompleteTask completeTask,
+                               @NonNull ActivateTask activateTask,
+                               @NonNull DeleteTask deleteTask,
+                               @NonNull PlayPauseSong playPauseSong) {
+        mSong = song;
         mUseCaseHandler = checkNotNull(useCaseHandler, "useCaseHandler cannot be null!");
         mTaskDetailView = checkNotNull(taskDetailView, "taskDetailView cannot be null!");
         mGetTask = checkNotNull(getTask, "getTask cannot be null!");
-        mCompleteTask = checkNotNull(completeTask, "completeTask cannot be null!");
-        mActivateTask = checkNotNull(activateTask, "activateTask cannot be null!");
-        mDeleteTask = checkNotNull(deleteTask, "deleteTask cannot be null!");
+        mDeleteTask = checkNotNull(deleteTask, "deleteSong cannot be null!");
+        mPlayPauseSong = playPauseSong;
         mTaskDetailView.setPresenter(this);
     }
 
@@ -69,23 +70,20 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
     }
 
     private void openTask() {
-        if (Strings.isNullOrEmpty(mTaskId)) {
-            mTaskDetailView.showMissingTask();
+        if (Strings.isNullOrEmpty(mSong.getId())) {
+            mTaskDetailView.showMissingSong();
             return;
         }
 
         mTaskDetailView.setLoadingIndicator(true);
 
-        mUseCaseHandler.execute(mGetTask, new GetTask.RequestValues(mTaskId),
+        mUseCaseHandler.execute(mGetTask, new GetTask.RequestValues(mSong.getId()),
                 new UseCase.UseCaseCallback<GetTask.ResponseValue>() {
                     @Override
                     public void onSuccess(GetTask.ResponseValue response) {
                         Song song = response.getTask();
 
                         // The view may not be able to handle UI updates anymore
-                        if (!mTaskDetailView.isActive()) {
-                            return;
-                        }
                         mTaskDetailView.setLoadingIndicator(false);
                         showTask(song);
                     }
@@ -93,30 +91,27 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
                     @Override
                     public void onError() {
                         // The view may not be able to handle UI updates anymore
-                        if (!mTaskDetailView.isActive()) {
-                            return;
-                        }
-                        mTaskDetailView.showMissingTask();
+                        mTaskDetailView.showMissingSong();
                     }
                 });
     }
 
     @Override
-    public void editTask() {
-        if (Strings.isNullOrEmpty(mTaskId)) {
-            mTaskDetailView.showMissingTask();
+    public void editSong() {
+        if (Strings.isNullOrEmpty(mSong.getId())) {
+            mTaskDetailView.showMissingSong();
             return;
         }
-        mTaskDetailView.showEditTask(mTaskId);
+        mTaskDetailView.showEditSong(mSong.getId());
     }
 
     @Override
-    public void deleteTask() {
-        mUseCaseHandler.execute(mDeleteTask, new DeleteTask.RequestValues(mTaskId),
+    public void deleteSong() {
+        mUseCaseHandler.execute(mDeleteTask, new DeleteTask.RequestValues(mSong.getId()),
                 new UseCase.UseCaseCallback<DeleteTask.ResponseValue>() {
                     @Override
                     public void onSuccess(DeleteTask.ResponseValue response) {
-                        mTaskDetailView.showTaskDeleted();
+                        mTaskDetailView.showSongDeleted();
                     }
 
                     @Override
@@ -127,17 +122,22 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
     }
 
     @Override
-    public void completeTask() {
-        if (Strings.isNullOrEmpty(mTaskId)) {
-            mTaskDetailView.showMissingTask();
-            return;
-        }
+    public void shuffleSong() {
 
-        mUseCaseHandler.execute(mCompleteTask, new CompleteTask.RequestValues(mTaskId),
-                new UseCase.UseCaseCallback<CompleteTask.ResponseValue>() {
+    }
+
+    @Override
+    public void lastSong() {
+
+    }
+
+    @Override
+    public void playPauseSong() {
+        mUseCaseHandler.execute(mPlayPauseSong, new PlayPauseSong.RequestValues(mSong),
+                new UseCase.UseCaseCallback<PlayPauseSong.ResponseValue>() {
                     @Override
-                    public void onSuccess(CompleteTask.ResponseValue response) {
-                        mTaskDetailView.showTaskMarkedComplete();
+                    public void onSuccess(PlayPauseSong.ResponseValue response) {
+
                     }
 
                     @Override
@@ -148,23 +148,8 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
     }
 
     @Override
-    public void activateTask() {
-        if (Strings.isNullOrEmpty(mTaskId)) {
-            mTaskDetailView.showMissingTask();
-            return;
-        }
-        mUseCaseHandler.execute(mActivateTask, new ActivateTask.RequestValues(mTaskId),
-                new UseCase.UseCaseCallback<ActivateTask.ResponseValue>() {
-                    @Override
-                    public void onSuccess(ActivateTask.ResponseValue response) {
-                        mTaskDetailView.showTaskMarkedActive();
-                    }
+    public void nextSong() {
 
-                    @Override
-                    public void onError() {
-                        // Show error, log, etc.
-                    }
-                });
     }
 
     private void showTask(@NonNull Song song) {
@@ -182,6 +167,5 @@ public class TaskDetailPresenter implements TaskDetailContract.Presenter {
         } else {
             mTaskDetailView.showDescription(description);
         }
-        mTaskDetailView.showCompletionStatus(song.isCompleted());
     }
 }

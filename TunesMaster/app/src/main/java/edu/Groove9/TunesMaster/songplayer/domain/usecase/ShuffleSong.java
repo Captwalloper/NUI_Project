@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package edu.Groove9.TunesMaster.playlist.domain.usecase;
+package edu.Groove9.TunesMaster.songplayer.domain.usecase;
 
 import android.support.annotation.NonNull;
 
@@ -24,35 +24,24 @@ import edu.Groove9.TunesMaster.data.source.TasksRepository;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Marks a task as active (not completed yet).
+ * Deletes tasks marked as completed.
  */
-public class ActivateTask extends UseCase<ActivateTask.RequestValues, ActivateTask.ResponseValue> {
+public class ShuffleSong
+        extends UseCase<ShuffleSong.RequestValues, ShuffleSong.ResponseValue> {
 
     private final TasksRepository mTasksRepository;
 
-    public ActivateTask(@NonNull TasksRepository tasksRepository) {
+    public ShuffleSong(@NonNull TasksRepository tasksRepository) {
         mTasksRepository = checkNotNull(tasksRepository, "tasksRepository cannot be null!");
     }
 
     @Override
     protected void executeUseCase(final RequestValues values) {
-        String activeTask = values.getActivateTask();
-        mTasksRepository.activateTask(activeTask);
+        mTasksRepository.clearCompletedTasks();
         getUseCaseCallback().onSuccess(new ResponseValue());
     }
 
-    public static final class RequestValues implements UseCase.RequestValues {
+    public static class RequestValues implements UseCase.RequestValues { }
 
-        private final String mActivateTask;
-
-        public RequestValues(@NonNull String activateTask) {
-            mActivateTask = checkNotNull(activateTask, "activateSong cannot be null!");
-        }
-
-        public String getActivateTask() {
-            return mActivateTask;
-        }
-    }
-
-    public static final class ResponseValue implements UseCase.ResponseValue { }
+    public static class ResponseValue implements UseCase.ResponseValue { }
 }

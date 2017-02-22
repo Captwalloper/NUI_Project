@@ -42,7 +42,7 @@ import android.widget.TextView;
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
-import edu.Groove9.TunesMaster.taskdetail.TaskDetailActivity;
+import edu.Groove9.TunesMaster.songplayer.SongPlayerActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -320,8 +320,8 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
     public void showTaskDetailsUi(String taskId) {
         // in it's own Activity, since it makes more sense that way and it gives us the flexibility
         // to show some Intent stubbing.
-        Intent intent = new Intent(getContext(), TaskDetailActivity.class);
-        intent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, taskId);
+        Intent intent = new Intent(getContext(), SongPlayerActivity.class);
+        intent.putExtra(SongPlayerActivity.EXTRA_SONG_ID, taskId);
         startActivity(intent);
     }
 

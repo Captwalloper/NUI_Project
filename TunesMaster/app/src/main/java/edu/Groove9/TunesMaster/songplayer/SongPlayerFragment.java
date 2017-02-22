@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package edu.Groove9.TunesMaster.taskdetail;
+package edu.Groove9.TunesMaster.songplayer;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -30,6 +30,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
@@ -44,7 +45,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Main UI for the task detail screen.
  */
-public class TaskDetailFragment extends Fragment implements TaskDetailContract.View {
+public class SongPlayerFragment extends Fragment implements SongPlayerContract.View {
 
     @NonNull
     private static final String ARGUMENT_TASK_ID = "TASK_ID";
@@ -52,18 +53,16 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
     @NonNull
     private static final int REQUEST_EDIT_TASK = 1;
 
-    private TaskDetailContract.Presenter mPresenter;
+    private SongPlayerContract.Presenter mPresenter;
 
     private TextView mDetailTitle;
 
     private TextView mDetailDescription;
 
-    private CheckBox mDetailCompleteStatus;
-
-    public static TaskDetailFragment newInstance(@Nullable String taskId) {
+    public static SongPlayerFragment newInstance(@Nullable String taskId) {
         Bundle arguments = new Bundle();
         arguments.putString(ARGUMENT_TASK_ID, taskId);
-        TaskDetailFragment fragment = new TaskDetailFragment();
+        SongPlayerFragment fragment = new SongPlayerFragment();
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -78,20 +77,48 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.taskdetail_frag, container, false);
+        View root = inflater.inflate(R.layout.songplayer_frag, container, false);
         setHasOptionsMenu(true);
         mDetailTitle = (TextView) root.findViewById(R.id.task_detail_title);
         mDetailDescription = (TextView) root.findViewById(R.id.task_detail_description);
-        mDetailCompleteStatus = (CheckBox) root.findViewById(R.id.task_detail_complete);
 
         //Set up floating action button
         FloatingActionButton fab =
                 (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task);
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPresenter.editTask();
+                mPresenter.editSong();
+            }
+        });
+
+        //Set up control panel
+        Button shuffle = (Button) root.findViewById(R.id.song_player_shuffle);
+        shuffle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.shuffleSong();
+            }
+        });
+        Button last = (Button) root.findViewById(R.id.song_player_last);
+        last.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.lastSong();
+            }
+        });
+        Button playpause = (Button) root.findViewById(R.id.song_player_playpause);
+        playpause.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.playPauseSong();
+            }
+        });
+        Button next = (Button) root.findViewById(R.id.song_player_next);
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.nextSong();
             }
         });
 
@@ -99,7 +126,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
     }
 
     @Override
-    public void setPresenter(@NonNull TaskDetailContract.Presenter presenter) {
+    public void setPresenter(@NonNull SongPlayerContract.Presenter presenter) {
         mPresenter = checkNotNull(presenter);
     }
 
@@ -107,7 +134,7 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_delete:
-                mPresenter.deleteTask();
+                mPresenter.deleteSong();
                 return true;
         }
         return false;
@@ -143,43 +170,19 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
     }
 
     @Override
-    public void showCompletionStatus(final boolean complete) {
-        Preconditions.checkNotNull(mDetailCompleteStatus);
-
-        mDetailCompleteStatus.setChecked(complete);
-        mDetailCompleteStatus.setOnCheckedChangeListener(
-                new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        if (isChecked) {
-                            mPresenter.completeTask();
-                        } else {
-                            mPresenter.activateTask();
-                        }
-                    }
-                });
-    }
-
-    @Override
-    public void showEditTask(@NonNull String taskId) {
+    public void showEditSong(@NonNull String taskId) {
         Intent intent = new Intent(getContext(), AddEditTaskActivity.class);
         intent.putExtra(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID, taskId);
         startActivityForResult(intent, REQUEST_EDIT_TASK);
     }
 
     @Override
-    public void showTaskDeleted() {
+    public void showSongDeleted() {
         getActivity().finish();
     }
 
     public void showTaskMarkedComplete() {
         Snackbar.make(getView(), getString(R.string.task_marked_complete), Snackbar.LENGTH_LONG)
-                .show();
-    }
-
-    @Override
-    public void showTaskMarkedActive() {
-        Snackbar.make(getView(), getString(R.string.task_marked_active), Snackbar.LENGTH_LONG)
                 .show();
     }
 
@@ -200,14 +203,9 @@ public class TaskDetailFragment extends Fragment implements TaskDetailContract.V
     }
 
     @Override
-    public void showMissingTask() {
+    public void showMissingSong() {
         mDetailTitle.setText("");
         mDetailDescription.setText(getString(R.string.no_data));
-    }
-
-    @Override
-    public boolean isActive() {
-        return isAdded();
     }
 
 }

@@ -23,6 +23,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +38,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class PrototypeSongsLocalDataSource implements TasksDataSource {
 
+    private static final String music_folder = "music";
     private static PrototypeSongsLocalDataSource INSTANCE;
 
     private Context context;
@@ -75,7 +77,7 @@ public class PrototypeSongsLocalDataSource implements TasksDataSource {
 
         String[] assetFiles;
         try {
-            assetFiles = context.getAssets().list("");
+            assetFiles = context.getAssets().list(music_folder);
             for (String file : assetFiles) {
                 Song song = getSongFromFile(file);
                 songs.add(song);
@@ -87,7 +89,7 @@ public class PrototypeSongsLocalDataSource implements TasksDataSource {
         return songs;
     }
 
-    private Song getSongFromFile(String filename) {
+    private static Song getSongFromFile(String filename) {
         String title = filename;
         String description = "A test song";
         String id = filename;
@@ -96,7 +98,7 @@ public class PrototypeSongsLocalDataSource implements TasksDataSource {
         return new Song(title, description, id, completed, source);
     }
 
-    private Song getSongFromId(String id) {
+    public static Song getSongFromId(String id) {
         String filename = id;
         return getSongFromFile(filename);
     }

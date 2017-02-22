@@ -36,7 +36,7 @@ import edu.Groove9.TunesMaster.data.FakeTasksRemoteDataSource;
 
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.data.source.TasksRepository;
-import edu.Groove9.TunesMaster.taskdetail.TaskDetailActivity;
+import edu.Groove9.TunesMaster.songplayer.SongPlayerActivity;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -62,7 +62,7 @@ public class StatisticsScreenTest {
             new ActivityTestRule<>(StatisticsActivity.class, true, false);
 
     /**
-     * Setup your test fixture with a fake task id. The {@link TaskDetailActivity} is started with
+     * Setup your test fixture with a fake task id. The {@link SongPlayerActivity} is started with
      * a particular task id, which is then loaded from the service API.
      *
      * <p>

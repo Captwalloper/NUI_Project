@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package edu.Groove9.TunesMaster.taskdetail;
+package edu.Groove9.TunesMaster.songplayer;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -78,8 +78,8 @@ public class SongDetailScreenTest {
      * Activity under test, so you can control the Intent that is used to start the target Activity.
      */
     @Rule
-    public ActivityTestRule<TaskDetailActivity> mTaskDetailActivityTestRule =
-            new ActivityTestRule<>(TaskDetailActivity.class, true /* Initial touch mode  */,
+    public ActivityTestRule<SongPlayerActivity> mTaskDetailActivityTestRule =
+            new ActivityTestRule<>(SongPlayerActivity.class, true /* Initial touch mode  */,
                     false /* Lazily launch activity */);
 
     private void loadActiveTask() {
@@ -91,7 +91,7 @@ public class SongDetailScreenTest {
     }
 
     /**
-     * Setup your test fixture with a fake song id. The {@link TaskDetailActivity} is started with
+     * Setup your test fixture with a fake song id. The {@link SongPlayerActivity} is started with
      * a particular song id, which is then loaded from the service API.
      *
      * <p>
@@ -106,7 +106,7 @@ public class SongDetailScreenTest {
 
         // Lazily start the Activity from the ActivityTestRule this time to inject the start Intent
         Intent startIntent = new Intent();
-        startIntent.putExtra(TaskDetailActivity.EXTRA_TASK_ID, song.getId());
+        startIntent.putExtra(SongPlayerActivity.EXTRA_TASK_ID, song.getId());
         mTaskDetailActivityTestRule.launchActivity(startIntent);
     }
 

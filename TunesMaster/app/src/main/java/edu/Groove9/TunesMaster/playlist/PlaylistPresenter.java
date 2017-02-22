@@ -59,8 +59,8 @@ public class PlaylistPresenter implements PlaylistContract.Presenter {
         mUseCaseHandler = checkNotNull(useCaseHandler, "usecaseHandler cannot be null");
         mTasksView = checkNotNull(tasksView, "tasksView cannot be null!");
         mGetTasks = checkNotNull(getTasks, "getTask cannot be null!");
-        mCompleteTask = checkNotNull(completeTask, "completeTask cannot be null!");
-        mActivateTask = checkNotNull(activateTask, "activateTask cannot be null!");
+        mCompleteTask = checkNotNull(completeTask, "completeSong cannot be null!");
+        mActivateTask = checkNotNull(activateTask, "activateSong cannot be null!");
         mClearCompleteTasks = checkNotNull(clearCompleteTasks,
                 "clearCompleteTasks cannot be null!");
 

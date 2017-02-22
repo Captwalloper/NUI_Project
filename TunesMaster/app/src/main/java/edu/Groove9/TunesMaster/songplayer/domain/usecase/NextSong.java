@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package edu.Groove9.TunesMaster.playlist.domain.usecase;
+package edu.Groove9.TunesMaster.songplayer.domain.usecase;
 
 import android.support.annotation.NonNull;
 
@@ -26,11 +26,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Marks a task as active (not completed yet).
  */
-public class ActivateTask extends UseCase<ActivateTask.RequestValues, ActivateTask.ResponseValue> {
+public class NextSong extends UseCase<NextSong.RequestValues, NextSong.ResponseValue> {
 
     private final TasksRepository mTasksRepository;
 
-    public ActivateTask(@NonNull TasksRepository tasksRepository) {
+    public NextSong(@NonNull TasksRepository tasksRepository) {
         mTasksRepository = checkNotNull(tasksRepository, "tasksRepository cannot be null!");
     }
 

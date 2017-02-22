@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package edu.Groove9.TunesMaster.taskdetail;
+package edu.Groove9.TunesMaster.songplayer;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -23,20 +23,22 @@ import android.support.v7.widget.Toolbar;
 
 import edu.Groove9.TunesMaster.Injection;
 import edu.Groove9.TunesMaster.R;
+import edu.Groove9.TunesMaster.data.source.local.PrototypeSongsLocalDataSource;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.util.ActivityUtils;
 
 /**
  * Displays task details screen.
  */
-public class TaskDetailActivity extends AppCompatActivity {
+public class SongPlayerActivity extends AppCompatActivity {
 
-    public static final String EXTRA_TASK_ID = "TASK_ID";
+    public static final String EXTRA_SONG_ID = "SONG_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.taskdetail_act);
+        setContentView(R.layout.songplayer_act);
 
         // Set up the toolbar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -46,27 +48,29 @@ public class TaskDetailActivity extends AppCompatActivity {
         ab.setDisplayShowHomeEnabled(true);
 
         // Get the requested task id
-        String taskId = getIntent().getStringExtra(EXTRA_TASK_ID);
+        String songId = getIntent().getStringExtra(EXTRA_SONG_ID);
 
-        TaskDetailFragment taskDetailFragment = (TaskDetailFragment) getSupportFragmentManager()
+        SongPlayerFragment songPlayerFragment = (SongPlayerFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.contentFrame);
 
-        if (taskDetailFragment == null) {
-            taskDetailFragment = TaskDetailFragment.newInstance(taskId);
+        if (songPlayerFragment == null) {
+            songPlayerFragment = SongPlayerFragment.newInstance(songId);
 
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-                    taskDetailFragment, R.id.contentFrame);
+                    songPlayerFragment, R.id.contentFrame);
         }
 
         // Create the presenter
-        new TaskDetailPresenter(
+        Song song = PrototypeSongsLocalDataSource.getSongFromId(songId); //HACK
+        new SongPlayerPresenter(
                 Injection.provideUseCaseHandler(),
-                taskId,
-                taskDetailFragment,
+                song,
+                songPlayerFragment,
                 Injection.provideGetTask(getApplicationContext()),
                 Injection.provideCompleteTasks(getApplicationContext()),
                 Injection.provideActivateTask(getApplicationContext()),
-                Injection.provideDeleteTask(getApplicationContext()));
+                Injection.provideDeleteTask(getApplicationContext()),
+                Injection.providePlayPauseSong(getApplicationContext()));
     }
 
     @Override

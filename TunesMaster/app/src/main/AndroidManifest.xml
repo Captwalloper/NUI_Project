@@ -35,7 +35,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="edu.Groove9.TunesMaster.taskdetail.TaskDetailActivity" />
+        <activity android:name="edu.Groove9.TunesMaster.songplayer.SongPlayerActivity" />
         <activity android:name="edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity" />
         <activity android:name="edu.Groove9.TunesMaster.statistics.StatisticsActivity" />
     </application>

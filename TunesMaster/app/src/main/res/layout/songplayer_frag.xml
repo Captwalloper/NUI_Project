@@ -78,24 +78,34 @@
             android:layout_height="match_parent"
             android:text="Shuffle"
             android:layout_weight="1"/>
+
         <Button
             android:id="@+id/song_player_last"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="Last"
             android:layout_weight="1"/>
+
         <Button
             android:id="@+id/song_player_playpause"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="Play/Pause"
             android:layout_weight="1"/>
+
         <Button
             android:id="@+id/song_player_next"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="Next"
             android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/song_player_replay"
+            android:text="Replay"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
 
     </LinearLayout>
 

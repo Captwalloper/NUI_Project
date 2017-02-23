@@ -31,6 +31,7 @@ import edu.Groove9.TunesMaster.data.source.local.PrototypeSongsLocalDataSource;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.LastSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.NextSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.PlayPauseSong;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.RepeatSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.ShuffleSong;
 import edu.Groove9.TunesMaster.songplayer.player.AudioPlayerContract;
 import edu.Groove9.TunesMaster.songplayer.player.PrototypeAudioPlayer;
@@ -95,5 +96,8 @@ public class Injection {
 
     public static ShuffleSong provideShuffleSong(@NonNull Context context) {
         return new ShuffleSong(Injection.provideAudioPlayer(context));
+    }
+    public static RepeatSong provideRepeatSong(@NonNull Context context) {
+        return new RepeatSong(Injection.provideAudioPlayer(context));
     }
 }

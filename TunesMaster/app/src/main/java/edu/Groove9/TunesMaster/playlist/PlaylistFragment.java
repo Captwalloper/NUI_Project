@@ -20,7 +20,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -115,7 +114,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.tasks_frag, container, false);
+        View root = inflater.inflate(R.layout.playlist_frag, container, false);
 
         // Set up tasks view
         ListView listView = (ListView) root.findViewById(R.id.tasks_list);
@@ -136,16 +135,15 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
         });
 
         // Set up floating action button
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_task);
-
-        fab.setImageResource(R.drawable.ic_add);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.addNewTask();
-            }
-        });
+//        FloatingActionButton fab =
+//                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_task);
+//        fab.setImageResource(R.drawable.ic_add);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mPresenter.addNewTask();
+//            }
+//        });
 
         // Set up progress indicator
         final ScrollChildSwipeRefreshLayout swipeRefreshLayout =
@@ -381,7 +379,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
             View rowView = view;
             if (rowView == null) {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-                rowView = inflater.inflate(R.layout.task_item, viewGroup, false);
+                rowView = inflater.inflate(R.layout.song_item, viewGroup, false);
             }
 
             final Song song = getItem(i);
@@ -389,8 +387,6 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
 
             TextView titleTV = (TextView) rowView.findViewById(R.id.title);
             titleTV.setText(song.getTitleForList());
-
-            CheckBox completeCB = (CheckBox) rowView.findViewById(R.id.complete);
 
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override

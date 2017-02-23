@@ -24,12 +24,6 @@
     android:paddingBottom="@dimen/list_item_padding"
     android:paddingTop="@dimen/list_item_padding">
 
-    <CheckBox
-        android:id="@+id/complete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical" />
-
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"

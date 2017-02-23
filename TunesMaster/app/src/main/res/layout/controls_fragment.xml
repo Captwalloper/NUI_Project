@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <!--Control Panel-->
+
+
+
+
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="0.1dp"
+android:layout_weight="0.58"
+android:orientation="horizontal"
+
+
+android:weightSum="5"
+    >
+<Button android:layout_margin="8dp"
+    android:id="@+id/song_player_replay"
+    android:layout_width="0dp"
+    android:layout_height="50dp"
+
+    android:layout_weight="1"
+    android:background="@drawable/ic_public"/>
+<Button android:layout_margin="8dp"
+    android:id="@+id/song_player_last"
+    android:layout_width="0dp"
+    android:layout_height="50dp"
+
+    android:layout_weight="1"
+    android:background="@drawable/ic_mic"/>
+<Button android:layout_margin="8dp"
+    android:id="@+id/song_player_playpause"
+    android:layout_width="0dp"
+    android:layout_height="50dp"
+
+    android:layout_weight="1"
+    android:background="@drawable/ic_music_note"/>
+<Button android:layout_margin="8dp"
+    android:id="@+id/song_player_next"
+    android:layout_width="0dp"
+    android:layout_height="50dp"
+
+    android:layout_weight="1"
+    android:background="@drawable/ic_favorite_black_24dp"/>
+
+<Button android:layout_margin="8dp"
+    android:id="@+id/song_player_shuffle"
+    android:layout_width="0dp"
+    android:layout_height="50dp"
+
+    android:layout_weight="1"
+    android:background="@drawable/ic_queue_music"/>
+
+</LinearLayout>
+
+
+    </LinearLayout>

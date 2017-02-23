@@ -401,7 +401,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
             TextView titleTV = (TextView) rowView.findViewById(R.id.title);
             titleTV.setText(song.getTitleForList());
 
-            CheckBox completeCB = (CheckBox) rowView.findViewById(R.id.complete);
+            /*CheckBox completeCB = (CheckBox) rowView.findViewById(R.id.complete);
 
             // Active/completed song UI
             completeCB.setChecked(song.isCompleted());
@@ -423,7 +423,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
                     }
                 }
             });
-
+*/
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

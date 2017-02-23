@@ -124,7 +124,7 @@ public class TasksScreenTest {
     @Test
     public void clickAddTaskButton_opensAddTaskUi() {
         // Click on the add task button
-        onView(withId(R.id.fab_add_task)).perform(click());
+//        onView(withId(R.id.fab_add_task)).perform(click());
 
         // Check if the add task screen is displayed
         onView(withId(R.id.add_task_title)).check(matches(isDisplayed()));
@@ -139,7 +139,7 @@ public class TasksScreenTest {
         onView(withText(TITLE1)).perform(click());
 
         // Click on the edit task button
-        onView(withId(R.id.fab_edit_task)).perform(click());
+//        onView(withId(R.id.fab_edit_task)).perform(click());
 
         String editTaskTitle = TITLE2;
         String editTaskDescription = "New Description";
@@ -340,7 +340,7 @@ public class TasksScreenTest {
         onView(withText(TITLE1)).perform(click());
 
         // Click on the edit task button
-        onView(withId(R.id.fab_edit_task)).perform(click());
+//        onView(withId(R.id.fab_edit_task)).perform(click());
 
         // Rotate the screen
         TestUtils.rotateOrientation(TestUtils.getCurrentActivity());
@@ -378,7 +378,7 @@ public class TasksScreenTest {
 
     private void createTask(String title, String description) {
         // Click on the add task button
-        onView(withId(R.id.fab_add_task)).perform(click());
+//        onView(withId(R.id.fab_add_task)).perform(click());
 
         // Add task title and description
         onView(withId(R.id.add_task_title)).perform(typeText(title),

@@ -85,14 +85,14 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
         mDetailDescription = (TextView) root.findViewById(R.id.task_detail_description);
 
         //Set up floating action button
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.editSong();
-            }
-        });
+//        FloatingActionButton fab =
+//                (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mPresenter.editSong();
+//            }
+//        });
 
         //Set up song panel (gestures)
         LinearLayout songPanel = (LinearLayout) root.findViewById(R.id.song_player_song_panel);

@@ -24,8 +24,8 @@ import static org.mockito.Mockito.when;
 import edu.Groove9.TunesMaster.TestUseCaseScheduler;
 import edu.Groove9.TunesMaster.UseCaseHandler;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
-import edu.Groove9.TunesMaster.data.source.TasksDataSource;
-import edu.Groove9.TunesMaster.data.source.TasksRepository;
+import edu.Groove9.TunesMaster.data.source.SongsDataSource;
+import edu.Groove9.TunesMaster.data.source.SongsRepository;
 import edu.Groove9.TunesMaster.statistics.domain.usecase.GetStatistics;
 import com.google.common.collect.Lists;
 
@@ -48,7 +48,7 @@ public class StatisticsPresenterTest {
     private static final Uri SOURCE = Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0");
 
     @Mock
-    private TasksRepository mTasksRepository;
+    private SongsRepository mSongsRepository;
 
     @Mock
     private StatisticsContract.View mStatisticsView;
@@ -58,7 +58,7 @@ public class StatisticsPresenterTest {
      * perform further actions or assertions on them.
      */
     @Captor
-    private ArgumentCaptor<TasksDataSource.LoadTasksCallback> mLoadTasksCallbackCaptor;
+    private ArgumentCaptor<SongsDataSource.LoadSongsCallback> mLoadTasksCallbackCaptor;
 
 
     private StatisticsPresenter mStatisticsPresenter;
@@ -92,8 +92,8 @@ public class StatisticsPresenterTest {
         verify(mStatisticsView).setProgressIndicator(true);
 
         // Callback is captured and invoked with stubbed tasks
-        verify(mTasksRepository).getTasks(mLoadTasksCallbackCaptor.capture());
-        mLoadTasksCallbackCaptor.getValue().onTasksLoaded(TASKS);
+        verify(mSongsRepository).getSongs(mLoadTasksCallbackCaptor.capture());
+        mLoadTasksCallbackCaptor.getValue().onSongsLoaded(TASKS);
 
         // Then progress indicator is hidden and correct data is passed on to the view
         verify(mStatisticsView).setProgressIndicator(false);
@@ -111,8 +111,8 @@ public class StatisticsPresenterTest {
         verify(mStatisticsView).setProgressIndicator(true);
 
         // Callback is captured and invoked with stubbed tasks
-        verify(mTasksRepository).getTasks(mLoadTasksCallbackCaptor.capture());
-        mLoadTasksCallbackCaptor.getValue().onTasksLoaded(TASKS);
+        verify(mSongsRepository).getSongs(mLoadTasksCallbackCaptor.capture());
+        mLoadTasksCallbackCaptor.getValue().onSongsLoaded(TASKS);
 
         // Then progress indicator is hidden and correct data is passed on to the view
         verify(mStatisticsView).setProgressIndicator(false);
@@ -125,7 +125,7 @@ public class StatisticsPresenterTest {
         mStatisticsPresenter.start();
 
         // And tasks data isn't available
-        verify(mTasksRepository).getTasks(mLoadTasksCallbackCaptor.capture());
+        verify(mSongsRepository).getSongs(mLoadTasksCallbackCaptor.capture());
         mLoadTasksCallbackCaptor.getValue().onDataNotAvailable();
 
         // Then an error message is shown
@@ -134,7 +134,7 @@ public class StatisticsPresenterTest {
 
     private StatisticsPresenter givenStatisticsPresenter() {
         UseCaseHandler useCaseHandler = new UseCaseHandler(new TestUseCaseScheduler());
-        GetStatistics getStatistics = new GetStatistics(mTasksRepository);
+        GetStatistics getStatistics = new GetStatistics(mSongsRepository);
 
         return new StatisticsPresenter(useCaseHandler, mStatisticsView, getStatistics);
     }

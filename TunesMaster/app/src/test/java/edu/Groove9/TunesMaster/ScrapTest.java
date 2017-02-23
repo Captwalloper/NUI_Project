@@ -18,33 +18,14 @@ package edu.Groove9.TunesMaster;
 
 import android.net.Uri;
 
-import edu.Groove9.TunesMaster.TestUseCaseScheduler;
-import edu.Groove9.TunesMaster.UseCaseHandler;
-import edu.Groove9.TunesMaster.addedittask.domain.usecase.DeleteTask;
-import edu.Groove9.TunesMaster.addedittask.domain.usecase.GetTask;
-import edu.Groove9.TunesMaster.data.source.TasksDataSource;
-import edu.Groove9.TunesMaster.data.source.TasksRepository;
-import edu.Groove9.TunesMaster.playlist.domain.model.Song;
-import edu.Groove9.TunesMaster.playlist.domain.usecase.ActivateTask;
-import edu.Groove9.TunesMaster.playlist.domain.usecase.CompleteTask;
-
-import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InOrder;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class ScrapTest {
 

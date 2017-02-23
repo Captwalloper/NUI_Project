@@ -21,26 +21,26 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import android.support.annotation.NonNull;
 
 import edu.Groove9.TunesMaster.UseCase;
+import edu.Groove9.TunesMaster.data.source.SongsRepository;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
-import edu.Groove9.TunesMaster.data.source.TasksDataSource;
-import edu.Groove9.TunesMaster.data.source.TasksRepository;
+import edu.Groove9.TunesMaster.data.source.SongsDataSource;
 
 /**
- * Retrieves a {@link Song} from the {@link TasksRepository}.
+ * Retrieves a {@link Song} from the {@link SongsRepository}.
  */
 public class GetTask extends UseCase<GetTask.RequestValues, GetTask.ResponseValue> {
 
-    private final TasksRepository mTasksRepository;
+    private final SongsRepository mSongsRepository;
 
-    public GetTask(@NonNull TasksRepository tasksRepository) {
-        mTasksRepository = checkNotNull(tasksRepository, "tasksRepository cannot be null!");
+    public GetTask(@NonNull SongsRepository songsRepository) {
+        mSongsRepository = checkNotNull(songsRepository, "songsRepository cannot be null!");
     }
 
     @Override
     protected void executeUseCase(final RequestValues values) {
-        mTasksRepository.getTask(values.getTaskId(), new TasksDataSource.GetTaskCallback() {
+        mSongsRepository.getSong(values.getTaskId(), new SongsDataSource.GetSongCallback() {
             @Override
-            public void onTaskLoaded(Song song) {
+            public void onSongLoaded(Song song) {
                 if (song != null) {
                     ResponseValue responseValue = new ResponseValue(song);
                     getUseCaseCallback().onSuccess(responseValue);

@@ -33,7 +33,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
@@ -83,13 +85,37 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
         mDetailDescription = (TextView) root.findViewById(R.id.task_detail_description);
 
         //Set up floating action button
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.editSong();
+//        FloatingActionButton fab =
+//                (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mPresenter.editSong();
+//            }
+//        });
+
+        //Set up song panel (gestures)
+        LinearLayout songPanel = (LinearLayout) root.findViewById(R.id.song_player_song_panel);
+        songPanel.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
+            public void onSwipeTop() {
+                Toast.makeText(getActivity(),"top",Toast.LENGTH_SHORT).show();
             }
+            public void onSwipeRight() {
+                Toast.makeText(getActivity(), "right", Toast.LENGTH_SHORT).show();
+                mPresenter.nextSong();
+            }
+            public void onSwipeLeft() {
+                Toast.makeText(getActivity(), "left", Toast.LENGTH_SHORT).show();
+                mPresenter.lastSong();
+            }
+            public void onSwipeBottom() {
+                Toast.makeText(getActivity(), "bottom", Toast.LENGTH_SHORT).show();
+            }
+            public void onSingleTap() {
+                Toast.makeText(getActivity(), "single tap", Toast.LENGTH_SHORT).show();
+                mPresenter.playPauseSong();
+            }
+
         });
 
         //Set up control panel

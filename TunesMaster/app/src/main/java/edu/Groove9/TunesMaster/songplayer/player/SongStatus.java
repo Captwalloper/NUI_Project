@@ -7,5 +7,5 @@ package edu.Groove9.TunesMaster.songplayer.player;
 public enum SongStatus {
     PLAYING,
     PAUSED,
-    NOT_SELECTED
+    NOT_SELECTED // Song is currently not the chosen one in a playlist
 }

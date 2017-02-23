@@ -24,31 +24,30 @@ import android.support.annotation.NonNull;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.DeleteTask;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.GetTask;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.SaveTask;
-import edu.Groove9.TunesMaster.data.FakeTasksRemoteDataSource;
-import edu.Groove9.TunesMaster.data.source.TasksDataSource;
-import edu.Groove9.TunesMaster.data.source.TasksRepository;
+import edu.Groove9.TunesMaster.data.FakeSongsRemoteDataSource;
+import edu.Groove9.TunesMaster.data.source.SongsDataSource;
+import edu.Groove9.TunesMaster.data.source.SongsRepository;
 import edu.Groove9.TunesMaster.data.source.local.PrototypeSongsLocalDataSource;
-import edu.Groove9.TunesMaster.data.source.local.TasksLocalDataSource;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.LastSong;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.NextSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.PlayPauseSong;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.ShuffleSong;
 import edu.Groove9.TunesMaster.songplayer.player.AudioPlayerContract;
 import edu.Groove9.TunesMaster.songplayer.player.PrototypeAudioPlayer;
 import edu.Groove9.TunesMaster.statistics.domain.usecase.GetStatistics;
 import edu.Groove9.TunesMaster.playlist.domain.filter.FilterFactory;
-import edu.Groove9.TunesMaster.playlist.domain.usecase.ActivateTask;
-import edu.Groove9.TunesMaster.playlist.domain.usecase.ClearCompleteTasks;
-import edu.Groove9.TunesMaster.playlist.domain.usecase.CompleteTask;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.GetTasks;
 
 /**
  * Enables injection of mock implementations for
- * {@link TasksDataSource} at compile time. This is useful for testing, since it allows us to use
+ * {@link SongsDataSource} at compile time. This is useful for testing, since it allows us to use
  * a fake instance of the class to isolate the dependencies and run a test hermetically.
  */
 public class Injection {
 
-    public static TasksRepository provideTasksRepository(@NonNull Context context) {
+    public static SongsRepository provideSongsRepository(@NonNull Context context) {
         checkNotNull(context);
-        return TasksRepository.getInstance(FakeTasksRemoteDataSource.getInstance(),
+        return SongsRepository.getInstance(FakeSongsRemoteDataSource.getInstance(),
                 PrototypeSongsLocalDataSource.getInstance(context));
     }
 
@@ -59,7 +58,7 @@ public class Injection {
     }
 
     public static GetTasks provideGetTasks(@NonNull Context context) {
-        return new GetTasks(provideTasksRepository(context), new FilterFactory());
+        return new GetTasks(provideSongsRepository(context), new FilterFactory());
     }
 
     public static UseCaseHandler provideUseCaseHandler() {
@@ -67,34 +66,34 @@ public class Injection {
     }
 
     public static GetTask provideGetTask(@NonNull Context context) {
-        return new GetTask(Injection.provideTasksRepository(context));
+        return new GetTask(Injection.provideSongsRepository(context));
     }
 
     public static SaveTask provideSaveTask(@NonNull Context context) {
-        return new SaveTask(Injection.provideTasksRepository(context));
-    }
-
-    public static CompleteTask provideCompleteTasks(@NonNull Context context) {
-        return new CompleteTask(Injection.provideTasksRepository(context));
-    }
-
-    public static ActivateTask provideActivateTask(@NonNull Context context) {
-        return new ActivateTask(Injection.provideTasksRepository(context));
-    }
-
-    public static ClearCompleteTasks provideClearCompleteTasks(@NonNull Context context) {
-        return new ClearCompleteTasks(Injection.provideTasksRepository(context));
+        return new SaveTask(Injection.provideSongsRepository(context));
     }
 
     public static DeleteTask provideDeleteTask(@NonNull Context context) {
-        return new DeleteTask(Injection.provideTasksRepository(context));
+        return new DeleteTask(Injection.provideSongsRepository(context));
     }
 
     public static GetStatistics provideGetStatistics(@NonNull Context context) {
-        return new GetStatistics(Injection.provideTasksRepository(context));
+        return new GetStatistics(Injection.provideSongsRepository(context));
     }
 
     public static PlayPauseSong providePlayPauseSong(@NonNull Context context) {
         return new PlayPauseSong(Injection.provideAudioPlayer(context));
+    }
+
+    public static NextSong provideNextSong(@NonNull Context context) {
+        return new NextSong(Injection.provideAudioPlayer(context));
+    }
+
+    public static LastSong provideLastSong(@NonNull Context context) {
+        return new LastSong(Injection.provideAudioPlayer(context));
+    }
+
+    public static ShuffleSong provideShuffleSong(@NonNull Context context) {
+        return new ShuffleSong(Injection.provideAudioPlayer(context));
     }
 }

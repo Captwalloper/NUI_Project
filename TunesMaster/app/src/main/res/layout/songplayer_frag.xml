@@ -29,6 +29,7 @@
 
     <!--Control Panel-->
     <LinearLayout
+        android:id="@+id/song_player_song_panel"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3.55"

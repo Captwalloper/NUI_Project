@@ -76,10 +76,7 @@ public class PlaylistActivity extends AppCompatActivity {
         mPlaylistPresenter = new PlaylistPresenter(
                 Injection.provideUseCaseHandler(),
                 playlistFragment,
-                Injection.provideGetTasks(getApplicationContext()),
-                Injection.provideCompleteTasks(getApplicationContext()),
-                Injection.provideActivateTask(getApplicationContext()),
-                Injection.provideClearCompleteTasks(getApplicationContext())
+                Injection.provideGetTasks(getApplicationContext())
                 );
 
         // Load previously saved state, if available.

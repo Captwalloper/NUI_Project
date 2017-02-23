@@ -25,14 +25,18 @@ import android.test.suitebuilder.annotation.LargeTest;
 
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.TestUtils;
-import edu.Groove9.TunesMaster.data.FakeTasksRemoteDataSource;
+import edu.Groove9.TunesMaster.data.FakeSongsRemoteDataSource;
 
+import edu.Groove9.TunesMaster.data.source.SongsRepository;
+import edu.Groove9.TunesMaster.playlist.domain.model.Playlist;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
-import edu.Groove9.TunesMaster.data.source.TasksRepository;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
@@ -53,18 +57,6 @@ public class SongDetailScreenTest {
 
     private static String TASK_DESCRIPTION = "Rocks";
 
-    private static Uri SONG_SOURCE = Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0");
-
-    /**
-     * {@link Song} stub that is added to the fake service API layer.
-     */
-    private static Song activeSong = new Song(TASK_TITLE, TASK_DESCRIPTION, false, SONG_SOURCE);
-
-    /**
-     * {@link Song} stub that is added to the fake service API layer.
-     */
-    private static Song completedSong = new Song(TASK_TITLE, TASK_DESCRIPTION, true, SONG_SOURCE);
-
     /**
      * {@link ActivityTestRule} is a JUnit {@link Rule @Rule} to launch your activity under test.
      *
@@ -82,14 +74,6 @@ public class SongDetailScreenTest {
             new ActivityTestRule<>(SongPlayerActivity.class, true /* Initial touch mode  */,
                     false /* Lazily launch activity */);
 
-    private void loadActiveTask() {
-        startActivityWithWithStubbedTask(activeSong);
-    }
-
-    private void loadCompletedTask() {
-        startActivityWithWithStubbedTask(completedSong);
-    }
-
     /**
      * Setup your test fixture with a fake song id. The {@link SongPlayerActivity} is started with
      * a particular song id, which is then loaded from the service API.
@@ -101,38 +85,34 @@ public class SongDetailScreenTest {
      */
     private void startActivityWithWithStubbedTask(Song song) {
         // Add a song stub to the fake service api layer.
-        TasksRepository.destroyInstance();
-        FakeTasksRemoteDataSource.getInstance().addTasks(song);
+        SongsRepository.destroyInstance();
+        FakeSongsRemoteDataSource.getInstance().addTasks(song);
 
         // Lazily start the Activity from the ActivityTestRule this time to inject the start Intent
         Intent startIntent = new Intent();
-        startIntent.putExtra(SongPlayerActivity.EXTRA_TASK_ID, song.getId());
+        Playlist playlist = new Playlist(new ArrayList<>(Arrays.asList(song)), song);
+        startIntent.putExtra("edu.Groove9.TunesMaster.playlist.domain.model.Playlist", playlist);
         mTaskDetailActivityTestRule.launchActivity(startIntent);
     }
 
     @Test
     public void activeTaskDetails_DisplayedInUi() throws Exception {
-        loadActiveTask();
 
         // Check that the task title and description are displayed
         onView(withId(R.id.task_detail_title)).check(matches(withText(TASK_TITLE)));
         onView(withId(R.id.task_detail_description)).check(matches(withText(TASK_DESCRIPTION)));
-        onView(withId(R.id.task_detail_complete)).check(matches(not(isChecked())));
     }
 
     @Test
     public void completedTaskDetails_DisplayedInUi() throws Exception {
-        loadCompletedTask();
 
         // Check that the task title and description are displayed
         onView(withId(R.id.task_detail_title)).check(matches(withText(TASK_TITLE)));
         onView(withId(R.id.task_detail_description)).check(matches(withText(TASK_DESCRIPTION)));
-        onView(withId(R.id.task_detail_complete)).check(matches(isChecked()));
     }
 
     @Test
     public void orientationChange_menuAndTaskPersist() {
-        loadActiveTask();
 
         // Check delete menu item is displayed and is unique
         onView(withId(R.id.menu_delete)).check(matches(isDisplayed()));

@@ -20,7 +20,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -41,6 +40,7 @@ import android.widget.TextView;
 
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
+import edu.Groove9.TunesMaster.playlist.domain.model.Playlist;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.songplayer.SongPlayerActivity;
 
@@ -75,18 +75,8 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
      */
     private TaskItemListener mItemListener = new TaskItemListener() {
         @Override
-        public void onTaskClick(Song clickedSong) {
-            mPresenter.openTaskDetails(clickedSong);
-        }
-
-        @Override
-        public void onCompleteTaskClick(Song completedSong) {
-            mPresenter.completeTask(completedSong);
-        }
-
-        @Override
-        public void onActivateTaskClick(Song activatedSong) {
-            mPresenter.activateTask(activatedSong);
+        public void onTaskClick(Playlist playlist) {
+            mPresenter.openSongPlayer(playlist);
         }
     };
 
@@ -124,7 +114,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.tasks_frag, container, false);
+        View root = inflater.inflate(R.layout.playlist_frag, container, false);
 
         // Set up tasks view
         ListView listView = (ListView) root.findViewById(R.id.tasks_list);
@@ -145,16 +135,15 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
         });
 
         // Set up floating action button
-        FloatingActionButton fab =
-                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_task);
-
-        fab.setImageResource(R.drawable.ic_add);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPresenter.addNewTask();
-            }
-        });
+//        FloatingActionButton fab =
+//                (FloatingActionButton) getActivity().findViewById(R.id.fab_add_task);
+//        fab.setImageResource(R.drawable.ic_add);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mPresenter.addNewTask();
+//            }
+//        });
 
         // Set up progress indicator
         final ScrollChildSwipeRefreshLayout swipeRefreshLayout =
@@ -182,9 +171,6 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_clear:
-                mPresenter.clearCompletedTasks();
-                break;
             case R.id.menu_filter:
                 showFilteringPopUpMenu();
                 break;
@@ -317,11 +303,11 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
     }
 
     @Override
-    public void showTaskDetailsUi(String taskId) {
+    public void showSongPlayerUI(Playlist playlist) {
         // in it's own Activity, since it makes more sense that way and it gives us the flexibility
         // to show some Intent stubbing.
         Intent intent = new Intent(getContext(), SongPlayerActivity.class);
-        intent.putExtra(SongPlayerActivity.EXTRA_SONG_ID, taskId);
+        intent.putExtra("edu.Groove9.TunesMaster.playlist.domain.model.Playlist", playlist);
         startActivity(intent);
     }
 
@@ -393,13 +379,15 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
             View rowView = view;
             if (rowView == null) {
                 LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-                rowView = inflater.inflate(R.layout.task_item, viewGroup, false);
+                rowView = inflater.inflate(R.layout.song_item, viewGroup, false);
             }
 
             final Song song = getItem(i);
+            final List<Song> songs = mSongs;
 
             TextView titleTV = (TextView) rowView.findViewById(R.id.title);
             titleTV.setText(song.getTitleForList());
+
 
             /*CheckBox completeCB = (CheckBox) rowView.findViewById(R.id.complete);
 
@@ -424,10 +412,11 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
                 }
             });
 */
+
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mItemListener.onTaskClick(song);
+                    mItemListener.onTaskClick(new Playlist(songs, song));
                 }
             });
 
@@ -436,12 +425,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
     }
 
     public interface TaskItemListener {
-
-        void onTaskClick(Song clickedSong);
-
-        void onCompleteTaskClick(Song completedSong);
-
-        void onActivateTaskClick(Song activatedSong);
+        void onTaskClick(Playlist playlist);
     }
 
 }

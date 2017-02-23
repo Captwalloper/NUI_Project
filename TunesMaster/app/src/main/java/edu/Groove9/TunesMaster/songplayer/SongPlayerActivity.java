@@ -24,6 +24,7 @@ import android.support.v7.widget.Toolbar;
 import edu.Groove9.TunesMaster.Injection;
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.data.source.local.PrototypeSongsLocalDataSource;
+import edu.Groove9.TunesMaster.playlist.domain.model.Playlist;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.util.ActivityUtils;
 
@@ -32,7 +33,7 @@ import edu.Groove9.TunesMaster.util.ActivityUtils;
  */
 public class SongPlayerActivity extends AppCompatActivity {
 
-    public static final String EXTRA_SONG_ID = "SONG_ID";
+//    public static final String PLAYLIST_KEY = "PLAYLIST_KEY";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,30 +48,30 @@ public class SongPlayerActivity extends AppCompatActivity {
         ab.setDisplayHomeAsUpEnabled(true);
         ab.setDisplayShowHomeEnabled(true);
 
-        // Get the requested task id
-        String songId = getIntent().getStringExtra(EXTRA_SONG_ID);
+        // Get the playlist
+        Playlist playlist = (Playlist)getIntent().getSerializableExtra("edu.Groove9.TunesMaster.playlist.domain.model.Playlist");
 
         SongPlayerFragment songPlayerFragment = (SongPlayerFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.contentFrame);
 
         if (songPlayerFragment == null) {
-            songPlayerFragment = SongPlayerFragment.newInstance(songId);
+            songPlayerFragment = SongPlayerFragment.newInstance(playlist.getCurrentSong().getId());
 
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
                     songPlayerFragment, R.id.contentFrame);
         }
 
         // Create the presenter
-        Song song = PrototypeSongsLocalDataSource.getSongFromId(songId); //HACK
         new SongPlayerPresenter(
                 Injection.provideUseCaseHandler(),
-                song,
+                playlist,
                 songPlayerFragment,
                 Injection.provideGetTask(getApplicationContext()),
-                Injection.provideCompleteTasks(getApplicationContext()),
-                Injection.provideActivateTask(getApplicationContext()),
                 Injection.provideDeleteTask(getApplicationContext()),
-                Injection.providePlayPauseSong(getApplicationContext()));
+                Injection.providePlayPauseSong(getApplicationContext()),
+                Injection.provideNextSong(getApplicationContext()),
+                Injection.provideLastSong(getApplicationContext()),
+                Injection.provideShuffleSong(getApplicationContext()));
     }
 
     @Override

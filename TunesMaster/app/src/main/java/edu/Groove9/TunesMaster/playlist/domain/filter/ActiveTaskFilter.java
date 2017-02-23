@@ -29,9 +29,9 @@ class ActiveTaskFilter implements TaskFilter {
     public List<Song> filter(List<Song> songs) {
         List<Song> filteredSongs = new ArrayList<>();
         for (Song song : songs) {
-            if (song.isActive()) {
+//            if (song.isActive()) {
                 filteredSongs.add(song);
-            }
+//            }
         }
         return filteredSongs;
     }

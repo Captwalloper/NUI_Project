@@ -28,8 +28,8 @@ import edu.Groove9.TunesMaster.UseCaseHandler;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.GetTask;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.SaveTask;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
-import edu.Groove9.TunesMaster.data.source.TasksDataSource;
-import edu.Groove9.TunesMaster.data.source.TasksRepository;
+import edu.Groove9.TunesMaster.data.source.SongsDataSource;
+import edu.Groove9.TunesMaster.data.source.SongsRepository;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class AddEditSongPresenterTest {
     private static final Uri SOURCE = Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0");
 
     @Mock
-    private TasksRepository mTasksRepository;
+    private SongsRepository mSongsRepository;
 
     @Mock
     private AddEditTaskContract.View mAddEditTaskView;
@@ -56,7 +56,7 @@ public class AddEditSongPresenterTest {
      * perform further actions or assertions on them.
      */
     @Captor
-    private ArgumentCaptor<TasksDataSource.GetTaskCallback> mGetTaskCallbackCaptor;
+    private ArgumentCaptor<SongsDataSource.GetSongCallback> mGetTaskCallbackCaptor;
 
     private AddEditTaskPresenter mAddEditTaskPresenter;
 
@@ -79,7 +79,7 @@ public class AddEditSongPresenterTest {
         mAddEditTaskPresenter.saveTask("New Song Title", "Some Song Description", SOURCE);
 
         // Then a task is saved in the repository and the view updated
-        verify(mTasksRepository).saveTask(any(Song.class)); // saved to the model
+        verify(mSongsRepository).saveSong(any(Song.class)); // saved to the model
         verify(mAddEditTaskView).showTasksList(); // shown in the UI
     }
 
@@ -105,7 +105,7 @@ public class AddEditSongPresenterTest {
         mAddEditTaskPresenter.saveTask("New Song Title", "Some Song Description", SOURCE);
 
         // Then a task is saved in the repository and the view updated
-        verify(mTasksRepository).saveTask(any(Song.class)); // saved to the model
+        verify(mSongsRepository).saveSong(any(Song.class)); // saved to the model
         verify(mAddEditTaskView).showTasksList(); // shown in the UI
     }
 
@@ -119,10 +119,10 @@ public class AddEditSongPresenterTest {
         mAddEditTaskPresenter.populateTask();
 
         // Then the task repository is queried and the view updated
-        verify(mTasksRepository).getTask(eq(testSong.getId()), mGetTaskCallbackCaptor.capture());
+        verify(mSongsRepository).getSong(eq(testSong.getId()), mGetTaskCallbackCaptor.capture());
 
         // Simulate callback
-        mGetTaskCallbackCaptor.getValue().onTaskLoaded(testSong);
+        mGetTaskCallbackCaptor.getValue().onSongLoaded(testSong);
 
         verify(mAddEditTaskView).setTitle(testSong.getTitle());
         verify(mAddEditTaskView).setDescription(testSong.getDescription());
@@ -131,8 +131,8 @@ public class AddEditSongPresenterTest {
     private AddEditTaskPresenter givenEditTaskPresenter(String taskId) {
 
         UseCaseHandler useCaseHandler = new UseCaseHandler(new TestUseCaseScheduler());
-        GetTask getTask = new GetTask(mTasksRepository);
-        SaveTask saveTask = new SaveTask(mTasksRepository);
+        GetTask getTask = new GetTask(mSongsRepository);
+        SaveTask saveTask = new SaveTask(mSongsRepository);
 
         return new AddEditTaskPresenter(useCaseHandler, taskId, mAddEditTaskView, getTask,
                 saveTask);

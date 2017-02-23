@@ -21,9 +21,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import android.support.annotation.NonNull;
 
 import edu.Groove9.TunesMaster.UseCase;
+import edu.Groove9.TunesMaster.data.source.SongsRepository;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
-import edu.Groove9.TunesMaster.data.source.TasksDataSource;
-import edu.Groove9.TunesMaster.data.source.TasksRepository;
+import edu.Groove9.TunesMaster.data.source.SongsDataSource;
 import edu.Groove9.TunesMaster.playlist.PlaylistFilterType;
 import edu.Groove9.TunesMaster.playlist.domain.filter.FilterFactory;
 import edu.Groove9.TunesMaster.playlist.domain.filter.TaskFilter;
@@ -35,24 +35,24 @@ import java.util.List;
  */
 public class GetTasks extends UseCase<GetTasks.RequestValues, GetTasks.ResponseValue> {
 
-    private final TasksRepository mTasksRepository;
+    private final SongsRepository mSongsRepository;
 
     private final FilterFactory mFilterFactory;
 
-    public GetTasks(@NonNull TasksRepository tasksRepository, @NonNull FilterFactory filterFactory) {
-        mTasksRepository = checkNotNull(tasksRepository, "tasksRepository cannot be null!");
+    public GetTasks(@NonNull SongsRepository songsRepository, @NonNull FilterFactory filterFactory) {
+        mSongsRepository = checkNotNull(songsRepository, "songsRepository cannot be null!");
         mFilterFactory = checkNotNull(filterFactory, "filterFactory cannot be null!");
     }
 
     @Override
     protected void executeUseCase(final RequestValues values) {
         if (values.isForceUpdate()) {
-            mTasksRepository.refreshTasks();
+            mSongsRepository.refreshSongs();
         }
 
-        mTasksRepository.getTasks(new TasksDataSource.LoadTasksCallback() {
+        mSongsRepository.getSongs(new SongsDataSource.LoadSongsCallback() {
             @Override
-            public void onTasksLoaded(List<Song> songs) {
+            public void onSongsLoaded(List<Song> songs) {
                 PlaylistFilterType currentFiltering = values.getCurrentFiltering();
                 TaskFilter taskFilter = mFilterFactory.create(currentFiltering);
 

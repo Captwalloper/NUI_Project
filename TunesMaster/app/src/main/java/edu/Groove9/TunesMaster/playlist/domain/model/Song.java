@@ -23,26 +23,26 @@ import android.support.annotation.Nullable;
 import com.google.common.base.Objects;
 import com.google.common.base.Strings;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Immutable model class for a Song.
  */
-public final class Song {
+@SuppressWarnings("serial")
+public final class Song implements Serializable {
 
     @NonNull
-    private final String mId;
+    private String mId;
 
     @NonNull
-    private final Uri mSource;
+    private SerializableUri mSource;
 
     @Nullable
-    private final String mTitle;
+    private String mTitle;
 
     @Nullable
-    private final String mDescription;
-
-    private final boolean mCompleted;
+    private String mDescription;
 
     /**
      * Use this constructor to create a new active Song.
@@ -51,7 +51,7 @@ public final class Song {
      * @param description description of the task
      */
     public Song(@Nullable String title, @Nullable String description, @NonNull Uri source) {
-        this(title, description, UUID.randomUUID().toString(), false, source);
+        this(title, description, UUID.randomUUID().toString(), source);
     }
 
     /**
@@ -63,36 +63,10 @@ public final class Song {
      * @param id          id of the task
      */
     public Song(@Nullable String title, @Nullable String description, @NonNull String id, @NonNull Uri source) {
-        this(title, description, id, false, source);
-    }
-
-    /**
-     * Use this constructor to create a new completed Song.
-     *
-     * @param title       title of the task
-     * @param description description of the task
-     * @param completed   true if the task is completed, false if it's active
-     */
-    public Song(@Nullable String title, @Nullable String description, boolean completed, @NonNull Uri source) {
-        this(title, description, UUID.randomUUID().toString(), completed, source);
-    }
-
-    /**
-     * Use this constructor to specify a completed Song if the Song already has an id (copy of
-     * another Song).
-     *
-     * @param title       title of the task
-     * @param description description of the task
-     * @param id          id of the task
-     * @param completed   true if the task is completed, false if it's active
-     */
-    public Song(@Nullable String title, @Nullable String description,
-                @NonNull String id, boolean completed, @NonNull Uri source) {
         mId = id;
         mTitle = title;
         mDescription = description;
-        mCompleted = completed;
-        mSource = source;
+        mSource = new SerializableUri(source);
     }
 
     @NonNull
@@ -101,7 +75,7 @@ public final class Song {
     }
 
     @NonNull
-    public Uri getSource() { return mSource; }
+    public Uri getSource() { return mSource.getUri(); }
 
     @Nullable
     public String getTitle() {
@@ -120,14 +94,6 @@ public final class Song {
     @Nullable
     public String getDescription() {
         return mDescription;
-    }
-
-    public boolean isCompleted() {
-        return mCompleted;
-    }
-
-    public boolean isActive() {
-        return !mCompleted;
     }
 
     public boolean isEmpty() {
@@ -153,5 +119,28 @@ public final class Song {
     @Override
     public String toString() {
         return "Song with title " + mTitle;
+    }
+
+    // Setters for serializablility
+
+    public void setmId(@NonNull String mId) {
+        this.mId = mId;
+    }
+
+    public void setmTitle(@Nullable String mTitle) {
+        this.mTitle = mTitle;
+    }
+
+    public void setmDescription(@Nullable String mDescription) {
+        this.mDescription = mDescription;
+    }
+
+    @NonNull
+    public SerializableUri getmSource() {
+        return mSource;
+    }
+
+    public void setmSource(@NonNull SerializableUri mSource) {
+        this.mSource = mSource;
     }
 }

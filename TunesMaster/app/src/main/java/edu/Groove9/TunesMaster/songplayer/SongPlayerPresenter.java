@@ -23,10 +23,12 @@ import edu.Groove9.TunesMaster.UseCase;
 import edu.Groove9.TunesMaster.UseCaseHandler;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.DeleteTask;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.GetTask;
+import edu.Groove9.TunesMaster.playlist.domain.model.Playlist;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
-import edu.Groove9.TunesMaster.playlist.domain.usecase.ActivateTask;
-import edu.Groove9.TunesMaster.playlist.domain.usecase.CompleteTask;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.LastSong;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.NextSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.PlayPauseSong;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.ShuffleSong;
 
 import com.google.common.base.Strings;
 
@@ -43,41 +45,48 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
     private final GetTask mGetTask;
     private final DeleteTask mDeleteTask;
     private final PlayPauseSong mPlayPauseSong;
+    private final NextSong mNextSong;
+    private final LastSong mLastSong;
+    private final ShuffleSong mShuffleSong;
 
     @Nullable
-    private Song mSong;
+    private Playlist mPlaylist;
 
     public SongPlayerPresenter(@NonNull UseCaseHandler useCaseHandler,
-                               @Nullable Song song,
+                               @Nullable Playlist playlist,
                                @NonNull SongPlayerContract.View taskDetailView,
                                @NonNull GetTask getTask,
-                               @NonNull CompleteTask completeTask,
-                               @NonNull ActivateTask activateTask,
                                @NonNull DeleteTask deleteTask,
-                               @NonNull PlayPauseSong playPauseSong) {
-        mSong = song;
+                               @NonNull PlayPauseSong playPauseSong,
+                               @NonNull NextSong nextSong,
+                               @NonNull LastSong lastSong,
+                               @NonNull ShuffleSong shuffleSong) {
+        mPlaylist = playlist;
         mUseCaseHandler = checkNotNull(useCaseHandler, "useCaseHandler cannot be null!");
         mTaskDetailView = checkNotNull(taskDetailView, "taskDetailView cannot be null!");
-        mGetTask = checkNotNull(getTask, "getTask cannot be null!");
+        mGetTask = checkNotNull(getTask, "getSong cannot be null!");
         mDeleteTask = checkNotNull(deleteTask, "deleteSong cannot be null!");
         mPlayPauseSong = playPauseSong;
+        mNextSong = nextSong;
+        mLastSong = lastSong;
+        mShuffleSong = shuffleSong;
         mTaskDetailView.setPresenter(this);
     }
 
     @Override
     public void start() {
-        openTask();
+        openSong();
     }
 
-    private void openTask() {
-        if (Strings.isNullOrEmpty(mSong.getId())) {
+    private void openSong() {
+        if (Strings.isNullOrEmpty(mPlaylist.getCurrentSong().getId())) {
             mTaskDetailView.showMissingSong();
             return;
         }
 
         mTaskDetailView.setLoadingIndicator(true);
 
-        mUseCaseHandler.execute(mGetTask, new GetTask.RequestValues(mSong.getId()),
+        mUseCaseHandler.execute(mGetTask, new GetTask.RequestValues(mPlaylist.getCurrentSong().getId()),
                 new UseCase.UseCaseCallback<GetTask.ResponseValue>() {
                     @Override
                     public void onSuccess(GetTask.ResponseValue response) {
@@ -98,16 +107,16 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
 
     @Override
     public void editSong() {
-        if (Strings.isNullOrEmpty(mSong.getId())) {
+        if (Strings.isNullOrEmpty(mPlaylist.getCurrentSong().getId())) {
             mTaskDetailView.showMissingSong();
             return;
         }
-        mTaskDetailView.showEditSong(mSong.getId());
+        mTaskDetailView.showEditSong(mPlaylist.getCurrentSong().getId());
     }
 
     @Override
     public void deleteSong() {
-        mUseCaseHandler.execute(mDeleteTask, new DeleteTask.RequestValues(mSong.getId()),
+        mUseCaseHandler.execute(mDeleteTask, new DeleteTask.RequestValues(mPlaylist.getCurrentSong().getId()),
                 new UseCase.UseCaseCallback<DeleteTask.ResponseValue>() {
                     @Override
                     public void onSuccess(DeleteTask.ResponseValue response) {
@@ -123,21 +132,43 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
 
     @Override
     public void shuffleSong() {
+        mUseCaseHandler.execute(mShuffleSong, new ShuffleSong.RequestValues(mPlaylist),
+                new UseCase.UseCaseCallback<ShuffleSong.ResponseValue>() {
+                    @Override
+                    public void onSuccess(ShuffleSong.ResponseValue response) {
+                        playPauseSong();
+                    }
 
+                    @Override
+                    public void onError() {
+                        // Show error, log, etc.
+                    }
+                });
     }
 
     @Override
     public void lastSong() {
+        mUseCaseHandler.execute(mLastSong, new LastSong.RequestValues(mPlaylist),
+                new UseCase.UseCaseCallback<LastSong.ResponseValue>() {
+                    @Override
+                    public void onSuccess(LastSong.ResponseValue response) {
+                        playPauseSong();
+                    }
 
+                    @Override
+                    public void onError() {
+                        // Show error, log, etc.
+                    }
+                });
     }
 
     @Override
     public void playPauseSong() {
-        mUseCaseHandler.execute(mPlayPauseSong, new PlayPauseSong.RequestValues(mSong),
+        mUseCaseHandler.execute(mPlayPauseSong, new PlayPauseSong.RequestValues(mPlaylist.getCurrentSong()),
                 new UseCase.UseCaseCallback<PlayPauseSong.ResponseValue>() {
                     @Override
                     public void onSuccess(PlayPauseSong.ResponseValue response) {
-
+                        openSong();
                     }
 
                     @Override
@@ -149,7 +180,18 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
 
     @Override
     public void nextSong() {
+        mUseCaseHandler.execute(mNextSong, new NextSong.RequestValues(mPlaylist),
+                new UseCase.UseCaseCallback<NextSong.ResponseValue>() {
+                    @Override
+                    public void onSuccess(NextSong.ResponseValue response) {
+                        playPauseSong();
+                    }
 
+                    @Override
+                    public void onError() {
+                        // Show error, log, etc.
+                    }
+                });
     }
 
     private void showTask(@NonNull Song song) {

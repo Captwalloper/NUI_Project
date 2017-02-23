@@ -175,8 +175,6 @@ public class TasksScreenTest {
         // Add active task
         createTask(TITLE1, DESCRIPTION);
 
-        // Mark the task as complete
-        clickCheckBoxForTask(TITLE1);
 
         // Verify task is shown as complete
         viewAllTasks();
@@ -193,10 +191,8 @@ public class TasksScreenTest {
 
         // Add completed task
         createTask(TITLE1, DESCRIPTION);
-        clickCheckBoxForTask(TITLE1);
 
         // Mark the task as active
-        clickCheckBoxForTask(TITLE1);
 
         // Verify task is shown as active
         viewAllTasks();
@@ -235,9 +231,7 @@ public class TasksScreenTest {
     public void showCompletedTasks() {
         // Add 2 completed tasks
         createTask(TITLE1, DESCRIPTION);
-        clickCheckBoxForTask(TITLE1);
         createTask(TITLE2, DESCRIPTION);
-        clickCheckBoxForTask(TITLE2);
 
         // Verify that all our tasks are shown
         viewCompletedTasks();
@@ -251,9 +245,7 @@ public class TasksScreenTest {
 
         // Add 2 complete tasks
         createTask(TITLE1, DESCRIPTION);
-        clickCheckBoxForTask(TITLE1);
         createTask(TITLE2, DESCRIPTION);
-        clickCheckBoxForTask(TITLE2);
 
         // Click clear completed in menu
         openActionBarOverflowOrOptionsMenu(getTargetContext());
@@ -301,103 +293,10 @@ public class TasksScreenTest {
     }
 
     @Test
-    public void markTaskAsCompleteOnDetailScreen_taskIsCompleteInList() {
-        viewAllTasks();
-
-        // Add 1 active task
-        createTask(TITLE1, DESCRIPTION);
-
-        // Click on the task on the list
-        onView(withText(TITLE1)).perform(click());
-
-        // Click on the checkbox in task details screen
-        onView(withId(R.id.task_detail_complete)).perform(click());
-
-        // Click on the navigation up button to go back to the list
-        onView(withContentDescription(getToolbarNavigationContentDescription())).perform(click());
-
-        // Check that the task is marked as completed
-        onView(allOf(withId(R.id.complete),
-                hasSibling(withText(TITLE1)))).check(matches(isChecked()));
-    }
-
-    @Test
-    public void markTaskAsActiveOnDetailScreen_taskIsActiveInList() {
-        viewAllTasks();
-
-        // Add 1 completed task
-        createTask(TITLE1, DESCRIPTION);
-        clickCheckBoxForTask(TITLE1);
-
-        // Click on the task on the list
-        onView(withText(TITLE1)).perform(click());
-
-        // Click on the checkbox in task details screen
-        onView(withId(R.id.task_detail_complete)).perform(click());
-
-        // Click on the navigation up button to go back to the list
-        onView(withContentDescription(getToolbarNavigationContentDescription())).perform(click());
-
-        // Check that the task is marked as active
-        onView(allOf(withId(R.id.complete),
-                hasSibling(withText(TITLE1)))).check(matches(not(isChecked())));
-    }
-
-    @Test
-    public void markTaskAsAcompleteAndActiveOnDetailScreen_taskIsActiveInList() {
-        viewAllTasks();
-
-        // Add 1 active task
-        createTask(TITLE1, DESCRIPTION);
-
-        // Click on the task on the list
-        onView(withText(TITLE1)).perform(click());
-
-        // Click on the checkbox in task details screen
-        onView(withId(R.id.task_detail_complete)).perform(click());
-
-        // Click again to restore it to original state
-        onView(withId(R.id.task_detail_complete)).perform(click());
-
-        // Click on the navigation up button to go back to the list
-        onView(withContentDescription(getToolbarNavigationContentDescription())).perform(click());
-
-        // Check that the task is marked as active
-        onView(allOf(withId(R.id.complete),
-                hasSibling(withText(TITLE1)))).check(matches(not(isChecked())));
-    }
-
-    @Test
-    public void markTaskAsActiveAndCompleteOnDetailScreen_taskIsCompleteInList() {
-        viewAllTasks();
-
-        // Add 1 completed task
-        createTask(TITLE1, DESCRIPTION);
-        clickCheckBoxForTask(TITLE1);
-
-        // Click on the task on the list
-        onView(withText(TITLE1)).perform(click());
-
-        // Click on the checkbox in task details screen
-        onView(withId(R.id.task_detail_complete)).perform(click());
-
-        // Click again to restore it to original state
-        onView(withId(R.id.task_detail_complete)).perform(click());
-
-        // Click on the navigation up button to go back to the list
-        onView(withContentDescription(getToolbarNavigationContentDescription())).perform(click());
-
-        // Check that the task is marked as active
-        onView(allOf(withId(R.id.complete),
-                hasSibling(withText(TITLE1)))).check(matches(isChecked()));
-    }
-
-    @Test
     public void orientationChange_FilterActivePersists() {
 
         // Add a completed task
         createTask(TITLE1, DESCRIPTION);
-        clickCheckBoxForTask(TITLE1);
 
         // when switching to active tasks
         viewActiveTasks();
@@ -417,7 +316,6 @@ public class TasksScreenTest {
 
         // Add a completed task
         createTask(TITLE1, DESCRIPTION);
-        clickCheckBoxForTask(TITLE1);
 
         // when switching to completed tasks
         viewCompletedTasks();
@@ -490,10 +388,6 @@ public class TasksScreenTest {
 
         // Save the task
         onView(withId(R.id.fab_edit_task_done)).perform(click());
-    }
-
-    private void clickCheckBoxForTask(String title) {
-        onView(allOf(withId(R.id.complete), hasSibling(withText(title)))).perform(click());
     }
 
     private String getText(int stringId) {

@@ -64,7 +64,7 @@ public class Playlist implements Serializable {
             int lastIndex = songs.size() - 1;
             currentSong = songs.get(lastIndex);
         } else {
-            currentSong = songs.get(++currentIndex);
+            currentSong = songs.get(--currentIndex);
         }
 
         return currentSong;

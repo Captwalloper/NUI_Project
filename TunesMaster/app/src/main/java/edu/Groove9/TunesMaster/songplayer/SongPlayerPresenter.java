@@ -18,6 +18,9 @@ package edu.Groove9.TunesMaster.songplayer;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.GestureDetectorCompat;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 
 import edu.Groove9.TunesMaster.UseCase;
 import edu.Groove9.TunesMaster.UseCaseHandler;
@@ -36,13 +39,15 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * Listens to user actions from the UI ({@link SongPlayerFragment}), retrieves the data and updates
  * the UI as required.
  */
-public class SongPlayerPresenter implements SongPlayerContract.Presenter {
+public class SongPlayerPresenter implements SongPlayerContract.Presenter,GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     private final SongPlayerContract.View mTaskDetailView;
     private final UseCaseHandler mUseCaseHandler;
     private final GetTask mGetTask;
     private final DeleteTask mDeleteTask;
     private final PlayPauseSong mPlayPauseSong;
+    private static final String DEBUG_TAG = "Gestures";
+    private GestureDetectorCompat mDetector;
 
     @Nullable
     private Song mSong;
@@ -167,5 +172,50 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
         } else {
             mTaskDetailView.showDescription(description);
         }
+    }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        return false;
     }
 }

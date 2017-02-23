@@ -17,9 +17,14 @@
 package edu.Groove9.TunesMaster.songplayer;
 
 import android.os.Bundle;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.widget.Toast;
 
 import edu.Groove9.TunesMaster.Injection;
 import edu.Groove9.TunesMaster.R;
@@ -30,15 +35,19 @@ import edu.Groove9.TunesMaster.util.ActivityUtils;
 /**
  * Displays task details screen.
  */
-public class SongPlayerActivity extends AppCompatActivity {
+public class SongPlayerActivity extends AppCompatActivity implements GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener {
 
     public static final String EXTRA_SONG_ID = "SONG_ID";
+    private static final String DEBUG_TAG = "Gestures";
+    private GestureDetectorCompat mDetector;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.songplayer_act);
+        mDetector = new GestureDetectorCompat(this,this);
+        mDetector.setOnDoubleTapListener(this);
 
         // Set up the toolbar.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -72,10 +81,65 @@ public class SongPlayerActivity extends AppCompatActivity {
                 Injection.provideDeleteTask(getApplicationContext()),
                 Injection.providePlayPauseSong(getApplicationContext()));
     }
+    @Override
+    public boolean onTouchEvent(MotionEvent event){
+        this.mDetector.onTouchEvent(event);
+        // Be sure to call the superclass implementation
+        return super.onTouchEvent(event);
+    }
 
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    @Override
+    public boolean onDown(MotionEvent e) {
+        Log.d(DEBUG_TAG,"onDown: " + e.toString());
+        Toast.makeText(this,"onDown",Toast.LENGTH_LONG).show();
+        return true;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        Toast.makeText(this,"onSingleTap",Toast.LENGTH_LONG).show();
+        return true;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        return false;
+    }
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        Toast.makeText(this,"onDoubleTap",Toast.LENGTH_LONG).show();
+        return true;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent e) {
+        return false;
     }
 }

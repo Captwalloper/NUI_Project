@@ -18,17 +18,13 @@ package edu.Groove9.TunesMaster.songplayer;
 
 import android.net.Uri;
 
-import edu.Groove9.TunesMaster.Injection;
 import edu.Groove9.TunesMaster.TestUseCaseScheduler;
 import edu.Groove9.TunesMaster.UseCaseHandler;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.DeleteTask;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.GetTask;
-import edu.Groove9.TunesMaster.data.source.TasksDataSource;
-import edu.Groove9.TunesMaster.data.source.TasksRepository;
-import edu.Groove9.TunesMaster.data.source.local.PrototypeSongsLocalDataSource;
+import edu.Groove9.TunesMaster.data.source.SongsRepository;
+import edu.Groove9.TunesMaster.data.source.SongsDataSource;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
-import edu.Groove9.TunesMaster.playlist.domain.usecase.ActivateTask;
-import edu.Groove9.TunesMaster.playlist.domain.usecase.CompleteTask;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.PlayPauseSong;
 import edu.Groove9.TunesMaster.songplayer.player.PrototypeAudioPlayer;
 
@@ -44,7 +40,6 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for the implementation of {@link SongPlayerPresenter}
@@ -64,7 +59,7 @@ public class SongDetailPresenterTest {
     public static final Song COMPLETED_SONG = new Song(TITLE_TEST, DESCRIPTION_TEST, true, SOURCE);
 
     @Mock
-    private TasksRepository mTasksRepository;
+    private SongsRepository mSongsRepository;
 
     @Mock
     private PrototypeAudioPlayer mAudioPlayer;
@@ -77,7 +72,7 @@ public class SongDetailPresenterTest {
      * perform further actions or assertions on them.
      */
     @Captor
-    private ArgumentCaptor<TasksDataSource.GetTaskCallback> mGetTaskCallbackCaptor;
+    private ArgumentCaptor<SongsDataSource.GetSongCallback> mGetTaskCallbackCaptor;
 
     private SongPlayerPresenter mSongPlayerPresenter;
 
@@ -98,12 +93,12 @@ public class SongDetailPresenterTest {
         mSongPlayerPresenter.start();
 
         // Then task is loaded from model, callback is captured and progress indicator is shown
-        verify(mTasksRepository).getTask(eq(ACTIVE_SONG.getId()), mGetTaskCallbackCaptor.capture());
+        verify(mSongsRepository).getSong(eq(ACTIVE_SONG.getId()), mGetTaskCallbackCaptor.capture());
         InOrder inOrder = inOrder(mTaskDetailView);
         inOrder.verify(mTaskDetailView).setLoadingIndicator(true);
 
         // When task is finally loaded
-        mGetTaskCallbackCaptor.getValue().onTaskLoaded(ACTIVE_SONG); // Trigger callback
+        mGetTaskCallbackCaptor.getValue().onSongLoaded(ACTIVE_SONG); // Trigger callback
 
         // Then progress indicator is hidden and title, description and completion status are shown
         // in UI
@@ -118,13 +113,13 @@ public class SongDetailPresenterTest {
         mSongPlayerPresenter.start();
 
         // Then task is loaded from model, callback is captured and progress indicator is shown
-        verify(mTasksRepository).getTask(
+        verify(mSongsRepository).getSong(
                 eq(COMPLETED_SONG.getId()), mGetTaskCallbackCaptor.capture());
         InOrder inOrder = inOrder(mTaskDetailView);
         inOrder.verify(mTaskDetailView).setLoadingIndicator(true);
 
         // When task is finally loaded
-        mGetTaskCallbackCaptor.getValue().onTaskLoaded(COMPLETED_SONG); // Trigger callback
+        mGetTaskCallbackCaptor.getValue().onSongLoaded(COMPLETED_SONG); // Trigger callback
 
         // Then progress indicator is hidden and title, description and completion status are shown
         // in UI
@@ -151,7 +146,7 @@ public class SongDetailPresenterTest {
         mSongPlayerPresenter.deleteSong();
 
         // Then the repository and the view are notified
-        verify(mTasksRepository).deleteTask(song.getId());
+        verify(mSongsRepository).deleteSong(song.getId());
         verify(mTaskDetailView).showSongDeleted();
     }
 
@@ -181,14 +176,12 @@ public class SongDetailPresenterTest {
 
     private SongPlayerPresenter givenTaskDetailPresenter(String id) {
         UseCaseHandler useCaseHandler = new UseCaseHandler(new TestUseCaseScheduler());
-        GetTask getTask = new GetTask(mTasksRepository);
-        CompleteTask completeTask = new CompleteTask(mTasksRepository);
-        ActivateTask activateTask = new ActivateTask(mTasksRepository);
-        DeleteTask deleteTask = new DeleteTask(mTasksRepository);
+        GetTask getTask = new GetTask(mSongsRepository);
+        DeleteTask deleteTask = new DeleteTask(mSongsRepository);
         PlayPauseSong playPauseSong = new PlayPauseSong(mAudioPlayer);
 
         return new SongPlayerPresenter(useCaseHandler, new Song(id, "test", Uri.parse("")), mTaskDetailView,
-                getTask, completeTask, activateTask, deleteTask, playPauseSong);
+                getTask, deleteTask, playPauseSong);
     }
 
 }

@@ -25,10 +25,10 @@ import android.test.suitebuilder.annotation.LargeTest;
 
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.TestUtils;
-import edu.Groove9.TunesMaster.data.FakeTasksRemoteDataSource;
+import edu.Groove9.TunesMaster.data.FakeSongsRemoteDataSource;
 
+import edu.Groove9.TunesMaster.data.source.SongsRepository;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
-import edu.Groove9.TunesMaster.data.source.TasksRepository;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -101,8 +101,8 @@ public class SongDetailScreenTest {
      */
     private void startActivityWithWithStubbedTask(Song song) {
         // Add a song stub to the fake service api layer.
-        TasksRepository.destroyInstance();
-        FakeTasksRemoteDataSource.getInstance().addTasks(song);
+        SongsRepository.destroyInstance();
+        FakeSongsRemoteDataSource.getInstance().addTasks(song);
 
         // Lazily start the Activity from the ActivityTestRule this time to inject the start Intent
         Intent startIntent = new Intent();

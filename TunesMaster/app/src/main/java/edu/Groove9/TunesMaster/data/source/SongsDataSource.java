@@ -25,46 +25,36 @@ import java.util.List;
 /**
  * Main entry point for accessing tasks data.
  * <p>
- * For simplicity, only getTasks() and getTask() have callbacks. Consider adding callbacks to other
+ * For simplicity, only getSongs() and getSong() have callbacks. Consider adding callbacks to other
  * methods to inform the user of network/database errors or successful operations.
  * For Groove9, when a new task is created, it's synchronously stored in cache but usually every
  * operation on database or network should be executed in a different thread.
  */
-public interface TasksDataSource {
+public interface SongsDataSource {
 
-    interface LoadTasksCallback {
+    interface LoadSongsCallback {
 
-        void onTasksLoaded(List<Song> songs);
-
-        void onDataNotAvailable();
-    }
-
-    interface GetTaskCallback {
-
-        void onTaskLoaded(Song song);
+        void onSongsLoaded(List<Song> songs);
 
         void onDataNotAvailable();
     }
 
-    void getTasks(@NonNull LoadTasksCallback callback);
+    interface GetSongCallback {
 
-    void getTask(@NonNull String taskId, @NonNull GetTaskCallback callback);
+        void onSongLoaded(Song song);
 
-    void saveTask(@NonNull Song song);
+        void onDataNotAvailable();
+    }
 
-    void completeTask(@NonNull Song song);
+    void getSongs(@NonNull LoadSongsCallback callback);
 
-    void completeTask(@NonNull String taskId);
+    void getSong(@NonNull String id, @NonNull GetSongCallback callback);
 
-    void activateTask(@NonNull Song song);
+    void saveSong(@NonNull Song song);
 
-    void activateTask(@NonNull String taskId);
+    void refreshSongs();
 
-    void clearCompletedTasks();
+    void deleteAllSongs();
 
-    void refreshTasks();
-
-    void deleteAllTasks();
-
-    void deleteTask(@NonNull String taskId);
+    void deleteSong(@NonNull String taskId);
 }

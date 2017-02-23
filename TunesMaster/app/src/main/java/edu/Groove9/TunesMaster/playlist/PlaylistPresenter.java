@@ -24,11 +24,9 @@ import android.support.annotation.NonNull;
 import edu.Groove9.TunesMaster.UseCase;
 import edu.Groove9.TunesMaster.UseCaseHandler;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
+import edu.Groove9.TunesMaster.playlist.domain.model.Playlist;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
-import edu.Groove9.TunesMaster.data.source.TasksDataSource;
-import edu.Groove9.TunesMaster.playlist.domain.usecase.ActivateTask;
-import edu.Groove9.TunesMaster.playlist.domain.usecase.ClearCompleteTasks;
-import edu.Groove9.TunesMaster.playlist.domain.usecase.CompleteTask;
+import edu.Groove9.TunesMaster.data.source.SongsDataSource;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.GetTasks;
 
 import java.util.List;
@@ -42,9 +40,6 @@ public class PlaylistPresenter implements PlaylistContract.Presenter {
 
     private final PlaylistContract.View mTasksView;
     private final GetTasks mGetTasks;
-    private final CompleteTask mCompleteTask;
-    private final ActivateTask mActivateTask;
-    private final ClearCompleteTasks mClearCompleteTasks;
 
     private PlaylistFilterType mCurrentFiltering = PlaylistFilterType.ALL_TASKS;
 
@@ -53,17 +48,10 @@ public class PlaylistPresenter implements PlaylistContract.Presenter {
     private final UseCaseHandler mUseCaseHandler;
 
     public PlaylistPresenter(@NonNull UseCaseHandler useCaseHandler,
-                             @NonNull PlaylistContract.View tasksView, @NonNull GetTasks getTasks,
-                             @NonNull CompleteTask completeTask, @NonNull ActivateTask activateTask,
-                             @NonNull ClearCompleteTasks clearCompleteTasks) {
+                             @NonNull PlaylistContract.View tasksView, @NonNull GetTasks getTasks) {
         mUseCaseHandler = checkNotNull(useCaseHandler, "usecaseHandler cannot be null");
         mTasksView = checkNotNull(tasksView, "tasksView cannot be null!");
-        mGetTasks = checkNotNull(getTasks, "getTask cannot be null!");
-        mCompleteTask = checkNotNull(completeTask, "completeSong cannot be null!");
-        mActivateTask = checkNotNull(activateTask, "activateSong cannot be null!");
-        mClearCompleteTasks = checkNotNull(clearCompleteTasks,
-                "clearCompleteTasks cannot be null!");
-
+        mGetTasks = checkNotNull(getTasks, "getSong cannot be null!");
 
         mTasksView.setPresenter(this);
     }
@@ -90,7 +78,7 @@ public class PlaylistPresenter implements PlaylistContract.Presenter {
     }
 
     /**
-     * @param forceUpdate   Pass in true to refresh the data in the {@link TasksDataSource}
+     * @param forceUpdate   Pass in true to refresh the data in the {@link SongsDataSource}
      * @param showLoadingUI Pass in true to display a loading icon in the UI
      */
     private void loadTasks(boolean forceUpdate, final boolean showLoadingUI) {
@@ -174,63 +162,9 @@ public class PlaylistPresenter implements PlaylistContract.Presenter {
     }
 
     @Override
-    public void openTaskDetails(@NonNull Song requestedSong) {
-        checkNotNull(requestedSong, "requestedSong cannot be null!");
-        mTasksView.showTaskDetailsUi(requestedSong.getId());
-    }
-
-    @Override
-    public void completeTask(@NonNull Song completedSong) {
-        checkNotNull(completedSong, "completedSong cannot be null!");
-        mUseCaseHandler.execute(mCompleteTask, new CompleteTask.RequestValues(
-                        completedSong.getId()),
-                new UseCase.UseCaseCallback<CompleteTask.ResponseValue>() {
-                    @Override
-                    public void onSuccess(CompleteTask.ResponseValue response) {
-                        mTasksView.showTaskMarkedComplete();
-                        loadTasks(false, false);
-                    }
-
-                    @Override
-                    public void onError() {
-                        mTasksView.showLoadingTasksError();
-                    }
-                });
-    }
-
-    @Override
-    public void activateTask(@NonNull Song activeSong) {
-        checkNotNull(activeSong, "activeSong cannot be null!");
-        mUseCaseHandler.execute(mActivateTask, new ActivateTask.RequestValues(activeSong.getId()),
-                new UseCase.UseCaseCallback<ActivateTask.ResponseValue>() {
-                    @Override
-                    public void onSuccess(ActivateTask.ResponseValue response) {
-                        mTasksView.showTaskMarkedActive();
-                        loadTasks(false, false);
-                    }
-
-                    @Override
-                    public void onError() {
-                        mTasksView.showLoadingTasksError();
-                    }
-                });
-    }
-
-    @Override
-    public void clearCompletedTasks() {
-        mUseCaseHandler.execute(mClearCompleteTasks, new ClearCompleteTasks.RequestValues(),
-                new UseCase.UseCaseCallback<ClearCompleteTasks.ResponseValue>() {
-                    @Override
-                    public void onSuccess(ClearCompleteTasks.ResponseValue response) {
-                        mTasksView.showCompletedTasksCleared();
-                        loadTasks(false, false);
-                    }
-
-                    @Override
-                    public void onError() {
-                        mTasksView.showLoadingTasksError();
-                    }
-                });
+    public void openSongPlayer(@NonNull Playlist playlist) {
+        checkNotNull(playlist, "playlist cannot be null!");
+        mTasksView.showSongPlayerUI(playlist);
     }
 
     /**

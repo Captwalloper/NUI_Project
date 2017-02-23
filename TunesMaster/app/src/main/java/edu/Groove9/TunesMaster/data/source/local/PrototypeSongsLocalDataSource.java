@@ -16,19 +16,15 @@
 
 package edu.Groove9.TunesMaster.data.source.local;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.Groove9.TunesMaster.data.source.TasksDataSource;
+import edu.Groove9.TunesMaster.data.source.SongsDataSource;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -36,7 +32,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Concrete implementation of a data source as a db.
  */
-public class PrototypeSongsLocalDataSource implements TasksDataSource {
+public class PrototypeSongsLocalDataSource implements SongsDataSource {
 
     private static final String music_folder = "music";
     private static PrototypeSongsLocalDataSource INSTANCE;
@@ -57,17 +53,17 @@ public class PrototypeSongsLocalDataSource implements TasksDataSource {
     }
 
     /**
-     * Note: {@link LoadTasksCallback#onDataNotAvailable()} is fired if the database doesn't exist
+     * Note: {@link LoadSongsCallback#onDataNotAvailable()} is fired if the database doesn't exist
      * or the table is empty.
      */
     @Override
-    public void getTasks(@NonNull LoadTasksCallback callback) {
+    public void getSongs(@NonNull LoadSongsCallback callback) {
         List<Song> songs = loadSongsFromAssetsFolder();
         if (songs.isEmpty()) {
             // This will be called if the table is new or just empty.
             callback.onDataNotAvailable();
         } else {
-            callback.onTasksLoaded(songs);
+            callback.onSongsLoaded(songs);
         }
 
     }
@@ -93,9 +89,8 @@ public class PrototypeSongsLocalDataSource implements TasksDataSource {
         String title = filename;
         String description = "A test song";
         String id = filename;
-        boolean completed = false;
         Uri source = Uri.parse(filename);
-        return new Song(title, description, id, completed, source);
+        return new Song(title, description, id, source);
     }
 
     public static Song getSongFromId(String id) {
@@ -104,63 +99,37 @@ public class PrototypeSongsLocalDataSource implements TasksDataSource {
     }
 
     /**
-     * Note: {@link GetTaskCallback#onDataNotAvailable()} is fired if the {@link Song} isn't
+     * Note: {@link GetSongCallback#onDataNotAvailable()} is fired if the {@link Song} isn't
      * found.
      */
     @Override
-    public void getTask(@NonNull String taskId, @NonNull GetTaskCallback callback) {
-        Song song = getSongFromId(taskId);
+    public void getSong(@NonNull String id, @NonNull GetSongCallback callback) {
+        Song song = getSongFromId(id);
         if (song != null) {
-            callback.onTaskLoaded(song);
+            callback.onSongLoaded(song);
         } else {
             callback.onDataNotAvailable();
         }
     }
 
     @Override
-    public void saveTask(@NonNull Song song) {
+    public void saveSong(@NonNull Song song) {
         // do nothing
     }
 
     @Override
-    public void completeTask(@NonNull Song song) {
-        // do nothing
-    }
-
-    @Override
-    public void completeTask(@NonNull String taskId) {
-
-    }
-
-    @Override
-    public void activateTask(@NonNull Song song) {
-        // do nothing
-    }
-
-    @Override
-    public void activateTask(@NonNull String taskId) {
-        // Not required for the local data source because the {@link TasksRepository} handles
-        // converting from a {@code taskId} to a {@link task} using its cached data.
-    }
-
-    @Override
-    public void clearCompletedTasks() {
-        // do nothing
-    }
-
-    @Override
-    public void refreshTasks() {
-        // Not required because the {@link TasksRepository} handles the logic of refreshing the
+    public void refreshSongs() {
+        // Not required because the {@link SongsRepository} handles the logic of refreshing the
         // tasks from all the available data sources.
     }
 
     @Override
-    public void deleteAllTasks() {
+    public void deleteAllSongs() {
         // do nothing
     }
 
     @Override
-    public void deleteTask(@NonNull String taskId) {
+    public void deleteSong(@NonNull String taskId) {
         // do nothing
     }
 }

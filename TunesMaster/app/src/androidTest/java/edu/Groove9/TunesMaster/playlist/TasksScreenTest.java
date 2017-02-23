@@ -27,7 +27,7 @@ import android.widget.ListView;
 import edu.Groove9.TunesMaster.Injection;
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.TestUtils;
-import edu.Groove9.TunesMaster.data.source.TasksDataSource;
+import edu.Groove9.TunesMaster.data.source.SongsDataSource;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -82,14 +82,14 @@ public class TasksScreenTest {
 
                 /**
                  * To avoid a long list of tasks and the need to scroll through the list to find a
-                 * task, we call {@link TasksDataSource#deleteAllTasks()} before each test.
+                 * task, we call {@link SongsDataSource#deleteAllSongs()} before each test.
                  */
                 @Override
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
                     // Doing this in @Before generates a race condition.
-                    Injection.provideTasksRepository(InstrumentationRegistry.getTargetContext())
-                        .deleteAllTasks();
+                    Injection.provideSongsRepository(InstrumentationRegistry.getTargetContext())
+                        .deleteAllSongs();
                 }
             };
 

@@ -30,9 +30,9 @@ class CompleteTaskFilter implements TaskFilter {
         List<Song> filteredSongs = new ArrayList<>();
 
         for (Song song : songs) {
-            if (song.isCompleted()) {
+//            if (song.isCompleted()) {
                 filteredSongs.add(song);
-            }
+//            }
         }
         return filteredSongs;
     }

@@ -41,6 +41,7 @@ import android.widget.TextView;
 
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
+import edu.Groove9.TunesMaster.playlist.domain.model.Playlist;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.songplayer.SongPlayerActivity;
 
@@ -75,18 +76,8 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
      */
     private TaskItemListener mItemListener = new TaskItemListener() {
         @Override
-        public void onTaskClick(Song clickedSong) {
-            mPresenter.openTaskDetails(clickedSong);
-        }
-
-        @Override
-        public void onCompleteTaskClick(Song completedSong) {
-            mPresenter.completeTask(completedSong);
-        }
-
-        @Override
-        public void onActivateTaskClick(Song activatedSong) {
-            mPresenter.activateTask(activatedSong);
+        public void onTaskClick(Playlist playlist) {
+            mPresenter.openSongPlayer(playlist);
         }
     };
 
@@ -182,9 +173,6 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_clear:
-                mPresenter.clearCompletedTasks();
-                break;
             case R.id.menu_filter:
                 showFilteringPopUpMenu();
                 break;
@@ -317,11 +305,11 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
     }
 
     @Override
-    public void showTaskDetailsUi(String taskId) {
+    public void showSongPlayerUI(Playlist playlist) {
         // in it's own Activity, since it makes more sense that way and it gives us the flexibility
         // to show some Intent stubbing.
         Intent intent = new Intent(getContext(), SongPlayerActivity.class);
-        intent.putExtra(SongPlayerActivity.EXTRA_SONG_ID, taskId);
+        intent.putExtra("edu.Groove9.TunesMaster.playlist.domain.model.Playlist", playlist);
         startActivity(intent);
     }
 
@@ -397,37 +385,17 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
             }
 
             final Song song = getItem(i);
+            final List<Song> songs = mSongs;
 
             TextView titleTV = (TextView) rowView.findViewById(R.id.title);
             titleTV.setText(song.getTitleForList());
 
             CheckBox completeCB = (CheckBox) rowView.findViewById(R.id.complete);
 
-            // Active/completed song UI
-            completeCB.setChecked(song.isCompleted());
-            if (song.isCompleted()) {
-                rowView.setBackgroundDrawable(viewGroup.getContext()
-                        .getResources().getDrawable(R.drawable.list_completed_touch_feedback));
-            } else {
-                rowView.setBackgroundDrawable(viewGroup.getContext()
-                        .getResources().getDrawable(R.drawable.touch_feedback));
-            }
-
-            completeCB.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!song.isCompleted()) {
-                        mItemListener.onCompleteTaskClick(song);
-                    } else {
-                        mItemListener.onActivateTaskClick(song);
-                    }
-                }
-            });
-
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    mItemListener.onTaskClick(song);
+                    mItemListener.onTaskClick(new Playlist(songs, song));
                 }
             });
 
@@ -436,12 +404,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
     }
 
     public interface TaskItemListener {
-
-        void onTaskClick(Song clickedSong);
-
-        void onCompleteTaskClick(Song completedSong);
-
-        void onActivateTaskClick(Song activatedSong);
+        void onTaskClick(Playlist playlist);
     }
 
 }

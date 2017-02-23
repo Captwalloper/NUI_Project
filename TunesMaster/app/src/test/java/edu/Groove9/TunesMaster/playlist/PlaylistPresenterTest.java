@@ -20,13 +20,10 @@ import android.net.Uri;
 
 import edu.Groove9.TunesMaster.TestUseCaseScheduler;
 import edu.Groove9.TunesMaster.UseCaseHandler;
-import edu.Groove9.TunesMaster.data.source.TasksDataSource.LoadTasksCallback;
-import edu.Groove9.TunesMaster.data.source.TasksRepository;
+import edu.Groove9.TunesMaster.data.source.SongsRepository;
+import edu.Groove9.TunesMaster.data.source.SongsDataSource.LoadSongsCallback;
 import edu.Groove9.TunesMaster.playlist.domain.filter.FilterFactory;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
-import edu.Groove9.TunesMaster.playlist.domain.usecase.ActivateTask;
-import edu.Groove9.TunesMaster.playlist.domain.usecase.ClearCompleteTasks;
-import edu.Groove9.TunesMaster.playlist.domain.usecase.CompleteTask;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.GetTasks;
 import com.google.common.collect.Lists;
 
@@ -57,7 +54,7 @@ public class PlaylistPresenterTest {
     private static List<Song> TASKS;
 
     @Mock
-    private TasksRepository mTasksRepository;
+    private SongsRepository mSongsRepository;
 
     @Mock
     private PlaylistContract.View mTasksView;
@@ -67,7 +64,7 @@ public class PlaylistPresenterTest {
      * perform further actions or assertions on them.
      */
     @Captor
-    private ArgumentCaptor<LoadTasksCallback> mLoadTasksCallbackCaptor;
+    private ArgumentCaptor<LoadSongsCallback> mLoadTasksCallbackCaptor;
 
     private PlaylistPresenter mPlaylistPresenter;
 
@@ -90,13 +87,9 @@ public class PlaylistPresenterTest {
 
     private PlaylistPresenter givenTasksPresenter() {
         UseCaseHandler useCaseHandler = new UseCaseHandler(new TestUseCaseScheduler());
-        GetTasks getTasks = new GetTasks(mTasksRepository, new FilterFactory());
-        CompleteTask completeTask = new CompleteTask(mTasksRepository);
-        ActivateTask activateTask = new ActivateTask(mTasksRepository);
-        ClearCompleteTasks clearCompleteTasks = new ClearCompleteTasks(mTasksRepository);
+        GetTasks getTasks = new GetTasks(mSongsRepository, new FilterFactory());
 
-        return new PlaylistPresenter(useCaseHandler, mTasksView, getTasks, completeTask, activateTask,
-                clearCompleteTasks);
+        return new PlaylistPresenter(useCaseHandler, mTasksView, getTasks);
     }
 
     @Test
@@ -107,8 +100,8 @@ public class PlaylistPresenterTest {
         mPlaylistPresenter.loadTasks(true);
 
         // Callback is captured and invoked with stubbed tasks
-        verify(mTasksRepository).getTasks(mLoadTasksCallbackCaptor.capture());
-        mLoadTasksCallbackCaptor.getValue().onTasksLoaded(TASKS);
+        verify(mSongsRepository).getSongs(mLoadTasksCallbackCaptor.capture());
+        mLoadTasksCallbackCaptor.getValue().onSongsLoaded(TASKS);
 
         // Then progress indicator is shown
         InOrder inOrder = inOrder(mTasksView);
@@ -128,8 +121,8 @@ public class PlaylistPresenterTest {
         mPlaylistPresenter.loadTasks(true);
 
         // Callback is captured and invoked with stubbed tasks
-        verify(mTasksRepository).getTasks(mLoadTasksCallbackCaptor.capture());
-        mLoadTasksCallbackCaptor.getValue().onTasksLoaded(TASKS);
+        verify(mSongsRepository).getSongs(mLoadTasksCallbackCaptor.capture());
+        mLoadTasksCallbackCaptor.getValue().onSongsLoaded(TASKS);
 
         // Then progress indicator is hidden and active tasks are shown in UI
         verify(mTasksView).setLoadingIndicator(false);
@@ -146,8 +139,8 @@ public class PlaylistPresenterTest {
         mPlaylistPresenter.loadTasks(true);
 
         // Callback is captured and invoked with stubbed tasks
-        verify(mTasksRepository).getTasks(mLoadTasksCallbackCaptor.capture());
-        mLoadTasksCallbackCaptor.getValue().onTasksLoaded(TASKS);
+        verify(mSongsRepository).getSongs(mLoadTasksCallbackCaptor.capture());
+        mLoadTasksCallbackCaptor.getValue().onSongsLoaded(TASKS);
 
         // Then progress indicator is hidden and completed tasks are shown in UI
         verify(mTasksView).setLoadingIndicator(false);
@@ -171,37 +164,10 @@ public class PlaylistPresenterTest {
         Song requestedSong = new Song("Details Requested", "For this task", SOURCE);
 
         // When open task details is requested
-        mPlaylistPresenter.openTaskDetails(requestedSong);
+        mPlaylistPresenter.openSongPlayer(requestedSong);
 
         // Then task detail UI is shown
-        verify(mTasksView).showTaskDetailsUi(any(String.class));
-    }
-
-    @Test
-    public void completeTask_ShowsTaskMarkedComplete() {
-        // Given a stubbed song
-        Song song = new Song("Details Requested", "For this song", SOURCE);
-
-        // When song is marked as complete
-        mPlaylistPresenter.completeTask(song);
-
-        // Then repository is called and song marked complete UI is shown
-        verify(mTasksRepository).completeTask(eq(song.getId()));
-        verify(mTasksView).showTaskMarkedComplete();
-    }
-
-    @Test
-    public void activateTask_ShowsTaskMarkedActive() {
-        // Given a stubbed completed song
-        Song song = new Song("Details Requested", "For this song", true, SOURCE);
-        mPlaylistPresenter.loadTasks(true);
-
-        // When song is marked as activated
-        mPlaylistPresenter.activateTask(song);
-
-        // Then repository is called and song marked active UI is shown
-        verify(mTasksRepository).activateTask(eq(song.getId()));
-        verify(mTasksView).showTaskMarkedActive();
+        verify(mTasksView).showSongPlayerUI(any(String.class));
     }
 
     @Test
@@ -211,7 +177,7 @@ public class PlaylistPresenterTest {
         mPlaylistPresenter.loadTasks(true);
 
         // And the tasks aren't available in the repository
-        verify(mTasksRepository).getTasks(mLoadTasksCallbackCaptor.capture());
+        verify(mSongsRepository).getSongs(mLoadTasksCallbackCaptor.capture());
         mLoadTasksCallbackCaptor.getValue().onDataNotAvailable();
 
         // Then an error message is shown

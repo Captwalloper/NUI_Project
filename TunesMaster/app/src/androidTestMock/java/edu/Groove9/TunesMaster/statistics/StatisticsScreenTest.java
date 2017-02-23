@@ -32,10 +32,10 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import edu.Groove9.TunesMaster.R;
-import edu.Groove9.TunesMaster.data.FakeTasksRemoteDataSource;
+import edu.Groove9.TunesMaster.data.FakeSongsRemoteDataSource;
 
+import edu.Groove9.TunesMaster.data.source.SongsRepository;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
-import edu.Groove9.TunesMaster.data.source.TasksRepository;
 import edu.Groove9.TunesMaster.songplayer.SongPlayerActivity;
 
 import org.junit.Before;
@@ -73,9 +73,9 @@ public class StatisticsScreenTest {
     @Before
     public void intentWithStubbedTaskId() {
         // Given some tasks
-        TasksRepository.destroyInstance();
-        FakeTasksRemoteDataSource.getInstance().addTasks(new Song("Title1", "", false, Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0")));
-        FakeTasksRemoteDataSource.getInstance().addTasks(new Song("Title2", "", true, Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0")));
+        SongsRepository.destroyInstance();
+        FakeSongsRemoteDataSource.getInstance().addTasks(new Song("Title1", "", false, Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0")));
+        FakeSongsRemoteDataSource.getInstance().addTasks(new Song("Title2", "", true, Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0")));
 
         // Lazily start the Activity from the ActivityTestRule
         Intent startIntent = new Intent();

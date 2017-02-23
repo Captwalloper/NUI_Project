@@ -19,7 +19,11 @@ package edu.Groove9.TunesMaster.songplayer.domain.usecase;
 import android.support.annotation.NonNull;
 
 import edu.Groove9.TunesMaster.UseCase;
-import edu.Groove9.TunesMaster.data.source.TasksRepository;
+import edu.Groove9.TunesMaster.data.source.SongsRepository;
+import edu.Groove9.TunesMaster.playlist.domain.model.Playlist;
+import edu.Groove9.TunesMaster.playlist.domain.model.Song;
+import edu.Groove9.TunesMaster.songplayer.player.AudioPlayerContract;
+import edu.Groove9.TunesMaster.songplayer.player.SongStatus;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -28,31 +32,44 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class NextSong extends UseCase<NextSong.RequestValues, NextSong.ResponseValue> {
 
-    private final TasksRepository mTasksRepository;
+    private final AudioPlayerContract musicPlayer;
 
-    public NextSong(@NonNull TasksRepository tasksRepository) {
-        mTasksRepository = checkNotNull(tasksRepository, "tasksRepository cannot be null!");
+    public NextSong(@NonNull AudioPlayerContract musicPlayer) {
+        this.musicPlayer = checkNotNull(musicPlayer, "musicPlayer cannot be null!");
     }
 
     @Override
     protected void executeUseCase(final RequestValues values) {
-        String activeTask = values.getActivateTask();
-        mTasksRepository.activateTask(activeTask);
-        getUseCaseCallback().onSuccess(new ResponseValue());
+        Playlist playlist = values.getPlaylist();
+
+        playlist.getNextSong();
+
+        getUseCaseCallback().onSuccess(new ResponseValue(playlist));
     }
 
     public static final class RequestValues implements UseCase.RequestValues {
 
-        private final String mActivateTask;
+        private final Playlist playlist;
 
-        public RequestValues(@NonNull String activateTask) {
-            mActivateTask = checkNotNull(activateTask, "activateSong cannot be null!");
+        public RequestValues(@NonNull Playlist playlist) {
+            this.playlist = checkNotNull(playlist, "playlist cannot be null!");
         }
 
-        public String getActivateTask() {
-            return mActivateTask;
+        public Playlist getPlaylist() {
+            return playlist;
         }
     }
 
-    public static final class ResponseValue implements UseCase.ResponseValue { }
+    public static final class ResponseValue implements UseCase.ResponseValue {
+
+        private final Playlist playlist;
+
+        public ResponseValue(@NonNull Playlist playlist) {
+            this.playlist = checkNotNull(playlist, "playlist cannot be null!");
+        }
+
+        public Playlist getPlaylist() {
+            return playlist;
+        }
+    }
 }

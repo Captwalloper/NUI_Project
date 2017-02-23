@@ -19,25 +19,25 @@ package edu.Groove9.TunesMaster.addedittask.domain.usecase;
 import android.support.annotation.NonNull;
 
 import edu.Groove9.TunesMaster.UseCase;
+import edu.Groove9.TunesMaster.data.source.SongsRepository;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
-import edu.Groove9.TunesMaster.data.source.TasksRepository;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Deletes a {@link Song} from the {@link TasksRepository}.
+ * Deletes a {@link Song} from the {@link SongsRepository}.
  */
 public class DeleteTask extends UseCase<DeleteTask.RequestValues, DeleteTask.ResponseValue> {
 
-    private final TasksRepository mTasksRepository;
+    private final SongsRepository mSongsRepository;
 
-    public DeleteTask(@NonNull TasksRepository tasksRepository) {
-        mTasksRepository = checkNotNull(tasksRepository, "tasksRepository cannot be null!");
+    public DeleteTask(@NonNull SongsRepository songsRepository) {
+        mSongsRepository = checkNotNull(songsRepository, "songsRepository cannot be null!");
     }
 
     @Override
     protected void executeUseCase(final RequestValues values) {
-        mTasksRepository.deleteTask(values.getTaskId());
+        mSongsRepository.deleteSong(values.getTaskId());
         getUseCaseCallback().onSuccess(new ResponseValue());
     }
 

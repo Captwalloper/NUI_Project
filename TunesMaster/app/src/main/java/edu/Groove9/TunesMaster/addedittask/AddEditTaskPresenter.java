@@ -58,8 +58,8 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
         mUseCaseHandler = checkNotNull(useCaseHandler, "useCaseHandler cannot be null!");
         mTaskId = taskId;
         mAddTaskView = checkNotNull(addTaskView, "addTaskView cannot be null!");
-        mGetTask = checkNotNull(getTask, "getTask cannot be null!");
-        mSaveTask = checkNotNull(saveTask, "saveTask cannot be null!");
+        mGetTask = checkNotNull(getTask, "getSong cannot be null!");
+        mSaveTask = checkNotNull(saveTask, "saveSong cannot be null!");
 
         mAddTaskView.setPresenter(this);
     }

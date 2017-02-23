@@ -388,6 +388,31 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
             TextView titleTV = (TextView) rowView.findViewById(R.id.title);
             titleTV.setText(song.getTitleForList());
 
+
+            /*CheckBox completeCB = (CheckBox) rowView.findViewById(R.id.complete);
+
+            // Active/completed song UI
+            completeCB.setChecked(song.isCompleted());
+            if (song.isCompleted()) {
+                rowView.setBackgroundDrawable(viewGroup.getContext()
+                        .getResources().getDrawable(R.drawable.list_completed_touch_feedback));
+            } else {
+                rowView.setBackgroundDrawable(viewGroup.getContext()
+                        .getResources().getDrawable(R.drawable.touch_feedback));
+            }
+
+            completeCB.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!song.isCompleted()) {
+                        mItemListener.onCompleteTaskClick(song);
+                    } else {
+                        mItemListener.onActivateTaskClick(song);
+                    }
+                }
+            });
+*/
+
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

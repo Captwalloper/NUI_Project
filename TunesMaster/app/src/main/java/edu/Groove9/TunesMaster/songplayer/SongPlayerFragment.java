@@ -176,6 +176,13 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
                 mPresenter.nextSong();
             }
         });
+        Button replay=(Button)root.findViewById(R.id.song_player_replay);
+        replay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.repeatSong();
+            }
+        });
 
         return root;
     }

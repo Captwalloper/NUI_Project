@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.provider.MediaStore;
 
 import java.io.IOException;
 
@@ -75,6 +76,24 @@ public class PrototypeAudioPlayer implements AudioPlayerContract {
     public void stop() {
         this.currentSong = null;
         shutdown();
+    }
+
+    @Override
+    public void changeVolume(VolumeIncrement increment) {
+        AudioManager am = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        int direction = -1;
+        switch(increment) {
+            case UP:
+                direction = AudioManager.ADJUST_RAISE;
+                break;
+            case DOWN:
+                direction = AudioManager.ADJUST_LOWER;
+                break;
+            default:
+                throw new RuntimeException("Unkown VolumeIncrement: " + increment);
+        }
+        int flags = 0; // ignore
+        am.adjustVolume(direction, flags);
     }
 
     @Override

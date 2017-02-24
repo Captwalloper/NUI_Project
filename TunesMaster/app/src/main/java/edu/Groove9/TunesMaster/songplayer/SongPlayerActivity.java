@@ -71,7 +71,10 @@ public class SongPlayerActivity extends AppCompatActivity {
                 Injection.providePlayPauseSong(getApplicationContext()),
                 Injection.provideNextSong(getApplicationContext()),
                 Injection.provideLastSong(getApplicationContext()),
-                Injection.provideShuffleSong(getApplicationContext()));
+                Injection.provideShuffleSong(getApplicationContext()),
+                Injection.provideVolumeUp(getApplicationContext()),
+                Injection.provideVolumeDown(getApplicationContext())
+                );
     }
 
     @Override

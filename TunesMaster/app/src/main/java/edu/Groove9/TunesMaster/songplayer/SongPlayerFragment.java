@@ -99,6 +99,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
         songPanel.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
             public void onSwipeTop() {
                 Toast.makeText(getActivity(),"top",Toast.LENGTH_SHORT).show();
+                mPresenter.volumeUp();
             }
             public void onSwipeRight() {
                 Toast.makeText(getActivity(), "right", Toast.LENGTH_SHORT).show();
@@ -110,12 +111,12 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             }
             public void onSwipeBottom() {
                 Toast.makeText(getActivity(), "bottom", Toast.LENGTH_SHORT).show();
+                mPresenter.volumeDown();
             }
             public void onSingleTap() {
                 Toast.makeText(getActivity(), "single tap", Toast.LENGTH_SHORT).show();
                 mPresenter.playPauseSong();
             }
-
         });
 
         //Set up control panel

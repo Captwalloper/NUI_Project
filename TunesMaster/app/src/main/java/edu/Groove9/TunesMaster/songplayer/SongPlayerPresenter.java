@@ -29,6 +29,8 @@ import edu.Groove9.TunesMaster.songplayer.domain.usecase.LastSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.NextSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.PlayPauseSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.ShuffleSong;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.VolumeDown;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.VolumeUp;
 
 import com.google.common.base.Strings;
 
@@ -48,6 +50,8 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
     private final NextSong mNextSong;
     private final LastSong mLastSong;
     private final ShuffleSong mShuffleSong;
+    private final VolumeUp mVolumeUp;
+    private final VolumeDown mVolumeDown;
 
     @Nullable
     private Playlist mPlaylist;
@@ -60,7 +64,10 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                                @NonNull PlayPauseSong playPauseSong,
                                @NonNull NextSong nextSong,
                                @NonNull LastSong lastSong,
-                               @NonNull ShuffleSong shuffleSong) {
+                               @NonNull ShuffleSong shuffleSong,
+                               @NonNull VolumeUp volumeUp,
+                               @NonNull VolumeDown volumeDown
+                               ) {
         mPlaylist = playlist;
         mUseCaseHandler = checkNotNull(useCaseHandler, "useCaseHandler cannot be null!");
         mTaskDetailView = checkNotNull(taskDetailView, "taskDetailView cannot be null!");
@@ -70,6 +77,8 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
         mNextSong = nextSong;
         mLastSong = lastSong;
         mShuffleSong = shuffleSong;
+        mVolumeUp = volumeUp;
+        mVolumeDown = volumeDown;
         mTaskDetailView.setPresenter(this);
     }
 
@@ -209,5 +218,34 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
         } else {
             mTaskDetailView.showDescription(description);
         }
+    }
+
+    public void volumeUp() {
+        mUseCaseHandler.execute(mVolumeUp, new VolumeUp.RequestValues(),
+                new UseCase.UseCaseCallback<VolumeUp.ResponseValue>() {
+                    @Override
+                    public void onSuccess(VolumeUp.ResponseValue response) {
+
+                    }
+
+                    @Override
+                    public void onError() {
+                        // Show error, log, etc.
+                    }
+                });
+    }
+
+    public void volumeDown() {
+        mUseCaseHandler.execute(mVolumeDown, new VolumeDown.RequestValues(),
+                new UseCase.UseCaseCallback<VolumeDown.ResponseValue>() {
+                    @Override
+                    public void onSuccess(VolumeDown.ResponseValue response) {
+                    }
+
+                    @Override
+                    public void onError() {
+                        // Show error, log, etc.
+                    }
+                });
     }
 }

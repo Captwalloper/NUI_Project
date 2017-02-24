@@ -57,5 +57,9 @@ public interface SongPlayerContract {
         void playPauseSong();
 
         void nextSong();
+
+        void volumeUp();
+
+        void volumeDown();
     }
 }

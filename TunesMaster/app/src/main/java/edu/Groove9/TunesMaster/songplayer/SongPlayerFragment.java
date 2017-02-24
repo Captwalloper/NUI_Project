@@ -17,7 +17,10 @@
 package edu.Groove9.TunesMaster.songplayer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -61,6 +64,11 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
 
     private TextView mDetailDescription;
 
+    // The following are used for the shake detection
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+    private ShakeDetector mShakeDetector;
+
     public static SongPlayerFragment newInstance(@Nullable String taskId) {
         Bundle arguments = new Bundle();
         arguments.putString(ARGUMENT_TASK_ID, taskId);
@@ -72,7 +80,17 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
     @Override
     public void onResume() {
         super.onResume();
+        // Add the following line to register the Session Manager Listener onResume
+        mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
+
         mPresenter.start();
+    }
+
+    @Override
+    public void onPause() {
+        // Add the following line to unregister the Sensor Manager onPause
+        mSensorManager.unregisterListener(mShakeDetector);
+        super.onPause();
     }
 
     @Nullable
@@ -118,6 +136,17 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
                 mPresenter.playPauseSong();
             }
         });
+        // ShakeDetector initialization
+        mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        mAccelerometer = mSensorManager
+                .getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        mShakeDetector = new ShakeDetector();
+        mShakeDetector.setOnShakeListener(new ShakeDetector.OnShakeListener() {
+            @Override
+            public void onShake(int count) {
+                mPresenter.shuffleSong();
+            }
+        });
 
         //Set up control panel
         Button shuffle = (Button) root.findViewById(R.id.song_player_shuffle);
@@ -146,6 +175,13 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             @Override
             public void onClick(View v) {
                 mPresenter.nextSong();
+            }
+        });
+        Button replay=(Button)root.findViewById(R.id.song_player_replay);
+        replay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPresenter.repeatSong();
             }
         });
 

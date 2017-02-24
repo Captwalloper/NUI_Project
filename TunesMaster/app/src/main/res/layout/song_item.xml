@@ -24,6 +24,8 @@
     android:paddingBottom="@dimen/list_item_padding"
     android:paddingTop="@dimen/list_item_padding">
 
+
+
     <TextView
         android:id="@+id/title"
         android:layout_width="match_parent"

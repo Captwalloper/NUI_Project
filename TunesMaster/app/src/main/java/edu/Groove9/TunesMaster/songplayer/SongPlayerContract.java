@@ -61,5 +61,7 @@ public interface SongPlayerContract {
         void volumeUp();
 
         void volumeDown();
+
+        void repeatSong();
     }
 }

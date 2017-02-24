@@ -28,6 +28,7 @@ import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.LastSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.NextSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.PlayPauseSong;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.RepeatSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.ShuffleSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.VolumeDown;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.VolumeUp;
@@ -47,6 +48,7 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
     private final GetTask mGetTask;
     private final DeleteTask mDeleteTask;
     private final PlayPauseSong mPlayPauseSong;
+    private final RepeatSong mRepeatSong;
     private final NextSong mNextSong;
     private final LastSong mLastSong;
     private final ShuffleSong mShuffleSong;
@@ -66,8 +68,10 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                                @NonNull LastSong lastSong,
                                @NonNull ShuffleSong shuffleSong,
                                @NonNull VolumeUp volumeUp,
-                               @NonNull VolumeDown volumeDown
+                               @NonNull VolumeDown volumeDown,
+                               @NonNull RepeatSong repeatSong
                                ) {
+
         mPlaylist = playlist;
         mUseCaseHandler = checkNotNull(useCaseHandler, "useCaseHandler cannot be null!");
         mTaskDetailView = checkNotNull(taskDetailView, "taskDetailView cannot be null!");
@@ -80,7 +84,10 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
         mVolumeUp = volumeUp;
         mVolumeDown = volumeDown;
         mTaskDetailView.setPresenter(this);
+        mRepeatSong = repeatSong;
     }
+
+
 
     @Override
     public void start() {
@@ -186,6 +193,18 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                     }
                 });
     }
+    @Override
+    public void repeatSong() {
+        mUseCaseHandler.execute(mRepeatSong, new RepeatSong.RequestValues(mPlaylist.getCurrentSong()),
+               new UseCase.UseCaseCallback<RepeatSong.ResponseValue>() {
+                    @Override
+                    public void onSuccess(RepeatSong.ResponseValue response) {openSong();}
+
+                    @Override
+                    public void onError() {
+                    }
+                });
+    }
 
     @Override
     public void nextSong() {
@@ -202,6 +221,9 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                     }
                 });
     }
+
+
+
 
     private void showTask(@NonNull Song song) {
         String title = song.getTitle();

@@ -145,7 +145,7 @@ public class SongsRepositoryTest {
         mSongsRepository.saveSong(newSong);
 
         // When a task is completed to the tasks repository
-        mSongsRepository.completeTask(newSong);
+    //    mSongsRepository.completeTask(newSong);
 
         // Then the service API and persistent repository are called and the cache is updated
         verify(mTasksRemoteDataSource).completeTask(newSong);

@@ -74,8 +74,6 @@ public class StatisticsScreenTest {
     public void intentWithStubbedTaskId() {
         // Given some tasks
         SongsRepository.destroyInstance();
-        FakeSongsRemoteDataSource.getInstance().addTasks(new Song("Title1", "", false, Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0")));
-        FakeSongsRemoteDataSource.getInstance().addTasks(new Song("Title2", "", true, Uri.parse("https://www.youtube.com/watch?v=4PDJcw9oJt0")));
 
         // Lazily start the Activity from the ActivityTestRule
         Intent startIntent = new Intent();

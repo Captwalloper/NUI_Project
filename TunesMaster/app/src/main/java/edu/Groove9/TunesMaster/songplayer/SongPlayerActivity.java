@@ -23,9 +23,7 @@ import android.support.v7.widget.Toolbar;
 
 import edu.Groove9.TunesMaster.Injection;
 import edu.Groove9.TunesMaster.R;
-import edu.Groove9.TunesMaster.data.source.local.PrototypeSongsLocalDataSource;
 import edu.Groove9.TunesMaster.playlist.domain.model.Playlist;
-import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.util.ActivityUtils;
 
 /**
@@ -71,7 +69,8 @@ public class SongPlayerActivity extends AppCompatActivity {
                 Injection.providePlayPauseSong(getApplicationContext()),
                 Injection.provideNextSong(getApplicationContext()),
                 Injection.provideLastSong(getApplicationContext()),
-                Injection.provideShuffleSong(getApplicationContext()));
+                Injection.provideShuffleSong(getApplicationContext()),
+                Injection.provideRepeatSong(getApplicationContext()));
     }
 
     @Override

@@ -14,7 +14,9 @@
   ~ limitations under the License.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:yourapp="http://schemas.android.com/apk/res-auto"
+    xmlns:yourandroid="http://schemas.android.com/tools">
 
     <item
         android:id="@+id/list_navigation_menu_item"
@@ -24,4 +26,5 @@
         android:id="@+id/statistics_navigation_menu_item"
         android:icon="@drawable/ic_statistics"
         android:title="@string/song_player_title" />
+
 </menu>

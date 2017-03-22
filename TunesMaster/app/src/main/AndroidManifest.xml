@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2015 The Android Open Source Project
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,10 +12,9 @@
   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
-  -->
-
-<manifest package="edu.Groove9.TunesMaster"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="edu.Groove9.TunesMaster">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -28,16 +26,30 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-                android:name="edu.Groove9.TunesMaster.playlist.PlaylistActivity"
-                android:theme="@style/AppTheme.OverlapSystemBar">
+            android:name=".playlist.PlaylistActivity"
+            android:theme="@style/AppTheme.OverlapSystemBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="edu.Groove9.TunesMaster.songplayer.SongPlayerActivity" />
-        <activity android:name="edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity" />
-        <activity android:name="edu.Groove9.TunesMaster.statistics.StatisticsActivity" />
+        <activity android:name=".songplayer.SongPlayerActivity">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
+        <activity android:name=".addedittask.AddEditTaskActivity" />
+        <activity android:name=".statistics.StatisticsActivity" />
+        <activity android:name=".search.SearchResultsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".searchSong.SearchActivity"
+            android:label="@string/title_activity_search"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

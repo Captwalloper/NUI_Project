@@ -38,6 +38,7 @@
         <activity android:name="edu.Groove9.TunesMaster.songplayer.SongPlayerActivity" />
         <activity android:name="edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity" />
         <activity android:name="edu.Groove9.TunesMaster.statistics.StatisticsActivity" />
+        <activity android:name="edu.Groove9.TunesMaster.voice.VoiceActivity" />
     </application>
 
 </manifest>

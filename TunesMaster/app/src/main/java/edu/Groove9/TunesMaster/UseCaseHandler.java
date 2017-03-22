@@ -17,6 +17,8 @@
 package edu.Groove9.TunesMaster;
 
 
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.PlayPauseSong;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.RepeatSong;
 import edu.Groove9.TunesMaster.util.EspressoIdlingResource;
 
 /**
@@ -66,6 +68,7 @@ public class UseCaseHandler {
             final UseCase.UseCaseCallback<V> useCaseCallback) {
         mUseCaseScheduler.onError(useCaseCallback);
     }
+
 
     private static final class UiCallbackWrapper<V extends UseCase.ResponseValue> implements
             UseCase.UseCaseCallback<V> {

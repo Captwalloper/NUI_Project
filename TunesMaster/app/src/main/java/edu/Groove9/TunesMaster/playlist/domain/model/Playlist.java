@@ -3,6 +3,7 @@ package edu.Groove9.TunesMaster.playlist.domain.model;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -26,6 +27,10 @@ public class Playlist implements Serializable {
         if (!songs.isEmpty()) {
             currentSong = songs.get(0);
         }
+    }
+
+    public Playlist(Song... songs) {
+        this(Arrays.asList(songs));
     }
 
     public Playlist(List<Song> songs, Song currentSong) {

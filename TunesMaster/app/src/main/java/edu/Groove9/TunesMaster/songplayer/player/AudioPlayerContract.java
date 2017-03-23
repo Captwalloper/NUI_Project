@@ -16,6 +16,8 @@ public interface AudioPlayerContract {
 
     void stop();
 
+    void changeVolume(VolumeIncrement increment);
+
     SongStatus getStatus(Song song);
 
 }

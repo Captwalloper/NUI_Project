@@ -77,7 +77,7 @@ public class StatisticsPresenterTest {
 
         // We start the tasks to 3, with one active and two completed
         TASKS = Lists.newArrayList(new Song("Title1", "Description1", SOURCE),
-                new Song("Title2", "Description2", true, SOURCE), new Song("Title3", "Description3", true, SOURCE));
+                new Song("Title2", "Description2", SOURCE), new Song("Title3", "Description3", SOURCE));
     }
 
     @Test

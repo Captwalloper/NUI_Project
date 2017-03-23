@@ -33,6 +33,8 @@ import edu.Groove9.TunesMaster.songplayer.domain.usecase.NextSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.PlayPauseSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.RepeatSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.ShuffleSong;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.VolumeDown;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.VolumeUp;
 import edu.Groove9.TunesMaster.songplayer.player.AudioPlayerContract;
 import edu.Groove9.TunesMaster.songplayer.player.PrototypeAudioPlayer;
 import edu.Groove9.TunesMaster.statistics.domain.usecase.GetStatistics;
@@ -97,6 +99,15 @@ public class Injection {
     public static ShuffleSong provideShuffleSong(@NonNull Context context) {
         return new ShuffleSong(Injection.provideAudioPlayer(context));
     }
+
+    public static VolumeUp provideVolumeUp(@NonNull Context context) {
+        return new VolumeUp(Injection.provideAudioPlayer(context));
+    }
+
+    public static VolumeDown provideVolumeDown(@NonNull Context context) {
+        return new VolumeDown(Injection.provideAudioPlayer(context));
+    }
+
     public static RepeatSong provideRepeatSong(@NonNull Context context) {
         return new RepeatSong(Injection.provideAudioPlayer(context));
     }

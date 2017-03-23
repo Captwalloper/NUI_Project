@@ -17,6 +17,7 @@
 package edu.Groove9.TunesMaster.songplayer;
 
 import android.net.Uri;
+import android.support.annotation.NonNull;
 
 import edu.Groove9.TunesMaster.TestUseCaseScheduler;
 import edu.Groove9.TunesMaster.UseCaseHandler;
@@ -24,8 +25,15 @@ import edu.Groove9.TunesMaster.addedittask.domain.usecase.DeleteTask;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.GetTask;
 import edu.Groove9.TunesMaster.data.source.SongsRepository;
 import edu.Groove9.TunesMaster.data.source.SongsDataSource;
+import edu.Groove9.TunesMaster.playlist.domain.model.Playlist;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.LastSong;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.NextSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.PlayPauseSong;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.RepeatSong;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.ShuffleSong;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.VolumeDown;
+import edu.Groove9.TunesMaster.songplayer.domain.usecase.VolumeUp;
 import edu.Groove9.TunesMaster.songplayer.player.PrototypeAudioPlayer;
 
 import org.junit.Before;
@@ -56,7 +64,7 @@ public class SongDetailPresenterTest {
 
     public static final Song ACTIVE_SONG = new Song(TITLE_TEST, DESCRIPTION_TEST, SOURCE);
 
-    public static final Song COMPLETED_SONG = new Song(TITLE_TEST, DESCRIPTION_TEST, true, SOURCE);
+    public static final Song COMPLETED_SONG = new Song(TITLE_TEST, DESCRIPTION_TEST, SOURCE);
 
     @Mock
     private SongsRepository mSongsRepository;
@@ -176,12 +184,31 @@ public class SongDetailPresenterTest {
 
     private SongPlayerPresenter givenTaskDetailPresenter(String id) {
         UseCaseHandler useCaseHandler = new UseCaseHandler(new TestUseCaseScheduler());
+        Playlist playlist = new Playlist(new Song("title", "test", id, Uri.parse("")));
         GetTask getTask = new GetTask(mSongsRepository);
         DeleteTask deleteTask = new DeleteTask(mSongsRepository);
         PlayPauseSong playPauseSong = new PlayPauseSong(mAudioPlayer);
+        NextSong nextSong = new NextSong(mAudioPlayer);
+        LastSong lastSong = new LastSong(mAudioPlayer);
+        ShuffleSong shuffleSong = new ShuffleSong(mAudioPlayer);
+        VolumeUp volumeUp = new VolumeUp(mAudioPlayer);
+        VolumeDown volumeDown = new VolumeDown(mAudioPlayer);
+        RepeatSong repeatSong = new RepeatSong(mAudioPlayer);
 
-        return new SongPlayerPresenter(useCaseHandler, new Song(id, "test", Uri.parse("")), mTaskDetailView,
-                getTask, deleteTask, playPauseSong);
+        return new SongPlayerPresenter(
+                useCaseHandler
+                , playlist
+                , mTaskDetailView
+                , getTask
+                , deleteTask
+                , playPauseSong
+                , nextSong
+                , lastSong
+                , shuffleSong
+                , volumeUp
+                , volumeDown
+                , repeatSong
+        );
     }
 
 }

@@ -139,70 +139,6 @@ public class SongsRepositoryTest {
     }
 
     @Test
-    public void completeTask_completesTaskToServiceAPIUpdatesCache() {
-        // Given a stub active task with title and description added in the repository
-        Song newSong = new Song(TASK_TITLE, "Some Song Description", SOURCE);
-        mSongsRepository.saveSong(newSong);
-
-        // When a task is completed to the tasks repository
-    //    mSongsRepository.completeTask(newSong);
-
-        // Then the service API and persistent repository are called and the cache is updated
-        verify(mTasksRemoteDataSource).completeTask(newSong);
-        verify(mTasksLocalDataSource).completeTask(newSong);
-        assertThat(mSongsRepository.mCachedSongs.size(), is(1));
-        assertThat(mSongsRepository.mCachedSongs.get(newSong.getId()).isActive(), is(false));
-    }
-
-    @Test
-    public void completeTaskId_completesTaskToServiceAPIUpdatesCache() {
-        // Given a stub active task with title and description added in the repository
-        Song newSong = new Song(TASK_TITLE, "Some Song Description", SOURCE);
-        mSongsRepository.saveSong(newSong);
-
-        // When a task is completed using its id to the tasks repository
-        mSongsRepository.completeTask(newSong.getId());
-
-        // Then the service API and persistent repository are called and the cache is updated
-        verify(mTasksRemoteDataSource).completeTask(newSong);
-        verify(mTasksLocalDataSource).completeTask(newSong);
-        assertThat(mSongsRepository.mCachedSongs.size(), is(1));
-        assertThat(mSongsRepository.mCachedSongs.get(newSong.getId()).isActive(), is(false));
-    }
-
-    @Test
-    public void activateTask_activatesTaskToServiceAPIUpdatesCache() {
-        // Given a stub completed task with title and description in the repository
-        Song newSong = new Song(TASK_TITLE, "Some Song Description", true, SOURCE);
-        mSongsRepository.saveSong(newSong);
-
-        // When a completed task is activated to the tasks repository
-        mSongsRepository.activateTask(newSong);
-
-        // Then the service API and persistent repository are called and the cache is updated
-        verify(mTasksRemoteDataSource).activateTask(newSong);
-        verify(mTasksLocalDataSource).activateTask(newSong);
-        assertThat(mSongsRepository.mCachedSongs.size(), is(1));
-        assertThat(mSongsRepository.mCachedSongs.get(newSong.getId()).isActive(), is(true));
-    }
-
-    @Test
-    public void activateTaskId_activatesTaskToServiceAPIUpdatesCache() {
-        // Given a stub completed task with title and description in the repository
-        Song newSong = new Song(TASK_TITLE, "Some Song Description", true, SOURCE);
-        mSongsRepository.saveSong(newSong);
-
-        // When a completed task is activated with its id to the tasks repository
-        mSongsRepository.activateTask(newSong.getId());
-
-        // Then the service API and persistent repository are called and the cache is updated
-        verify(mTasksRemoteDataSource).activateTask(newSong);
-        verify(mTasksLocalDataSource).activateTask(newSong);
-        assertThat(mSongsRepository.mCachedSongs.size(), is(1));
-        assertThat(mSongsRepository.mCachedSongs.get(newSong.getId()).isActive(), is(true));
-    }
-
-    @Test
     public void getTask_requestsSingleTaskFromLocalDataSource() {
         // When a task is requested from the tasks repository
         mSongsRepository.getSong(TASK_TITLE, mGetSongCallback);
@@ -215,34 +151,25 @@ public class SongsRepositoryTest {
     @Test
     public void deleteCompletedTasks_deleteCompletedTasksToServiceAPIUpdatesCache() {
         // Given 2 stub completed tasks and 1 stub active tasks in the repository
-        Song newSong = new Song(TASK_TITLE, "Some Song Description", true, SOURCE);
+        Song newSong = new Song(TASK_TITLE, "Some Song Description", SOURCE);
         mSongsRepository.saveSong(newSong);
         Song newSong2 = new Song(TASK_TITLE2, "Some Song Description", SOURCE);
         mSongsRepository.saveSong(newSong2);
-        Song newSong3 = new Song(TASK_TITLE3, "Some Song Description", true, SOURCE);
+        Song newSong3 = new Song(TASK_TITLE3, "Some Song Description", SOURCE);
         mSongsRepository.saveSong(newSong3);
 
-        // When a completed tasks are cleared to the tasks repository
-        mSongsRepository.clearCompletedTasks();
-
-
-        // Then the service API and persistent repository are called and the cache is updated
-        verify(mTasksRemoteDataSource).clearCompletedTasks();
-        verify(mTasksLocalDataSource).clearCompletedTasks();
-
         assertThat(mSongsRepository.mCachedSongs.size(), is(1));
-        assertTrue(mSongsRepository.mCachedSongs.get(newSong2.getId()).isActive());
         assertThat(mSongsRepository.mCachedSongs.get(newSong2.getId()).getTitle(), is(TASK_TITLE2));
     }
 
     @Test
     public void deleteAllTasks_deleteTasksToServiceAPIUpdatesCache() {
         // Given 2 stub completed tasks and 1 stub active tasks in the repository
-        Song newSong = new Song(TASK_TITLE, "Some Song Description", true, SOURCE);
+        Song newSong = new Song(TASK_TITLE, "Some Song Description", SOURCE);
         mSongsRepository.saveSong(newSong);
         Song newSong2 = new Song(TASK_TITLE2, "Some Song Description", SOURCE);
         mSongsRepository.saveSong(newSong2);
-        Song newSong3 = new Song(TASK_TITLE3, "Some Song Description", true, SOURCE);
+        Song newSong3 = new Song(TASK_TITLE3, "Some Song Description", SOURCE);
         mSongsRepository.saveSong(newSong3);
 
         // When all tasks are deleted to the tasks repository
@@ -258,7 +185,7 @@ public class SongsRepositoryTest {
     @Test
     public void deleteTask_deleteTaskToServiceAPIRemovedFromCache() {
         // Given a task in the repository
-        Song newSong = new Song(TASK_TITLE, "Some Song Description", true, SOURCE);
+        Song newSong = new Song(TASK_TITLE, "Some Song Description", SOURCE);
         mSongsRepository.saveSong(newSong);
         assertThat(mSongsRepository.mCachedSongs.containsKey(newSong.getId()), is(true));
 

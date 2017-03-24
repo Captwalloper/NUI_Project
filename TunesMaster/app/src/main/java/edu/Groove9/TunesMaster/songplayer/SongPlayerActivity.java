@@ -70,7 +70,10 @@ public class SongPlayerActivity extends AppCompatActivity {
                 Injection.provideNextSong(getApplicationContext()),
                 Injection.provideLastSong(getApplicationContext()),
                 Injection.provideShuffleSong(getApplicationContext()),
-                Injection.provideRepeatSong(getApplicationContext()));
+                Injection.provideVolumeUp(getApplicationContext()),
+                Injection.provideVolumeDown(getApplicationContext()),
+                Injection.provideRepeatSong(getApplicationContext())
+                );
     }
 
     @Override

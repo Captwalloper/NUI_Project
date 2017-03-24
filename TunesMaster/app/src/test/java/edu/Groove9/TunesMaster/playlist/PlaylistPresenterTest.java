@@ -23,6 +23,7 @@ import edu.Groove9.TunesMaster.UseCaseHandler;
 import edu.Groove9.TunesMaster.data.source.SongsRepository;
 import edu.Groove9.TunesMaster.data.source.SongsDataSource.LoadSongsCallback;
 import edu.Groove9.TunesMaster.playlist.domain.filter.FilterFactory;
+import edu.Groove9.TunesMaster.playlist.domain.model.Playlist;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.playlist.domain.usecase.GetTasks;
 import com.google.common.collect.Lists;
@@ -82,7 +83,7 @@ public class PlaylistPresenterTest {
 
         // We start the tasks to 3, with one active and two completed
         TASKS = Lists.newArrayList(new Song("Title1", "Description1", SOURCE),
-                new Song("Title2", "Description2", true, SOURCE), new Song("Title3", "Description3", true, SOURCE));
+                new Song("Title2", "Description2", SOURCE), new Song("Title3", "Description3", SOURCE));
     }
 
     private PlaylistPresenter givenTasksPresenter() {
@@ -162,12 +163,13 @@ public class PlaylistPresenterTest {
     public void clickOnTask_ShowsDetailUi() {
         // Given a stubbed active task
         Song requestedSong = new Song("Details Requested", "For this task", SOURCE);
+        Playlist playlist = new Playlist(requestedSong);
 
         // When open task details is requested
-        mPlaylistPresenter.openSongPlayer(requestedSong);
+        mPlaylistPresenter.openSongPlayer(playlist);
 
         // Then task detail UI is shown
-        verify(mTasksView).showSongPlayerUI(any(String.class));
+        verify(mTasksView).showSongPlayerUI(any(Playlist.class));
     }
 
     @Test

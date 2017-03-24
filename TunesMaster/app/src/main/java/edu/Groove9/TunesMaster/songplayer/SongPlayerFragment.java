@@ -16,7 +16,6 @@
 
 package edu.Groove9.TunesMaster.songplayer;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -24,8 +23,6 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,17 +31,23 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskFragment;
-import com.google.common.base.Preconditions;
+import edu.Groove9.TunesMaster.voice.IVoiceListener;
+import edu.Groove9.TunesMaster.voice.IVoiceRecognizer;
+import edu.Groove9.TunesMaster.voice.VoiceListener;
+import edu.Groove9.TunesMaster.voice.VoiceRecognizer;
+import edu.Groove9.TunesMaster.voice.VoiceResult;
 
+import static android.app.Activity.RESULT_OK;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -68,6 +71,10 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private ShakeDetector mShakeDetector;
+
+    // Use for Voice
+    IVoiceListener voiceListener;
+    IVoiceRecognizer voiceRecognizer;
 
     public static SongPlayerFragment newInstance(@Nullable String taskId) {
         Bundle arguments = new Bundle();
@@ -112,6 +119,16 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
 //            }
 //        });
 
+        setupSongPanel(root);
+        setupShakeDetector();
+        setupVoice();
+        setupControlPanel(root);
+        setupMacroPanel(root);
+
+        return root;
+    }
+
+    private void setupSongPanel(View root) {
         //Set up song panel (gestures)
         LinearLayout songPanel = (LinearLayout) root.findViewById(R.id.song_player_song_panel);
         songPanel.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
@@ -136,6 +153,9 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
                 mPresenter.playPauseSong();
             }
         });
+    }
+
+    private void setupShakeDetector() {
         // ShakeDetector initialization
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         mAccelerometer = mSensorManager
@@ -147,8 +167,9 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
                 mPresenter.shuffleSong();
             }
         });
+    }
 
-        //Set up control panel
+    private void setupControlPanel(View root) {
         Button shuffle = (Button) root.findViewById(R.id.song_player_shuffle);
         shuffle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,8 +205,23 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
                 mPresenter.repeatSong();
             }
         });
+    }
 
-        return root;
+    private void setupVoice() {
+        voiceListener = new VoiceListener();
+        voiceRecognizer = new VoiceRecognizer();
+    }
+
+    private void setupMacroPanel(View root) {
+        View macroPanel = root.findViewById(R.id.macro_panel);
+        Button mic = (Button) macroPanel.findViewById(R.id.mic_btn);
+        final Fragment frag = this;
+        mic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                voiceListener.retrieveInputFromUser(frag);
+            }
+        });
     }
 
     @Override
@@ -244,19 +280,72 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
         getActivity().finish();
     }
 
-    public void showTaskMarkedComplete() {
-        Snackbar.make(getView(), getString(R.string.task_marked_complete), Snackbar.LENGTH_LONG)
-                .show();
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_EDIT_TASK) {
-            // If the task was edited successfully, go back to the list.
-            if (resultCode == Activity.RESULT_OK) {
-                getActivity().finish();
-            }
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case REQUEST_EDIT_TASK:
+                // If the task was edited successfully, go back to the list.
+                if (resultCode == RESULT_OK) {
+                    getActivity().finish();
+                }
+                break;
+            case IVoiceListener.REQ_CODE_SPEECH_INPUT:
+                VoiceResult result = voiceListener.getResult(resultCode, data);
+                if (result.isSuccess()) {
+                    Map<String, Runnable> commands = new HashMap<>();
+                    commands.put("play", new Runnable() {
+                        @Override
+                        public void run() {
+                            mPresenter.playPauseSong();
+                        }
+                    });
+                    commands.put("pause|paws", new Runnable() {
+                        @Override
+                        public void run() {
+                            mPresenter.playPauseSong();
+                        }
+                    });
+                    commands.put("next", new Runnable() {
+                        @Override
+                        public void run() {
+                            mPresenter.nextSong();
+                        }
+                    });
+                    commands.put("last", new Runnable() {
+                        @Override
+                        public void run() {
+                            mPresenter.lastSong();
+                        }
+                    });
+                    commands.put("shuffle", new Runnable() {
+                        @Override
+                        public void run() {
+                            mPresenter.shuffleSong();
+                        }
+                    });
+                    String voiceText = result.getValue();
+                    showMessage(voiceText);
+                    Runnable action = voiceRecognizer.determineAction(voiceText, commands);
+                    action.run();
+                } else {
+                    showError(result.getValue());
+                }
+                break;
         }
+    }
+
+    public void showError(String error) {
+        Toast.makeText(getActivity().getApplicationContext(),
+                error,
+                Toast.LENGTH_SHORT).show();
+    }
+
+    public void showMessage(String message) {
+        Toast.makeText(getActivity().getApplicationContext(),
+                message,
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override

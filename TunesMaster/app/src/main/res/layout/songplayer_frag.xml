@@ -127,10 +127,13 @@
     </SeekBar>
 
     <!--Macro Panel-->
-    <include android:layout_marginTop="0dp"
+    <include
+        android:id="@+id/macro_panel"
+        android:layout_marginTop="0dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        layout="@layout/macro_fragment"
-        android:layout_weight="1.25" />
+        layout="@layout/macro_frag"
+        android:layout_weight="1.25"
+    />
 
 </LinearLayout>

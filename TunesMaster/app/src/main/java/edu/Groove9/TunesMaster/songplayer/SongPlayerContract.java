@@ -64,4 +64,14 @@ public interface SongPlayerContract {
 
         void repeatSong();
     }
+
+    interface Voice {
+        void OnPlay();
+        void OnPause();
+        void OnNext();
+        void OnLast();
+        void OnShuffle();
+
+        void OnFailure();
+    }
 }

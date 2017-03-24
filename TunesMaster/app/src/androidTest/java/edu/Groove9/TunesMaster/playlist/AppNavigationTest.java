@@ -72,7 +72,7 @@ public class AppNavigationTest {
                 .perform(navigateTo(R.id.statistics_navigation_menu_item));
 
         // Check that statistics Activity was opened.
-        onView(withId(R.id.statistics)).check(matches(isDisplayed()));
+        onView(withId(R.id.user_id)).check(matches(isDisplayed()));
     }
 
     @Test

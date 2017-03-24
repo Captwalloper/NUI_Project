@@ -20,12 +20,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import edu.Groove9.TunesMaster.R;
+import edu.Groove9.TunesMaster.statistics.domain.model.UserSession;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -34,7 +39,9 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class StatisticsFragment extends Fragment implements StatisticsContract.View {
 
-    private TextView mStatisticsTV;
+    private EditText userIdET;
+    private Button endSession;
+    private Button startSession;
 
     private StatisticsContract.Presenter mPresenter;
 
@@ -52,44 +59,65 @@ public class StatisticsFragment extends Fragment implements StatisticsContract.V
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.statistics_frag, container, false);
-        mStatisticsTV = (TextView) root.findViewById(R.id.statistics);
+        userIdET = (EditText) root.findViewById(R.id.user_id);
+        userIdET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                showUserSessionStatus();
+            }
+        });
+        endSession = (Button) root.findViewById(R.id.end_session_btn);
+        endSession.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserSession.end();
+                showUserSessionStatus();
+            }
+        });
+        startSession = (Button) root.findViewById(R.id.start_session_btn);
+        startSession.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String newUserId = userIdET.getText().toString();
+                UserSession.start(newUserId);
+                showUserSessionStatus();
+            }
+        });
+
         return root;
     }
+
 
     @Override
     public void onResume() {
         super.onResume();
-        mPresenter.start();
+        showUserSessionStatus();
     }
 
     @Override
-    public void setProgressIndicator(boolean active) {
-        if (active) {
-            mStatisticsTV.setText(getString(R.string.loading));
+    public void showUserSessionStatus() {
+        UserSession userSession = UserSession.get();
+        if (userSession == null) {
+            endSession.setEnabled(false);
+            String newUserId = userIdET.getText().toString();
+            startSession.setEnabled(UserSession.isUserIdValid(newUserId));
         } else {
-            mStatisticsTV.setText("");
+            endSession.setEnabled(true);
+            String newUserId = userIdET.getText().toString();
+            if (!newUserId.equals(userSession.userId)) {
+                userIdET.setText(userSession.userId);
+            }
+            startSession.setEnabled(false);
         }
-    }
-
-    @Override
-    public void showStatistics(int numberOfIncompleteTasks, int numberOfCompletedTasks) {
-        if (numberOfCompletedTasks == 0 && numberOfIncompleteTasks == 0) {
-            mStatisticsTV.setText(getResources().getString(R.string.statistics_no_tasks));
-        } else {
-            String displayString = getResources().getString(R.string.statistics_active_tasks) + " "
-                    + numberOfIncompleteTasks + "\n" + getResources().getString(
-                    R.string.statistics_completed_tasks) + " " + numberOfCompletedTasks;
-            mStatisticsTV.setText(displayString);
-        }
-    }
-
-    @Override
-    public void showLoadingStatisticsError() {
-        mStatisticsTV.setText(getResources().getString(R.string.statistics_error));
-    }
-
-    @Override
-    public boolean isActive() {
-        return isAdded();
     }
 }

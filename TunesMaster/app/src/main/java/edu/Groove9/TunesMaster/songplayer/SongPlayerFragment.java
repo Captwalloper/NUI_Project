@@ -41,6 +41,8 @@ import java.util.Map;
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskFragment;
+import edu.Groove9.TunesMaster.logging.Logger;
+import edu.Groove9.TunesMaster.logging.UserEvent;
 import edu.Groove9.TunesMaster.voice.IVoiceListener;
 import edu.Groove9.TunesMaster.voice.IVoiceRecognizer;
 import edu.Groove9.TunesMaster.voice.VoiceListener;
@@ -139,10 +141,12 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             public void onSwipeRight() {
                 Toast.makeText(getActivity(), "right", Toast.LENGTH_SHORT).show();
                 mPresenter.nextSong();
+                Logger.get().log(new UserEvent(UserEvent.Source.Gesture, UserEvent.Action.Next));
             }
             public void onSwipeLeft() {
                 Toast.makeText(getActivity(), "left", Toast.LENGTH_SHORT).show();
                 mPresenter.lastSong();
+                Logger.get().log(new UserEvent(UserEvent.Source.Gesture, UserEvent.Action.Last));
             }
             public void onSwipeBottom() {
                 Toast.makeText(getActivity(), "bottom", Toast.LENGTH_SHORT).show();
@@ -151,6 +155,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             public void onSingleTap() {
                 Toast.makeText(getActivity(), "single tap", Toast.LENGTH_SHORT).show();
                 mPresenter.playPauseSong();
+                Logger.get().log(new UserEvent(UserEvent.Source.Gesture, UserEvent.Action.PlayPause));
             }
         });
     }
@@ -165,6 +170,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             @Override
             public void onShake(int count) {
                 mPresenter.shuffleSong();
+                Logger.get().log(new UserEvent(UserEvent.Source.Gesture, UserEvent.Action.Shuffle));
             }
         });
     }
@@ -175,6 +181,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             @Override
             public void onClick(View v) {
                 mPresenter.shuffleSong();
+                Logger.get().log(new UserEvent(UserEvent.Source.Touch, UserEvent.Action.Shuffle));
             }
         });
         Button last = (Button) root.findViewById(R.id.song_player_last);
@@ -182,6 +189,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             @Override
             public void onClick(View v) {
                 mPresenter.lastSong();
+                Logger.get().log(new UserEvent(UserEvent.Source.Touch, UserEvent.Action.Last));
             }
         });
         Button playpause = (Button) root.findViewById(R.id.song_player_playpause);
@@ -189,6 +197,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             @Override
             public void onClick(View v) {
                 mPresenter.playPauseSong();
+                Logger.get().log(new UserEvent(UserEvent.Source.Touch, UserEvent.Action.PlayPause));
             }
         });
         Button next = (Button) root.findViewById(R.id.song_player_next);
@@ -196,6 +205,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             @Override
             public void onClick(View v) {
                 mPresenter.nextSong();
+                Logger.get().log(new UserEvent(UserEvent.Source.Touch, UserEvent.Action.Next));
             }
         });
         Button replay=(Button)root.findViewById(R.id.song_player_replay);
@@ -299,30 +309,35 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
                         @Override
                         public void run() {
                             mPresenter.playPauseSong();
+                            Logger.get().log(new UserEvent(UserEvent.Source.Voice, UserEvent.Action.PlayPause));
                         }
                     });
                     commands.put("pause|paws", new Runnable() {
                         @Override
                         public void run() {
                             mPresenter.playPauseSong();
+                            Logger.get().log(new UserEvent(UserEvent.Source.Voice, UserEvent.Action.PlayPause));
                         }
                     });
                     commands.put("next", new Runnable() {
                         @Override
                         public void run() {
                             mPresenter.nextSong();
+                            Logger.get().log(new UserEvent(UserEvent.Source.Voice, UserEvent.Action.Next));
                         }
                     });
                     commands.put("last", new Runnable() {
                         @Override
                         public void run() {
                             mPresenter.lastSong();
+                            Logger.get().log(new UserEvent(UserEvent.Source.Voice, UserEvent.Action.Last));
                         }
                     });
                     commands.put("shuffle", new Runnable() {
                         @Override
                         public void run() {
                             mPresenter.shuffleSong();
+                            Logger.get().log(new UserEvent(UserEvent.Source.Voice, UserEvent.Action.Shuffle));
                         }
                     });
                     String voiceText = result.getValue();

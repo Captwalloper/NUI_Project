@@ -48,34 +48,7 @@ public class StatisticsPresenter implements StatisticsContract.Presenter {
 
     @Override
     public void start() {
-        loadStatistics();
+
     }
 
-    private void loadStatistics() {
-        mStatisticsView.setProgressIndicator(true);
-
-        mUseCaseHandler.execute(mGetStatistics, new GetStatistics.RequestValues(),
-                new UseCase.UseCaseCallback<GetStatistics.ResponseValue>() {
-            @Override
-            public void onSuccess(GetStatistics.ResponseValue response) {
-                Statistics statistics = response.getStatistics();
-                // The view may not be able to handle UI updates anymore
-                if (!mStatisticsView.isActive()) {
-                    return;
-                }
-                mStatisticsView.setProgressIndicator(false);
-
-                mStatisticsView.showStatistics(statistics.getActiveTasks(), statistics.getCompletedTasks());
-            }
-
-            @Override
-            public void onError() {
-                // The view may not be able to handle UI updates anymore
-                if (!mStatisticsView.isActive()) {
-                    return;
-                }
-                mStatisticsView.showLoadingStatisticsError();
-            }
-        });
-    }
 }

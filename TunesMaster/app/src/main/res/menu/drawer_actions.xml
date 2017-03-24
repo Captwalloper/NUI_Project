@@ -21,7 +21,11 @@
         android:icon="@drawable/ic_list"
         android:title="@string/playlist_title" />
     <item
+        android:id="@+id/song_player_navigation_menu_item"
+        android:icon="@drawable/ic_music_note"
+        android:title="@string/song_player_title" />
+    <item
         android:id="@+id/statistics_navigation_menu_item"
         android:icon="@drawable/ic_statistics"
-        android:title="@string/song_player_title" />
+        android:title="@string/statistics_title" />
 </menu>

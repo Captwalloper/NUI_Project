@@ -23,11 +23,23 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin">
 
-    <TextView
-        android:id="@+id/statistics"
+    <Button
+        android:id="@+id/end_session_btn"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Medium Text"
+        android:layout_height="wrap_content"
+        android:text="@string/end_session"/>
+
+    <EditText
+        android:id="@+id/user_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="UserId"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/start_session_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/start_session"/>
 
 </LinearLayout>

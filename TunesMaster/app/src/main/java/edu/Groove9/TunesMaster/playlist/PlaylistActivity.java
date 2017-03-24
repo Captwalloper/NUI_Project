@@ -16,12 +16,16 @@
 
 package edu.Groove9.TunesMaster.playlist;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.VisibleForTesting;
 import android.support.design.widget.NavigationView;
 import android.support.test.espresso.IdlingResource;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -31,6 +35,7 @@ import android.view.MenuItem;
 
 import edu.Groove9.TunesMaster.Injection;
 import edu.Groove9.TunesMaster.R;
+import edu.Groove9.TunesMaster.songplayer.SongPlayerActivity;
 import edu.Groove9.TunesMaster.statistics.StatisticsActivity;
 import edu.Groove9.TunesMaster.util.ActivityUtils;
 import edu.Groove9.TunesMaster.util.EspressoIdlingResource;
@@ -38,6 +43,7 @@ import edu.Groove9.TunesMaster.util.EspressoIdlingResource;
 public class PlaylistActivity extends AppCompatActivity {
 
     private static final String CURRENT_FILTERING_KEY = "CURRENT_FILTERING_KEY";
+    private final int REQUEST_WRITE_STORAGE = 42;
 
     private DrawerLayout mDrawerLayout;
 
@@ -85,6 +91,18 @@ public class PlaylistActivity extends AppCompatActivity {
                     (PlaylistFilterType) savedInstanceState.getSerializable(CURRENT_FILTERING_KEY);
             mPlaylistPresenter.setFiltering(currentFiltering);
         }
+
+        askForPermission();
+    }
+
+    private void askForPermission() {
+        boolean hasPermission = (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+        if (!hasPermission) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_WRITE_STORAGE);
+        }
     }
 
     @Override
@@ -114,11 +132,17 @@ public class PlaylistActivity extends AppCompatActivity {
                             case R.id.list_navigation_menu_item:
                                 // Do nothing, we're already on that screen
                                 break;
-                            case R.id.statistics_navigation_menu_item:
-                                Intent intent = new Intent(PlaylistActivity.this, StatisticsActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            case R.id.song_player_navigation_menu_item:
+                                Intent songPlayerIntent = new Intent(PlaylistActivity.this, SongPlayerActivity.class);
+                                songPlayerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                                         | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
+                                startActivity(songPlayerIntent);
+                                break;
+                            case R.id.statistics_navigation_menu_item:
+                                Intent statisticsIntent = new Intent(PlaylistActivity.this, StatisticsActivity.class);
+                                statisticsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(statisticsIntent);
                                 break;
                             default:
                                 break;

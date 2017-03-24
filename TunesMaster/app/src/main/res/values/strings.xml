@@ -33,6 +33,7 @@
     <string name="successfully_saved_task_message">TO-DO saved</string>
     <string name="playlist_title">Playlist</string>
     <string name="song_player_title">Song Player</string>
+    <string name="statistics_title">Statistics</string>
     <string name="statistics_no_tasks">You have no songs.</string>
     <string name="statistics_active_tasks">Active songs:</string>
     <string name="statistics_completed_tasks">Completed songs:</string>
@@ -58,5 +59,7 @@
     <string name="refresh">Refresh</string>
     <string name="speech_prompt">Say something&#8230;</string>
     <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
+    <string name="start_session">Start Session</string>
+    <string name="end_session">End Session</string>
 
 </resources>

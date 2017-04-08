@@ -49,7 +49,7 @@
     <string name="nav_all">All</string>
     <string name="nav_active">Active</string>
     <string name="nav_completed">Completed</string>
-    <string name="label_all">All Songs</string>
+    <string name="label_all"></string>
     <string name="label_active">Active TO-DOs</string>
     <string name="label_completed">Completed TO-DOs</string>
     <string name="no_tasks_all">You have no songs in playlist!</string>

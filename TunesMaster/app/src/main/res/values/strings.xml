@@ -24,7 +24,7 @@
     <string name="completed_tasks_cleared">Completed songs cleared</string>
     <string name="menu_filter">Filter</string>
     <string name="menu_clear">Clear completed</string>
-    <string name="menu_delete_task">Delete song</string>
+    <string name="menu_help_task">Help!</string>
     <string name="navigation_view_header_title">Songs</string>
     <string name="title_hint">Title</string>
     <string name="description_hint">Enter Description here.</string>

@@ -38,8 +38,6 @@ import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
@@ -246,7 +244,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_delete:
+            case R.id.menu_help:
                 mPresenter.deleteSong();
                 return true;
         }

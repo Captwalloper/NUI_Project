@@ -109,6 +109,24 @@ public class PrototypeAudioPlayer implements AudioPlayerContract {
         }
     }
 
+    @Override
+    public int percentageProgress() {
+        try {
+            int totalLength = mediaPlayer.getDuration();
+            int played = mediaPlayer.getCurrentPosition();
+            return (played * 100) / totalLength;
+        } catch (NullPointerException npe) {
+            return 0;
+        }
+    }
+
+    @Override
+    public void setPercentProgress(int percent) {
+        int totalLength = mediaPlayer.getDuration();
+        int seekPositionMs = (totalLength * percent) / 100;
+        mediaPlayer.seekTo(seekPositionMs);
+    }
+
     private boolean isPlaying() {
         return mediaPlayer != null && mediaPlayer.isPlaying();
     }

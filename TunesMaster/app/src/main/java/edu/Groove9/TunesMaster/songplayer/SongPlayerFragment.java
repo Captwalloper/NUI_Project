@@ -22,6 +22,8 @@ import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -33,19 +35,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.stream.Collectors;
 
+import edu.Groove9.TunesMaster.Injection;
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskFragment;
 import edu.Groove9.TunesMaster.logging.Logger;
 import edu.Groove9.TunesMaster.logging.UserEvent;
+import edu.Groove9.TunesMaster.songplayer.player.AudioPlayerContract;
 import edu.Groove9.TunesMaster.voice.CommandParseException;
 import edu.Groove9.TunesMaster.voice.IVoiceListener;
 import edu.Groove9.TunesMaster.voice.IVoiceRecognizer;
@@ -70,8 +77,8 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
     private SongPlayerContract.Presenter mPresenter;
 
     private TextView mDetailTitle;
-
     private TextView mDetailDescription;
+    private SeekBar mSongProgress;
 
     // The following are used for the shake detection
     private SensorManager mSensorManager;
@@ -81,6 +88,10 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
     // Use for Voice
     IVoiceListener voiceListener;
     IVoiceRecognizer voiceRecognizer;
+
+    private AudioPlayerContract audioPlayer;
+    private Handler songProgressUpdateHandler;
+    private Timer songProgressUpdateTimer;
 
     public static SongPlayerFragment newInstance(@Nullable String taskId) {
         Bundle arguments = new Bundle();
@@ -115,6 +126,8 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
         mDetailTitle = (TextView) root.findViewById(R.id.task_detail_title);
         mDetailDescription = (TextView) root.findViewById(R.id.task_detail_description);
 
+        audioPlayer = Injection.provideAudioPlayer(getActivity().getApplicationContext());
+
         //Set up floating action button
 //        FloatingActionButton fab =
 //                (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task);
@@ -130,6 +143,8 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
         setupVoice();
         setupControlPanel(root);
         setupMacroPanel(root);
+
+        setupSongProgressSeekbar(root);
 
         return root;
     }
@@ -385,6 +400,50 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
     public void showMissingSong() {
         mDetailTitle.setText("");
         mDetailDescription.setText(getString(R.string.no_data));
+    }
+
+    @Override
+    public void showSongProgress(int percent) {
+        mSongProgress.setProgress(percent);
+    }
+
+    private void setupSongProgressSeekbar(View root) {
+        mSongProgress = (SeekBar) root.findViewById(R.id.song_player_progress);
+        mSongProgress.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (fromUser) {
+                    audioPlayer.setPercentProgress(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {  }
+        });
+
+        setupSongProgressUpdateHandler();
+        songProgressUpdateTimer = new Timer();
+        startSongProgressTimer();
+    }
+
+    private void setupSongProgressUpdateHandler() {
+        songProgressUpdateHandler = new Handler() {
+            public void handleMessage(Message msg) {
+                int progress = audioPlayer.percentageProgress();
+                showSongProgress(progress);
+            }
+        };
+    }
+
+    private void startSongProgressTimer() {
+        songProgressUpdateTimer.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                songProgressUpdateHandler.obtainMessage(1).sendToTarget();
+            }
+        }, 0, 1000);
     }
 
 }

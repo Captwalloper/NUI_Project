@@ -40,6 +40,7 @@ import android.widget.TextView;
 
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
+import edu.Groove9.TunesMaster.help.HelpActivity;
 import edu.Groove9.TunesMaster.playlist.domain.model.Playlist;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.songplayer.SongPlayerActivity;

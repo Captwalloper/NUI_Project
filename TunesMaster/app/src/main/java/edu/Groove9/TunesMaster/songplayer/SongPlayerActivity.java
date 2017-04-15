@@ -29,6 +29,8 @@ import edu.Groove9.TunesMaster.help.HelpActivity;
 import edu.Groove9.TunesMaster.playlist.domain.model.Playlist;
 import edu.Groove9.TunesMaster.util.ActivityUtils;
 
+import static java.security.AccessController.getContext;
+
 /**
  * Displays task details screen.
  */
@@ -87,9 +89,15 @@ public class SongPlayerActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_help:
                 // Open the navigation drawer when the home icon is selected from the toolbar.
-                startActivity( new Intent(SongPlayerActivity.this, HelpActivity.class));
+                showHelp();
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+    private void showHelp() {
+        Intent intent = new Intent(this, HelpActivity.class);
+        final String helpText="qwerty";
+        intent.putExtra("Help_Text", helpText);
+        startActivity(intent);
     }
 }

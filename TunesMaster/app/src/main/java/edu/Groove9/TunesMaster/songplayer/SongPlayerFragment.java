@@ -42,6 +42,7 @@ import java.util.Map;
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskFragment;
+import edu.Groove9.TunesMaster.help.HelpActivity;
 import edu.Groove9.TunesMaster.logging.Logger;
 import edu.Groove9.TunesMaster.logging.UserEvent;
 import edu.Groove9.TunesMaster.voice.CommandParseException;

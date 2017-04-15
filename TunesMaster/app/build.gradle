@@ -98,6 +98,7 @@ dependencies {
     androidTestCompile "com.android.support:design:$rootProject.supportLibraryVersion"
 
     compile 'ir.sohreco.androidfilechooser:android-file-chooser:1.2'
+    compile 'com.android.support:support-v4:24.2.1'
     androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
 }

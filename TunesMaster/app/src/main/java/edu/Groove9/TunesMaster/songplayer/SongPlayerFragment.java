@@ -31,7 +31,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -43,16 +42,13 @@ import android.os.CountDownTimer;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.stream.Collectors;
 
 import edu.Groove9.TunesMaster.Injection;
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskFragment;
-import edu.Groove9.TunesMaster.help.HelpActivity;
 import edu.Groove9.TunesMaster.logging.Logger;
 import edu.Groove9.TunesMaster.logging.UserEvent;
 import edu.Groove9.TunesMaster.songplayer.player.AudioPlayerContract;
@@ -173,15 +169,10 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
                 mPresenter.volumeUp();
             }
             public void onSwipeRight() {
-                //last.setBackground(getResources().getDrawable(R.drawable.last_fill));
-                showPreviousSongFeedback();
-                Toast.makeText(getActivity(), "Previous Song", Toast.LENGTH_SHORT).show();
                 mPresenter.nextSong();
                 Logger.get().log(new UserEvent(UserEvent.Source.Gesture, UserEvent.Action.Next));
             }
             public void onSwipeLeft() {
-                showNextSongFeedback();
-                Toast.makeText(getActivity(), "Next Song", Toast.LENGTH_SHORT).show();
                 mPresenter.lastSong();
                 Logger.get().log(new UserEvent(UserEvent.Source.Gesture, UserEvent.Action.Last));
             }
@@ -191,9 +182,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             }
             public void onSingleTap() {
 
-                Toast.makeText(getActivity(), "Play", Toast.LENGTH_SHORT).show();
                 mPresenter.playPauseSong();
-                showPlaypauseFeedback();
                 Logger.get().log(new UserEvent(UserEvent.Source.Gesture, UserEvent.Action.PlayPause));
             }
         });
@@ -220,7 +209,6 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             @Override
             public void onClick(View v) {
                 mPresenter.shuffleSong();
-                showShuffleFeedback();
                 Logger.get().log(new UserEvent(UserEvent.Source.Touch, UserEvent.Action.Shuffle));
             }
         });
@@ -229,7 +217,6 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             @Override
             public void onClick(View v) {
                 mPresenter.lastSong();
-                showPreviousSongFeedback();
                 Logger.get().log(new UserEvent(UserEvent.Source.Touch, UserEvent.Action.Last));
             }
         });
@@ -238,7 +225,6 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             @Override
             public void onClick(View v) {
                 mPresenter.playPauseSong();
-                showPlaypauseFeedback();
                 Logger.get().log(new UserEvent(UserEvent.Source.Touch, UserEvent.Action.PlayPause));
             }
         });
@@ -247,7 +233,6 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             @Override
             public void onClick(View v) {
                 mPresenter.nextSong();
-                showNextSongFeedback();
                 Logger.get().log(new UserEvent(UserEvent.Source.Touch, UserEvent.Action.Next));
             }
         });
@@ -320,16 +305,19 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
 
     @Override
     public void showNextSongFeedback() {
+        Toast.makeText(getActivity(), "Next Song", Toast.LENGTH_SHORT).show();
         showButtonFeedback(next, getResources().getDrawable(R.drawable.next_fill), getResources().getDrawable(R.drawable.next));
     }
 
     @Override
-    public void showPreviousSongFeedback() {
+    public void showLastSongFeedback() {
+        Toast.makeText(getActivity(), "Previous Song", Toast.LENGTH_SHORT).show();
         showButtonFeedback(last, getResources().getDrawable(R.drawable.last_fill), getResources().getDrawable(R.drawable.last));
     }
 
     @Override
     public void showPlaypauseFeedback() {
+        Toast.makeText(getActivity(), "Play", Toast.LENGTH_SHORT).show();
         boolean playing = playpause.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.play).getConstantState());
         if (playing) {
             playpause.setBackground(getResources().getDrawable(R.drawable.pause));
@@ -341,6 +329,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
 
     @Override
     public void showShuffleFeedback() {
+        Toast.makeText(getActivity(), "Shuffle", Toast.LENGTH_SHORT).show();
         showButtonFeedback(shuffle, getResources().getDrawable(R.drawable.shuffle_filled), getResources().getDrawable(R.drawable.shuffle));
     }
 

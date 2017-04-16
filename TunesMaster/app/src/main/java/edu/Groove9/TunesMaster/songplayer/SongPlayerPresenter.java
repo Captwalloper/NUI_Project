@@ -21,7 +21,6 @@ import android.support.annotation.Nullable;
 
 import edu.Groove9.TunesMaster.UseCase;
 import edu.Groove9.TunesMaster.UseCaseHandler;
-import edu.Groove9.TunesMaster.addedittask.domain.usecase.DeleteTask;
 import edu.Groove9.TunesMaster.addedittask.domain.usecase.GetTask;
 import edu.Groove9.TunesMaster.playlist.domain.model.Playlist;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
@@ -45,7 +44,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class SongPlayerPresenter implements SongPlayerContract.Presenter {
 
-    private final SongPlayerContract.View mTaskDetailView;
+    private final SongPlayerContract.View mView;
     private final UseCaseHandler mUseCaseHandler;
     private final GetTask mGetTask;
     private final PlayPauseSong mPlayPauseSong;
@@ -74,7 +73,7 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
 
         mPlaylist = playlist;
         mUseCaseHandler = checkNotNull(useCaseHandler, "useCaseHandler cannot be null!");
-        mTaskDetailView = checkNotNull(taskDetailView, "taskDetailView cannot be null!");
+        mView = checkNotNull(taskDetailView, "taskDetailView cannot be null!");
         mGetTask = checkNotNull(getTask, "getSong cannot be null!");
         mPlayPauseSong = playPauseSong;
         mNextSong = nextSong;
@@ -82,7 +81,7 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
         mShuffleSong = shuffleSong;
         mVolumeUp = volumeUp;
         mVolumeDown = volumeDown;
-        mTaskDetailView.setPresenter(this);
+        mView.setPresenter(this);
         mRepeatSong = repeatSong;
     }
 
@@ -95,11 +94,11 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
 
     private void openSong() {
         if (Strings.isNullOrEmpty(mPlaylist.getCurrentSong().getId())) {
-            mTaskDetailView.showMissingSong();
+            mView.showMissingSong();
             return;
         }
 
-        mTaskDetailView.setLoadingIndicator(true);
+        mView.setLoadingIndicator(true);
 
         mUseCaseHandler.execute(mGetTask, new GetTask.RequestValues(mPlaylist.getCurrentSong().getId()),
                 new UseCase.UseCaseCallback<GetTask.ResponseValue>() {
@@ -108,14 +107,14 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                         Song song = response.getTask();
 
                         // The view may not be able to handle UI updates anymore
-                        mTaskDetailView.setLoadingIndicator(false);
+                        mView.setLoadingIndicator(false);
                         showTask(song);
                     }
 
                     @Override
                     public void onError() {
                         // The view may not be able to handle UI updates anymore
-                        mTaskDetailView.showMissingSong();
+                        mView.showMissingSong();
                     }
                 });
     }
@@ -123,10 +122,10 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
     @Override
     public void editSong() {
         if (Strings.isNullOrEmpty(mPlaylist.getCurrentSong().getId())) {
-            mTaskDetailView.showMissingSong();
+            mView.showMissingSong();
             return;
         }
-        mTaskDetailView.showEditSong(mPlaylist.getCurrentSong().getId());
+        mView.showEditSong(mPlaylist.getCurrentSong().getId());
     }
 
     @Override
@@ -136,6 +135,7 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                     @Override
                     public void onSuccess(ShuffleSong.ResponseValue response) {
                         playPauseSong();
+                        mView.showShuffleFeedback();
                     }
 
                     @Override
@@ -152,6 +152,7 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                     @Override
                     public void onSuccess(LastSong.ResponseValue response) {
                         playPauseSong();
+                        mView.showLastSongFeedback();
                     }
 
                     @Override
@@ -168,7 +169,7 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                     @Override
                     public void onSuccess(PlayPauseSong.ResponseValue response) {
                         openSong();
-
+                        mView.showPlaypauseFeedback();
                     }
 
                     @Override
@@ -182,7 +183,9 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
         mUseCaseHandler.execute(mRepeatSong, new RepeatSong.RequestValues(mPlaylist.getCurrentSong()),
                new UseCase.UseCaseCallback<RepeatSong.ResponseValue>() {
                     @Override
-                    public void onSuccess(RepeatSong.ResponseValue response) {openSong();}
+                    public void onSuccess(RepeatSong.ResponseValue response) {
+                        openSong();
+                    }
 
                     @Override
                     public void onError() {
@@ -197,6 +200,7 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                     @Override
                     public void onSuccess(NextSong.ResponseValue response) {
                         playPauseSong();
+                        mView.showNextSongFeedback();
                     }
 
                     @Override
@@ -211,15 +215,15 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
         String description = song.getDescription();
 
         if (Strings.isNullOrEmpty(title)) {
-            mTaskDetailView.hideTitle();
+            mView.hideTitle();
         } else {
-            mTaskDetailView.showTitle(title);
+            mView.showTitle(title);
         }
 
         if (Strings.isNullOrEmpty(description)) {
-            mTaskDetailView.hideDescription();
+            mView.hideDescription();
         } else {
-            mTaskDetailView.showDescription(description);
+            mView.showDescription(description);
         }
     }
 
@@ -257,7 +261,7 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
         int progress = audioPlayer.percentageProgress();
         Song currentSong = mPlaylist.getCurrentSong();
         if (audioPlayer.getStatus(currentSong) == SongStatus.PLAYING) {
-            mTaskDetailView.showSongProgress(progress);
+            mView.showSongProgress(progress);
         }
     }
 }

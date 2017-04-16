@@ -42,7 +42,7 @@ public interface SongPlayerContract {
 
         void showNextSongFeedback();
 
-        void showPreviousSongFeedback();
+        void showLastSongFeedback();
 
         void showPlaypauseFeedback();
 

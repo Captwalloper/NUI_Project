@@ -497,8 +497,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
     private void setupSongProgressUpdateHandler() {
         songProgressUpdateHandler = new Handler() {
             public void handleMessage(Message msg) {
-                int progress = audioPlayer.percentageProgress();
-                showSongProgress(progress);
+                mPresenter.updateProgress(audioPlayer);
             }
         };
     }

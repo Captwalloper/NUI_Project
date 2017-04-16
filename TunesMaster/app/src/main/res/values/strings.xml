@@ -46,17 +46,17 @@
         <item>@string/nav_active</item>
         <item>@string/nav_completed</item>
     </string-array>
-    <string name="nav_all">All</string>
-    <string name="nav_active">Active</string>
-    <string name="nav_completed">Completed</string>
-    <string name="label_all">All Songs</string>
+    <string name="nav_all"></string>
+    <string name="nav_active"></string>
+    <string name="nav_completed"></string>
+    <string name="label_all"></string>
     <string name="label_active">Active TO-DOs</string>
     <string name="label_completed">Completed TO-DOs</string>
     <string name="no_tasks_all">You have no songs in playlist!</string>
     <string name="no_tasks_active">You have no active TO-DOs!</string>
     <string name="no_tasks_completed">You have no completed TO-DOs!</string>
     <string name="no_tasks_add">Add a TO-DO item +</string>
-    <string name="refresh">Refresh</string>
+    <string name="refresh"></string>
     <string name="speech_prompt">Say something&#8230;</string>
     <string name="speech_not_supported">Sorry! Your device doesn\'t support speech input</string>
     <string name="start_session">Start Session</string>

@@ -185,6 +185,7 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                     @Override
                     public void onSuccess(PlayPauseSong.ResponseValue response) {
                         openSong();
+
                     }
 
                     @Override

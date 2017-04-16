@@ -17,6 +17,7 @@
 package edu.Groove9.TunesMaster.playlist;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -32,18 +33,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import edu.Groove9.TunesMaster.Injection;
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
 import edu.Groove9.TunesMaster.help.HelpActivity;
 import edu.Groove9.TunesMaster.playlist.domain.model.Playlist;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
 import edu.Groove9.TunesMaster.songplayer.SongPlayerActivity;
+import edu.Groove9.TunesMaster.songplayer.player.SongStatus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +149,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
 //        });
 
         // Set up progress indicator
-        final ScrollChildSwipeRefreshLayout swipeRefreshLayout =
+        /*final ScrollChildSwipeRefreshLayout swipeRefreshLayout =
                 (ScrollChildSwipeRefreshLayout) root.findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(getActivity(), R.color.colorPrimary),
@@ -181,7 +183,9 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
         }
         return true;
     }
-
+*/
+        return root;
+    }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.tasks_fragment_menu, menu);
@@ -189,6 +193,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
 
     @Override
     public void showFilteringPopUpMenu() {
+        /*
         PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_filter));
         popup.getMenuInflater().inflate(R.menu.filter_tasks, popup.getMenu());
 
@@ -211,6 +216,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
         });
 
         popup.show();
+        */
     }
 
 
@@ -389,30 +395,12 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
             TextView titleTV = (TextView) rowView.findViewById(R.id.title);
             titleTV.setText(song.getTitleForList());
 
-
-            /*CheckBox completeCB = (CheckBox) rowView.findViewById(R.id.complete);
-
-            // Active/completed song UI
-            completeCB.setChecked(song.isCompleted());
-            if (song.isCompleted()) {
-                rowView.setBackgroundDrawable(viewGroup.getContext()
-                        .getResources().getDrawable(R.drawable.list_completed_touch_feedback));
-            } else {
-                rowView.setBackgroundDrawable(viewGroup.getContext()
-                        .getResources().getDrawable(R.drawable.touch_feedback));
-            }
-
-            completeCB.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!song.isCompleted()) {
-                        mItemListener.onCompleteTaskClick(song);
-                    } else {
-                        mItemListener.onActivateTaskClick(song);
-                    }
-                }
-            });
-*/
+            ImageView songPlayingIcon = (ImageView) rowView.findViewById(R.id.song_icon);
+            boolean songPlaying = Injection.provideAudioPlayer(viewGroup.getContext()).getStatus(song) == SongStatus.PLAYING;
+            Drawable icon = songPlaying ? viewGroup.getContext().getResources().getDrawable(R.drawable.play_fill)
+                                        : viewGroup.getContext().getResources().getDrawable(R.drawable.play)
+                    ;
+            songPlayingIcon.setBackground(icon);
 
             rowView.setOnClickListener(new View.OnClickListener() {
                 @Override

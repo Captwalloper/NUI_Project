@@ -23,6 +23,8 @@ import android.support.annotation.NonNull;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.lang.String;
+import java.util.StringTokenizer;
 
 import edu.Groove9.TunesMaster.data.source.SongsDataSource;
 import edu.Groove9.TunesMaster.playlist.domain.model.Song;
@@ -86,7 +88,7 @@ public class PrototypeSongsLocalDataSource implements SongsDataSource {
     }
 
     private static Song getSongFromFile(String filename) {
-        String title = filename;
+        String title = convertFilenameToTitle(filename);
         String description = "A test song";
         String id = filename;
         Uri source = Uri.parse(filename);
@@ -131,5 +133,14 @@ public class PrototypeSongsLocalDataSource implements SongsDataSource {
     @Override
     public void deleteSong(@NonNull String taskId) {
         // do nothing
+    }
+
+    private static String convertFilenameToTitle(String filename){
+
+      //  String[] songname =filename.split(".");
+
+        StringTokenizer songname = new StringTokenizer(filename, ".");
+
+        return songname.nextToken();
     }
 }

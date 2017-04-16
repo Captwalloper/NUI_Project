@@ -93,7 +93,10 @@ public class PrototypeAudioPlayer implements AudioPlayerContract {
                 throw new RuntimeException("Unknown VolumeIncrement: " + increment);
         }
         int flags = 0; // ignore
-        am.adjustVolume(direction, flags);
+        final int multiplier = 5;
+        for (int i=0; i<multiplier; i++) {
+            am.adjustVolume(direction, flags);
+        }
     }
 
     @Override
@@ -107,6 +110,24 @@ public class PrototypeAudioPlayer implements AudioPlayerContract {
         } else {
             return SongStatus.NOT_SELECTED;
         }
+    }
+
+    @Override
+    public int percentageProgress() {
+        try {
+            int totalLength = mediaPlayer.getDuration();
+            int played = mediaPlayer.getCurrentPosition();
+            return (played * 100) / totalLength;
+        } catch (NullPointerException npe) {
+            return 0;
+        }
+    }
+
+    @Override
+    public void setPercentProgress(int percent) {
+        int totalLength = mediaPlayer.getDuration();
+        int seekPositionMs = (totalLength * percent) / 100;
+        mediaPlayer.seekTo(seekPositionMs);
     }
 
     private boolean isPlaying() {

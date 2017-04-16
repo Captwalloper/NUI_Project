@@ -22,15 +22,23 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingBottom="@dimen/list_item_padding"
-    android:paddingTop="@dimen/list_item_padding">
+    android:paddingTop="@dimen/list_item_padding"
+    android:weightSum="8">
 
-
+    <ImageView
+        android:id="@+id/song_icon"
+        android:background="@drawable/ic_play_circle"
+        android:scaleType="fitXY"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/list_item_padding"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:layout_weight="7"/>
+
 </LinearLayout>

@@ -70,72 +70,11 @@ public class StatisticsPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         // Get a reference to the class under test
-        mStatisticsPresenter = givenStatisticsPresenter();
-
-        // The presenter won't update the view unless it's active.
-        when(mStatisticsView.isActive()).thenReturn(true);
+//        mStatisticsPresenter = givenStatisticsPresenter();
 
         // We start the tasks to 3, with one active and two completed
         TASKS = Lists.newArrayList(new Song("Title1", "Description1", SOURCE),
                 new Song("Title2", "Description2", SOURCE), new Song("Title3", "Description3", SOURCE));
     }
 
-    @Test
-    public void loadEmptyTasksFromRepository_CallViewToDisplay() {
-        // Given an initialized StatisticsPresenter with no tasks
-        TASKS.clear();
-
-        // When loading of Tasks is requested
-        mStatisticsPresenter.start();
-
-        //Then progress indicator is shown
-        verify(mStatisticsView).setProgressIndicator(true);
-
-        // Callback is captured and invoked with stubbed tasks
-        verify(mSongsRepository).getSongs(mLoadTasksCallbackCaptor.capture());
-        mLoadTasksCallbackCaptor.getValue().onSongsLoaded(TASKS);
-
-        // Then progress indicator is hidden and correct data is passed on to the view
-        verify(mStatisticsView).setProgressIndicator(false);
-        verify(mStatisticsView).showStatistics(0, 0);
-    }
-
-    @Test
-    public void loadNonEmptyTasksFromRepository_CallViewToDisplay() {
-        // Given an initialized StatisticsPresenter with 1 active and 2 completed tasks
-
-        // When loading of Tasks is requested
-        mStatisticsPresenter.start();
-
-        //Then progress indicator is shown
-        verify(mStatisticsView).setProgressIndicator(true);
-
-        // Callback is captured and invoked with stubbed tasks
-        verify(mSongsRepository).getSongs(mLoadTasksCallbackCaptor.capture());
-        mLoadTasksCallbackCaptor.getValue().onSongsLoaded(TASKS);
-
-        // Then progress indicator is hidden and correct data is passed on to the view
-        verify(mStatisticsView).setProgressIndicator(false);
-        verify(mStatisticsView).showStatistics(1, 2);
-    }
-
-    @Test
-    public void loadStatisticsWhenTasksAreUnavailable_CallErrorToDisplay() {
-        // When statistics are loaded
-        mStatisticsPresenter.start();
-
-        // And tasks data isn't available
-        verify(mSongsRepository).getSongs(mLoadTasksCallbackCaptor.capture());
-        mLoadTasksCallbackCaptor.getValue().onDataNotAvailable();
-
-        // Then an error message is shown
-        verify(mStatisticsView).showLoadingStatisticsError();
-    }
-
-    private StatisticsPresenter givenStatisticsPresenter() {
-        UseCaseHandler useCaseHandler = new UseCaseHandler(new TestUseCaseScheduler());
-        GetStatistics getStatistics = new GetStatistics(mSongsRepository);
-
-        return new StatisticsPresenter(useCaseHandler, mStatisticsView, getStatistics);
-    }
 }

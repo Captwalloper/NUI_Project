@@ -31,22 +31,16 @@ public class Logger {
     }
 
     private void setupFile(String filename) {
-//        File file = new File(filename);
-//        File Root = Environment.getExternalStorageDirectory();
-//        if(Root.canWrite()) {
-            File LogFile = new File("sdcard/"+filename);
-            try {
-                FileWriter LogWriter = new FileWriter(LogFile, true);
-                BufferedWriter out = new BufferedWriter(LogWriter);
-                Date date = new Date();
-                out.write("Logged at" + String.valueOf(date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "\n"));
-                out.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e.getMessage());
-            }
-//        } else {
-//            throw new RuntimeException("Root can't write!");
-//        }
+        File LogFile = new File("sdcard/"+filename);
+        try {
+            FileWriter LogWriter = new FileWriter(LogFile, true);
+            BufferedWriter out = new BufferedWriter(LogWriter);
+            Date date = new Date();
+            out.write("Logged at" + String.valueOf(date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds() + "\n"));
+            out.close();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to create log file:\n" + e.getMessage());
+        }
     }
 
     public void log(UserEvent userEvent) {

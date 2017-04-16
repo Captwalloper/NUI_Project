@@ -18,7 +18,6 @@ package edu.Groove9.TunesMaster.songplayer;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
@@ -40,7 +39,6 @@ import java.util.Arrays;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isChecked;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -115,7 +113,7 @@ public class SongDetailScreenTest {
     public void orientationChange_menuAndTaskPersist() {
 
         // Check delete menu item is displayed and is unique
-        onView(withId(R.id.menu_delete)).check(matches(isDisplayed()));
+        onView(withId(R.id.menu_help)).check(matches(isDisplayed()));
 
         TestUtils.rotateOrientation(mTaskDetailActivityTestRule.getActivity());
 
@@ -124,7 +122,7 @@ public class SongDetailScreenTest {
         //onView(withId(R.id.task_detail_description)).check(matches(withText(TASK_DESCRIPTION)));
 
         // Check delete menu item is displayed and is unique
-        onView(withId(R.id.menu_delete)).check(matches(isDisplayed()));
+        onView(withId(R.id.menu_help)).check(matches(isDisplayed()));
     }
 
 }

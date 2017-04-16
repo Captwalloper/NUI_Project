@@ -32,6 +32,8 @@ import edu.Groove9.TunesMaster.songplayer.domain.usecase.RepeatSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.ShuffleSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.VolumeDown;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.VolumeUp;
+import edu.Groove9.TunesMaster.songplayer.player.AudioPlayerContract;
+import edu.Groove9.TunesMaster.songplayer.player.SongStatus;
 
 import com.google.common.base.Strings;
 
@@ -46,7 +48,6 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
     private final SongPlayerContract.View mTaskDetailView;
     private final UseCaseHandler mUseCaseHandler;
     private final GetTask mGetTask;
-    private final DeleteTask mDeleteTask;
     private final PlayPauseSong mPlayPauseSong;
     private final RepeatSong mRepeatSong;
     private final NextSong mNextSong;
@@ -62,7 +63,6 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                                @Nullable Playlist playlist,
                                @NonNull SongPlayerContract.View taskDetailView,
                                @NonNull GetTask getTask,
-                               @NonNull DeleteTask deleteTask,
                                @NonNull PlayPauseSong playPauseSong,
                                @NonNull NextSong nextSong,
                                @NonNull LastSong lastSong,
@@ -76,7 +76,6 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
         mUseCaseHandler = checkNotNull(useCaseHandler, "useCaseHandler cannot be null!");
         mTaskDetailView = checkNotNull(taskDetailView, "taskDetailView cannot be null!");
         mGetTask = checkNotNull(getTask, "getSong cannot be null!");
-        mDeleteTask = checkNotNull(deleteTask, "deleteSong cannot be null!");
         mPlayPauseSong = playPauseSong;
         mNextSong = nextSong;
         mLastSong = lastSong;
@@ -131,22 +130,6 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
     }
 
     @Override
-    public void deleteSong() {
-        mUseCaseHandler.execute(mDeleteTask, new DeleteTask.RequestValues(mPlaylist.getCurrentSong().getId()),
-                new UseCase.UseCaseCallback<DeleteTask.ResponseValue>() {
-                    @Override
-                    public void onSuccess(DeleteTask.ResponseValue response) {
-                        mTaskDetailView.showSongDeleted();
-                    }
-
-                    @Override
-                    public void onError() {
-                        // Show error, log, etc.
-                    }
-                });
-    }
-
-    @Override
     public void shuffleSong() {
         mUseCaseHandler.execute(mShuffleSong, new ShuffleSong.RequestValues(mPlaylist),
                 new UseCase.UseCaseCallback<ShuffleSong.ResponseValue>() {
@@ -185,6 +168,7 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                     @Override
                     public void onSuccess(PlayPauseSong.ResponseValue response) {
                         openSong();
+
                     }
 
                     @Override
@@ -221,9 +205,6 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                     }
                 });
     }
-
-
-
 
     private void showTask(@NonNull Song song) {
         String title = song.getTitle();
@@ -269,5 +250,14 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                         // Show error, log, etc.
                     }
                 });
+    }
+
+    @Override
+    public void updateProgress(AudioPlayerContract audioPlayer) {
+        int progress = audioPlayer.percentageProgress();
+        Song currentSong = mPlaylist.getCurrentSong();
+        if (audioPlayer.getStatus(currentSong) == SongStatus.PLAYING) {
+            mTaskDetailView.showSongProgress(progress);
+        }
     }
 }

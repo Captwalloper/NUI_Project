@@ -16,15 +16,20 @@
 
 package edu.Groove9.TunesMaster.songplayer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import edu.Groove9.TunesMaster.Injection;
 import edu.Groove9.TunesMaster.R;
+import edu.Groove9.TunesMaster.help.HelpActivity;
 import edu.Groove9.TunesMaster.playlist.domain.model.Playlist;
 import edu.Groove9.TunesMaster.util.ActivityUtils;
+
+import static java.security.AccessController.getContext;
 
 /**
  * Displays task details screen.
@@ -64,7 +69,6 @@ public class SongPlayerActivity extends AppCompatActivity {
                 playlist,
                 songPlayerFragment,
                 Injection.provideGetTask(getApplicationContext()),
-                Injection.provideDeleteTask(getApplicationContext()),
                 Injection.providePlayPauseSong(getApplicationContext()),
                 Injection.provideNextSong(getApplicationContext()),
                 Injection.provideLastSong(getApplicationContext()),
@@ -79,5 +83,20 @@ public class SongPlayerActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_help:
+                // Open the navigation drawer when the home icon is selected from the toolbar.
+                showHelp();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    private void showHelp() {
+        Intent intent = new Intent(this, HelpActivity.class);
+        final String helpText="qwerty";
+        intent.putExtra("Help_Text", helpText);
+        startActivity(intent);
     }
 }

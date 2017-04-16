@@ -24,43 +24,42 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:weightSum="10"
     >
-    <SearchView
+   <!-- <SearchView
         android:id="@+id/searchView1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight=".5"/>
-
+-->
     <!--Song Panel-->
     <LinearLayout
         android:id="@+id/song_player_song_panel"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="6.5"
-        android:orientation="vertical"
         android:background="@color/cardview_light_background"
         android:gravity="center"
-        >
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_gravity="center"
             android:gravity="center"
-            android:layout_gravity="center">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/task_detail_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                android:text="Title"/>
+                android:text="Title"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
             <TextView
                 android:id="@+id/task_detail_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="Description"/>
+                android:text="Description"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
         </LinearLayout>
 
@@ -119,6 +118,7 @@
     </LinearLayout>
 
     <SeekBar
+        android:id="@+id/song_player_progress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:max="100"

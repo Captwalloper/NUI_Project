@@ -18,6 +18,7 @@ package edu.Groove9.TunesMaster.songplayer;
 
 import edu.Groove9.TunesMaster.BasePresenter;
 import edu.Groove9.TunesMaster.BaseView;
+import edu.Groove9.TunesMaster.songplayer.player.AudioPlayerContract;
 
 /**
  * This specifies the contract between the view and the presenter.
@@ -41,6 +42,16 @@ public interface SongPlayerContract {
 
         void showSongDeleted();
 
+        void showNextSongFeedback();
+
+        void showPreviousSongFeedback();
+
+        void showPlaypauseFeedback();
+
+        void showShuffleFeedback();
+
+        void showSongProgress(int percent);
+
     }
 
     interface Presenter extends BasePresenter {
@@ -48,8 +59,6 @@ public interface SongPlayerContract {
 
         void deleteSong();
 
-
-        //
         void shuffleSong();
 
         void lastSong();
@@ -63,6 +72,8 @@ public interface SongPlayerContract {
         void volumeDown();
 
         void repeatSong();
+
+        void updateProgress(AudioPlayerContract audioPlayer);
     }
 
     interface Voice {

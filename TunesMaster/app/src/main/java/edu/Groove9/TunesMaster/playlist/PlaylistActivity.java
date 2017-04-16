@@ -132,12 +132,6 @@ public class PlaylistActivity extends AppCompatActivity {
                             case R.id.list_navigation_menu_item:
                                 // Do nothing, we're already on that screen
                                 break;
-                            case R.id.song_player_navigation_menu_item:
-                                Intent songPlayerIntent = new Intent(PlaylistActivity.this, SongPlayerActivity.class);
-                                songPlayerIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(songPlayerIntent);
-                                break;
                             case R.id.statistics_navigation_menu_item:
                                 Intent statisticsIntent = new Intent(PlaylistActivity.this, StatisticsActivity.class);
                                 statisticsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK

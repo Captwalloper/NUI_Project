@@ -32,6 +32,8 @@ import edu.Groove9.TunesMaster.songplayer.domain.usecase.RepeatSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.ShuffleSong;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.VolumeDown;
 import edu.Groove9.TunesMaster.songplayer.domain.usecase.VolumeUp;
+import edu.Groove9.TunesMaster.songplayer.player.AudioPlayerContract;
+import edu.Groove9.TunesMaster.songplayer.player.SongStatus;
 
 import com.google.common.base.Strings;
 
@@ -185,6 +187,7 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                     @Override
                     public void onSuccess(PlayPauseSong.ResponseValue response) {
                         openSong();
+
                     }
 
                     @Override
@@ -221,9 +224,6 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                     }
                 });
     }
-
-
-
 
     private void showTask(@NonNull Song song) {
         String title = song.getTitle();
@@ -269,5 +269,14 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                         // Show error, log, etc.
                     }
                 });
+    }
+
+    @Override
+    public void updateProgress(AudioPlayerContract audioPlayer) {
+        int progress = audioPlayer.percentageProgress();
+        Song currentSong = mPlaylist.getCurrentSong();
+        if (audioPlayer.getStatus(currentSong) == SongStatus.PLAYING) {
+            mTaskDetailView.showSongProgress(progress);
+        }
     }
 }

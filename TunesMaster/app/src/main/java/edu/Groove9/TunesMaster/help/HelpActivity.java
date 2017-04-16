@@ -1,7 +1,9 @@
 package edu.Groove9.TunesMaster.help;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 
 import edu.Groove9.TunesMaster.Injection;
 import edu.Groove9.TunesMaster.R;
@@ -15,6 +17,13 @@ public class HelpActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.help_act);
+
+        // Set up the toolbar.
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+        ab.setDisplayShowHomeEnabled(true);
 
         //get Help text
         String helpText = (String)getIntent().getSerializableExtra("Help_Text");
@@ -37,6 +46,12 @@ public class HelpActivity extends AppCompatActivity {
         );
         //fragment.setPresenter(presenter)
         helpFragment.setPresenter(helpPresenter);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 
 }

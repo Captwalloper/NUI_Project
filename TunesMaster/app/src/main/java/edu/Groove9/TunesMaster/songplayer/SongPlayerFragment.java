@@ -71,7 +71,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
 
     private TextView mDetailTitle;
 
-    private TextView mDetailDescription;
+   // private TextView mDetailDescription;
 
     // The following are used for the shake detection
     private SensorManager mSensorManager;
@@ -113,7 +113,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
         View root = inflater.inflate(R.layout.songplayer_frag, container, false);
         setHasOptionsMenu(true);
         mDetailTitle = (TextView) root.findViewById(R.id.task_detail_title);
-        mDetailDescription = (TextView) root.findViewById(R.id.task_detail_description);
+       // mDetailDescription = (TextView) root.findViewById(R.id.task_detail_description);
 
         //Set up floating action button
 //        FloatingActionButton fab =
@@ -262,13 +262,13 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
     public void setLoadingIndicator(boolean active) {
         if (active) {
             mDetailTitle.setText("");
-            mDetailDescription.setText(getString(R.string.loading));
+            //mDetailDescription.setText(getString(R.string.loading));
         }
     }
 
     @Override
     public void hideDescription() {
-        mDetailDescription.setVisibility(View.GONE);
+        //mDetailDescription.setVisibility(View.GONE);
     }
 
     @Override
@@ -278,8 +278,8 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
 
     @Override
     public void showDescription(@NonNull String description) {
-        mDetailDescription.setVisibility(View.VISIBLE);
-        mDetailDescription.setText(description);
+        //mDetailDescription.setVisibility(View.VISIBLE);
+       // mDetailDescription.setText(description);
     }
 
     @Override
@@ -384,7 +384,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
     @Override
     public void showMissingSong() {
         mDetailTitle.setText("");
-        mDetailDescription.setText(getString(R.string.no_data));
+        //mDetailDescription.setText(getString(R.string.no_data));
     }
 
 }

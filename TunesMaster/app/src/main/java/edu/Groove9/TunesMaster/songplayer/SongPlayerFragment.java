@@ -18,6 +18,7 @@ package edu.Groove9.TunesMaster.songplayer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -37,12 +38,15 @@ import android.widget.Toast;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import edu.Groove9.TunesMaster.R;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskActivity;
 import edu.Groove9.TunesMaster.addedittask.AddEditTaskFragment;
 import edu.Groove9.TunesMaster.logging.Logger;
 import edu.Groove9.TunesMaster.logging.UserEvent;
+import edu.Groove9.TunesMaster.voice.CommandParseException;
 import edu.Groove9.TunesMaster.voice.IVoiceListener;
 import edu.Groove9.TunesMaster.voice.IVoiceRecognizer;
 import edu.Groove9.TunesMaster.voice.VoiceListener;
@@ -341,9 +345,16 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
                         }
                     });
                     String voiceText = result.getValue();
-                    showMessage(voiceText);
-                    Runnable action = voiceRecognizer.determineAction(voiceText, commands);
-                    action.run();
+                    Runnable action = null;
+                    try {
+                        action = voiceRecognizer.determineAction(voiceText, commands);
+                        String commandName = voiceRecognizer.determineCommandName(voiceText, commands);
+                        showMessage("Input: " + voiceText
+                                    + "\n" + "Command: " + commandName);
+                        action.run();
+                    } catch (CommandParseException e) {
+                        showError(e.getMessage());
+                    }
                 } else {
                     showError(result.getValue());
                 }
@@ -352,9 +363,10 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
     }
 
     public void showError(String error) {
-        Toast.makeText(getActivity().getApplicationContext(),
-                error,
-                Toast.LENGTH_SHORT).show();
+        Toast toast = Toast.makeText(getActivity().getApplicationContext(), error, Toast.LENGTH_LONG);
+        TextView v = (TextView) toast.getView().findViewById(android.R.id.message);
+        v.setTextColor(Color.RED);
+        toast.show();
     }
 
     public void showMessage(String message) {

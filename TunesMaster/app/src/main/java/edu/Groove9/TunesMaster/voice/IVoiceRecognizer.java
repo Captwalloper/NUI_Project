@@ -7,5 +7,6 @@ import java.util.Map;
  */
 
 public interface IVoiceRecognizer {
-    public Runnable determineAction(String input, Map<String, Runnable> commands);
+    public Runnable determineAction(String input, Map<String, Runnable> commands) throws CommandParseException;
+    public String determineCommandName(String input, Map<String, Runnable> commands) throws CommandParseException;
 }

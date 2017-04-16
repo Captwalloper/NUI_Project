@@ -85,21 +85,21 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/ic_replay"/>
+            android:background="@drawable/replay"/>
 
         <Button
             android:id="@+id/song_player_last"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/ic_fast_rewind"/>
+            android:background="@drawable/last"/>
 
         <Button
             android:id="@+id/song_player_playpause"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/ic_play_circle"/>
+            android:background="@drawable/play"/>
 
 
         <Button
@@ -107,14 +107,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/ic_fast_forward"/>
+            android:background="@drawable/next"/>
 
         <Button
             android:id="@+id/song_player_shuffle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/ic_shuffle"/>
+            android:background="@drawable/shuffle"/>
 
     </LinearLayout>
 

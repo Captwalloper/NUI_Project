@@ -392,8 +392,8 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
 
             ImageView songPlayingIcon = (ImageView) rowView.findViewById(R.id.song_icon);
             boolean songPlaying = Injection.provideAudioPlayer(viewGroup.getContext()).getStatus(song) == SongStatus.PLAYING;
-            Drawable icon = songPlaying ? viewGroup.getContext().getResources().getDrawable(R.drawable.ic_play_circle)
-                                        : viewGroup.getContext().getResources().getDrawable(R.drawable.ic_list)
+            Drawable icon = songPlaying ? viewGroup.getContext().getResources().getDrawable(R.drawable.play_fill)
+                                        : viewGroup.getContext().getResources().getDrawable(R.drawable.play)
                     ;
             songPlayingIcon.setBackground(icon);
 

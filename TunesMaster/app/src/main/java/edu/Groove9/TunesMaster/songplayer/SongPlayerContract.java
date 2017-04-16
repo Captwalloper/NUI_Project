@@ -49,6 +49,8 @@ public interface SongPlayerContract {
 
         void showShuffleFeedback();
 
+        void showSongProgress(int percent);
+
     }
 
     interface Presenter extends BasePresenter {

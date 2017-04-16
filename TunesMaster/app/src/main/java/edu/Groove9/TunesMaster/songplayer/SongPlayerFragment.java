@@ -18,6 +18,7 @@ package edu.Groove9.TunesMaster.songplayer;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.CountDownTimer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,6 +70,10 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
     private TextView mDetailTitle;
 
     private TextView mDetailDescription;
+    private Button playpause ;
+    private Button last ;
+    private Button next;
+    private Button shuffle;
 
     // The following are used for the shake detection
     private SensorManager mSensorManager;
@@ -110,7 +116,10 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
         setHasOptionsMenu(true);
         mDetailTitle = (TextView) root.findViewById(R.id.task_detail_title);
         mDetailDescription = (TextView) root.findViewById(R.id.task_detail_description);
-
+        playpause = (Button) root.findViewById(R.id.song_player_playpause);
+        last = (Button) root.findViewById(R.id.song_player_last);
+        next = (Button) root.findViewById(R.id.song_player_next);
+        shuffle = (Button) root.findViewById(R.id.song_player_shuffle);
         //Set up floating action button
 //        FloatingActionButton fab =
 //                (FloatingActionButton) getActivity().findViewById(R.id.fab_edit_task);
@@ -135,26 +144,31 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
         LinearLayout songPanel = (LinearLayout) root.findViewById(R.id.song_player_song_panel);
         songPanel.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
             public void onSwipeTop() {
-                Toast.makeText(getActivity(),"top",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(),"Increase Volume",Toast.LENGTH_SHORT).show();
                 mPresenter.volumeUp();
             }
             public void onSwipeRight() {
-                Toast.makeText(getActivity(), "right", Toast.LENGTH_SHORT).show();
+                //last.setBackground(getResources().getDrawable(R.drawable.last_fill));
+                showPreviousSongFeedback();
+                Toast.makeText(getActivity(), "Previous Song", Toast.LENGTH_SHORT).show();
                 mPresenter.nextSong();
                 Logger.get().log(new UserEvent(UserEvent.Source.Gesture, UserEvent.Action.Next));
             }
             public void onSwipeLeft() {
-                Toast.makeText(getActivity(), "left", Toast.LENGTH_SHORT).show();
+                showNextSongFeedback();
+                Toast.makeText(getActivity(), "Next Song", Toast.LENGTH_SHORT).show();
                 mPresenter.lastSong();
                 Logger.get().log(new UserEvent(UserEvent.Source.Gesture, UserEvent.Action.Last));
             }
             public void onSwipeBottom() {
-                Toast.makeText(getActivity(), "bottom", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Decrease Volume", Toast.LENGTH_SHORT).show();
                 mPresenter.volumeDown();
             }
             public void onSingleTap() {
-                Toast.makeText(getActivity(), "single tap", Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(getActivity(), "Play", Toast.LENGTH_SHORT).show();
                 mPresenter.playPauseSong();
+                showPlaypauseFeedback();
                 Logger.get().log(new UserEvent(UserEvent.Source.Gesture, UserEvent.Action.PlayPause));
             }
         });
@@ -181,6 +195,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             @Override
             public void onClick(View v) {
                 mPresenter.shuffleSong();
+                showShuffleFeedback();
                 Logger.get().log(new UserEvent(UserEvent.Source.Touch, UserEvent.Action.Shuffle));
             }
         });
@@ -189,6 +204,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             @Override
             public void onClick(View v) {
                 mPresenter.lastSong();
+                showPreviousSongFeedback();
                 Logger.get().log(new UserEvent(UserEvent.Source.Touch, UserEvent.Action.Last));
             }
         });
@@ -197,6 +213,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             @Override
             public void onClick(View v) {
                 mPresenter.playPauseSong();
+                showPlaypauseFeedback();
                 Logger.get().log(new UserEvent(UserEvent.Source.Touch, UserEvent.Action.PlayPause));
             }
         });
@@ -205,6 +222,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
             @Override
             public void onClick(View v) {
                 mPresenter.nextSong();
+                showNextSongFeedback();
                 Logger.get().log(new UserEvent(UserEvent.Source.Touch, UserEvent.Action.Next));
             }
         });
@@ -289,6 +307,51 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
     public void showSongDeleted() {
         getActivity().finish();
     }
+
+    @Override
+    public void showNextSongFeedback() {
+        showButtonFeedback(next, getResources().getDrawable(R.drawable.next_fill), getResources().getDrawable(R.drawable.next));
+    }
+
+    @Override
+    public void showPreviousSongFeedback() {
+        showButtonFeedback(last, getResources().getDrawable(R.drawable.last_fill), getResources().getDrawable(R.drawable.last));
+    }
+
+    @Override
+    public void showPlaypauseFeedback() {
+        boolean playing = playpause.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.play).getConstantState());
+        if (playing) {
+            playpause.setBackground(getResources().getDrawable(R.drawable.pause));
+        } else {
+            playpause.setBackground(getResources().getDrawable(R.drawable.play));
+        }
+    }
+
+
+    @Override
+    public void showShuffleFeedback() {
+        showButtonFeedback(shuffle, getResources().getDrawable(R.drawable.shuffle_filled), getResources().getDrawable(R.drawable.shuffle));
+    }
+
+
+    public void showButtonFeedback(Button button, Drawable pressed, Drawable normal){
+        button.setBackground(pressed);
+
+        final Button but = button;
+        final Drawable norm = normal;
+        final int delay = 1000;
+        new CountDownTimer(delay, delay) {
+            public void onTick(long millisUntilFinished) {/*ignore*/}
+
+            public void onFinish() {
+                but.setBackground(norm);
+            }
+
+        }.start();
+    }
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -93,7 +93,10 @@ public class PrototypeAudioPlayer implements AudioPlayerContract {
                 throw new RuntimeException("Unkown VolumeIncrement: " + increment);
         }
         int flags = 0; // ignore
-        am.adjustVolume(direction, flags);
+        final int multiplier = 5;
+        for (int i=0; i<multiplier; i++) {
+            am.adjustVolume(direction, flags);
+        }
     }
 
     @Override

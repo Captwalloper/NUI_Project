@@ -41,6 +41,14 @@ public interface SongPlayerContract {
 
         void showSongDeleted();
 
+        void showNextSongFeedback();
+
+        void showPreviousSongFeedback();
+
+        void showPlaypauseFeedback();
+
+        void showShuffleFeedback();
+
     }
 
     interface Presenter extends BasePresenter {

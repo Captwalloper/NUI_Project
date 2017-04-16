@@ -146,7 +146,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
 //        });
 
         // Set up progress indicator
-        final ScrollChildSwipeRefreshLayout swipeRefreshLayout =
+        /*final ScrollChildSwipeRefreshLayout swipeRefreshLayout =
                 (ScrollChildSwipeRefreshLayout) root.findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(getActivity(), R.color.colorPrimary),
@@ -180,7 +180,9 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
         }
         return true;
     }
-
+*/
+        return root;
+    }
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.tasks_fragment_menu, menu);
@@ -188,6 +190,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
 
     @Override
     public void showFilteringPopUpMenu() {
+        /*
         PopupMenu popup = new PopupMenu(getContext(), getActivity().findViewById(R.id.menu_filter));
         popup.getMenuInflater().inflate(R.menu.filter_tasks, popup.getMenu());
 
@@ -210,6 +213,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
         });
 
         popup.show();
+        */
     }
 
 

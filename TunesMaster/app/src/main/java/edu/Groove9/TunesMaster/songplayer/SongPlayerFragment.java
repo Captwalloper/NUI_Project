@@ -279,16 +279,6 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_help:
-                mPresenter.deleteSong();
-                return true;
-        }
-        return false;
-    }
-
-    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.taskdetail_fragment_menu, menu);
     }
@@ -322,11 +312,6 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
         Intent intent = new Intent(getContext(), AddEditTaskActivity.class);
         intent.putExtra(AddEditTaskFragment.ARGUMENT_EDIT_TASK_ID, taskId);
         startActivityForResult(intent, REQUEST_EDIT_TASK);
-    }
-
-    @Override
-    public void showSongDeleted() {
-        getActivity().finish();
     }
 
     @Override

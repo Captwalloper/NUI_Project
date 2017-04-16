@@ -48,7 +48,6 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
     private final SongPlayerContract.View mTaskDetailView;
     private final UseCaseHandler mUseCaseHandler;
     private final GetTask mGetTask;
-    private final DeleteTask mDeleteTask;
     private final PlayPauseSong mPlayPauseSong;
     private final RepeatSong mRepeatSong;
     private final NextSong mNextSong;
@@ -64,7 +63,6 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                                @Nullable Playlist playlist,
                                @NonNull SongPlayerContract.View taskDetailView,
                                @NonNull GetTask getTask,
-                               @NonNull DeleteTask deleteTask,
                                @NonNull PlayPauseSong playPauseSong,
                                @NonNull NextSong nextSong,
                                @NonNull LastSong lastSong,
@@ -78,7 +76,6 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
         mUseCaseHandler = checkNotNull(useCaseHandler, "useCaseHandler cannot be null!");
         mTaskDetailView = checkNotNull(taskDetailView, "taskDetailView cannot be null!");
         mGetTask = checkNotNull(getTask, "getSong cannot be null!");
-        mDeleteTask = checkNotNull(deleteTask, "deleteSong cannot be null!");
         mPlayPauseSong = playPauseSong;
         mNextSong = nextSong;
         mLastSong = lastSong;
@@ -130,22 +127,6 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
             return;
         }
         mTaskDetailView.showEditSong(mPlaylist.getCurrentSong().getId());
-    }
-
-    @Override
-    public void deleteSong() {
-        mUseCaseHandler.execute(mDeleteTask, new DeleteTask.RequestValues(mPlaylist.getCurrentSong().getId()),
-                new UseCase.UseCaseCallback<DeleteTask.ResponseValue>() {
-                    @Override
-                    public void onSuccess(DeleteTask.ResponseValue response) {
-                        mTaskDetailView.showSongDeleted();
-                    }
-
-                    @Override
-                    public void onError() {
-                        // Show error, log, etc.
-                    }
-                });
     }
 
     @Override

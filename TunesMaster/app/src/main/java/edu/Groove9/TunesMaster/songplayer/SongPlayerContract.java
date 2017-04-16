@@ -40,8 +40,6 @@ public interface SongPlayerContract {
 
         void showEditSong(String taskId);
 
-        void showSongDeleted();
-
         void showNextSongFeedback();
 
         void showPreviousSongFeedback();
@@ -56,8 +54,6 @@ public interface SongPlayerContract {
 
     interface Presenter extends BasePresenter {
         void editSong();
-
-        void deleteSong();
 
         void shuffleSong();
 

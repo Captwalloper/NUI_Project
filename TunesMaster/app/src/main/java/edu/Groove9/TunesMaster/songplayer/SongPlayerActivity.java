@@ -69,7 +69,6 @@ public class SongPlayerActivity extends AppCompatActivity {
                 playlist,
                 songPlayerFragment,
                 Injection.provideGetTask(getApplicationContext()),
-                Injection.provideDeleteTask(getApplicationContext()),
                 Injection.providePlayPauseSong(getApplicationContext()),
                 Injection.provideNextSong(getApplicationContext()),
                 Injection.provideLastSong(getApplicationContext()),

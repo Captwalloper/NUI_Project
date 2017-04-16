@@ -20,4 +20,8 @@ public interface AudioPlayerContract {
 
     SongStatus getStatus(Song song);
 
+    int percentageProgress();
+
+    void setPercentProgress(int percent);
+
 }

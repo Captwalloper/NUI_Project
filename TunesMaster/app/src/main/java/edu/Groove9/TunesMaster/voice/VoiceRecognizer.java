@@ -13,7 +13,7 @@ import java.util.Set;
 public class VoiceRecognizer implements IVoiceRecognizer {
 
     @Override
-    public Runnable determineAction(String input, Map<String, Runnable> commands) {
+    public Runnable determineAction(String input, Map<String, Runnable> commands) throws CommandParseException {
         Set<String> commandNames = commands.keySet();
         for (String commandName : commandNames) {
             List<String> aliases = extractAliases(commandName);
@@ -23,7 +23,21 @@ public class VoiceRecognizer implements IVoiceRecognizer {
                 }
             }
         }
-        throw new RuntimeException("No command found for input: " + input);
+        throw new CommandParseException(input, new ArrayList(commands.keySet()));
+    }
+
+    @Override
+    public String determineCommandName(String input, Map<String, Runnable> commands) throws CommandParseException {
+        Set<String> commandNames = commands.keySet();
+        for (String commandName : commandNames) {
+            List<String> aliases = extractAliases(commandName);
+            for (String alias : aliases) {
+                if (positiveMatch(input, alias)) {
+                    return aliases.get(0);
+                }
+            }
+        }
+        throw new CommandParseException(input, new ArrayList(commands.keySet()));
     }
 
     private List<String> extractAliases(String commandName) {
@@ -46,4 +60,5 @@ public class VoiceRecognizer implements IVoiceRecognizer {
     private String standardize(String input) {
         return input.toLowerCase();
     }
+
 }

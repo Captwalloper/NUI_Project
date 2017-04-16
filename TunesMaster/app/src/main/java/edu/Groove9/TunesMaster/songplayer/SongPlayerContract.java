@@ -41,6 +41,8 @@ public interface SongPlayerContract {
 
         void showSongDeleted();
 
+        void showSongProgress(int percent);
+
     }
 
     interface Presenter extends BasePresenter {

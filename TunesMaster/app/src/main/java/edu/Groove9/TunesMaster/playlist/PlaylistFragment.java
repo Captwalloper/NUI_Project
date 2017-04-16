@@ -149,7 +149,7 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
 //        });
 
         // Set up progress indicator
-        /*final ScrollChildSwipeRefreshLayout swipeRefreshLayout =
+        final ScrollChildSwipeRefreshLayout swipeRefreshLayout =
                 (ScrollChildSwipeRefreshLayout) root.findViewById(R.id.refresh_layout);
         swipeRefreshLayout.setColorSchemeColors(
                 ContextCompat.getColor(getActivity(), R.color.colorPrimary),
@@ -166,26 +166,24 @@ public class PlaylistFragment extends Fragment implements PlaylistContract.View 
             }
         });
 
-        setHasOptionsMenu(true);
+//        setHasOptionsMenu(true);
 
         return root;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_filter:
-                showFilteringPopUpMenu();
-                break;
-            case R.id.menu_refresh:
-                mPresenter.loadTasks(true);
-                break;
-        }
+//        switch (item.getItemId()) {
+//            case R.id.menu_filter:
+//                showFilteringPopUpMenu();
+//                break;
+//            case R.id.menu_refresh:
+//                mPresenter.loadTasks(true);
+//                break;
+//        }
         return true;
     }
-*/
-        return root;
-    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.tasks_fragment_menu, menu);

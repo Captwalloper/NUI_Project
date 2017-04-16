@@ -41,8 +41,11 @@ public class PrototypeAudioPlayer implements AudioPlayerContract {
         try {
             setDataSource(path);
             mediaPlayer.prepare();
-        } catch (IOException e) {
-            throw new RuntimeException("Failed to play song:\n" + e.toString());
+        } catch (IOException ioe) {
+            throw new RuntimeException("Failed to play song:\n" + ioe.toString());
+        } catch (IllegalStateException ise) {
+            mediaPlayer.release();
+            play(song); // retry
         }
         this.currentSong = song;
         mediaPlayer.start();
@@ -120,6 +123,8 @@ public class PrototypeAudioPlayer implements AudioPlayerContract {
             return (played * 100) / totalLength;
         } catch (NullPointerException npe) {
             return 0;
+        } catch (IllegalStateException ise) {
+            return 0;
         }
     }
 
@@ -131,7 +136,11 @@ public class PrototypeAudioPlayer implements AudioPlayerContract {
     }
 
     private boolean isPlaying() {
-        return mediaPlayer != null && mediaPlayer.isPlaying();
+        try {
+            return mediaPlayer != null && mediaPlayer.isPlaying();
+        } catch (IllegalStateException ise) {
+            return true;
+        }
     }
 
     private void setup() {

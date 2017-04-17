@@ -136,11 +136,8 @@ public class PrototypeSongsLocalDataSource implements SongsDataSource {
     }
 
     private static String convertFilenameToTitle(String filename){
-
-      //  String[] songname =filename.split(".");
-
-        StringTokenizer songname = new StringTokenizer(filename, ".");
-
-        return songname.nextToken();
+        String title = filename.substring(0, filename.lastIndexOf("."));
+        title = title.replace("Cant", "Can't");
+        return title;
     }
 }

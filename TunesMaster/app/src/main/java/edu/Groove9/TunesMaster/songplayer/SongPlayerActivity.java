@@ -95,7 +95,35 @@ public class SongPlayerActivity extends AppCompatActivity {
     }
     private void showHelp() {
         Intent intent = new Intent(this, HelpActivity.class);
-        final String helpText="qwerty";
+        final String helpText = new StringBuilder()
+                .append("CONTROL GUIDE\n")
+                .append("\n")
+                .append("Gestures (perform on/around song title)\n")
+                .append("  *Play/Pause     ->  Single Tap\n")
+                .append("  *Next Song      ->  Swipe Left\n")
+                .append("  *Last Song      ->  Swipe Right\n")
+                .append("  *Volume Up      ->  Swipe Up\n")
+                .append("  *Volume Down    ->  Swipe Down\n")
+                .append("  *Shuffle        ->  Shake the device!\n")
+                .append("\n")
+                .append("Speech (press mic button)\n")
+                .append("  *Play           ->  “Play”\n")
+                .append("  *Pause          ->  “Pause””\n")
+                .append("  *Next Song      ->  “Next”\n")
+                .append("  *Last Song      ->  “Last” or “Previous”\n")
+                .append("  *Shuffle        ->  “Shuffle”\n")
+                .append("\n")
+                .append("Touch\n")
+                .append("  *Play/Pause     ->  Center button”\n")
+                .append("  *Next Song      ->  2nd button from left”\n")
+                .append("  *Last Song      ->  4th button from left”\n")
+                .append("  *Shuffle        ->  Rightmost button”\n")
+                .append("  *Replay         ->  Leftmost button”\n")
+                .append("  *Song Position  ->  Bar below buttons;\n" +
+                        "                      touch/drag to adjust\n")
+                .append("  *Mic            ->  Bottom; press for speech\n")
+                .append("\n")
+                .toString();
         intent.putExtra("Help_Text", helpText);
         startActivity(intent);
     }

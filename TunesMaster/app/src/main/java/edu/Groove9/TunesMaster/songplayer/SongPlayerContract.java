@@ -19,6 +19,7 @@ package edu.Groove9.TunesMaster.songplayer;
 import edu.Groove9.TunesMaster.BasePresenter;
 import edu.Groove9.TunesMaster.BaseView;
 import edu.Groove9.TunesMaster.songplayer.player.AudioPlayerContract;
+import edu.Groove9.TunesMaster.songplayer.player.SongStatus;
 
 /**
  * This specifies the contract between the view and the presenter.
@@ -50,6 +51,8 @@ public interface SongPlayerContract {
 
         void showSongProgress(int percent);
 
+        void updatePlayPauseIcon(SongStatus songStatus);
+
     }
 
     interface Presenter extends BasePresenter {
@@ -70,6 +73,8 @@ public interface SongPlayerContract {
         void repeatSong();
 
         void updateProgress(AudioPlayerContract audioPlayer);
+
+        void updatePlayPauseIcon(AudioPlayerContract audioPlayer);
     }
 
     interface Voice {

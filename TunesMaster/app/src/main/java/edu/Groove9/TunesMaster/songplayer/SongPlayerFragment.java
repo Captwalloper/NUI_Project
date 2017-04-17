@@ -52,6 +52,7 @@ import edu.Groove9.TunesMaster.addedittask.AddEditTaskFragment;
 import edu.Groove9.TunesMaster.logging.Logger;
 import edu.Groove9.TunesMaster.logging.UserEvent;
 import edu.Groove9.TunesMaster.songplayer.player.AudioPlayerContract;
+import edu.Groove9.TunesMaster.songplayer.player.SongStatus;
 import edu.Groove9.TunesMaster.voice.CommandParseException;
 import edu.Groove9.TunesMaster.voice.IVoiceListener;
 import edu.Groove9.TunesMaster.voice.IVoiceRecognizer;
@@ -114,6 +115,7 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
         mSensorManager.registerListener(mShakeDetector, mAccelerometer,	SensorManager.SENSOR_DELAY_UI);
 
         mPresenter.start();
+        mPresenter.updatePlayPauseIcon(audioPlayer);
     }
 
     @Override
@@ -181,7 +183,6 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
                 mPresenter.volumeDown();
             }
             public void onSingleTap() {
-
                 mPresenter.playPauseSong();
                 Logger.get().log(new UserEvent(UserEvent.Source.Gesture, UserEvent.Action.PlayPause));
             }
@@ -318,14 +319,20 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
     @Override
     public void showPlaypauseFeedback() {
         Toast.makeText(getActivity(), "Play", Toast.LENGTH_SHORT).show();
-        boolean playing = playpause.getBackground().getConstantState().equals(getResources().getDrawable(R.drawable.play).getConstantState());
-        if (playing) {
-            playpause.setBackground(getResources().getDrawable(R.drawable.pause));
-        } else {
-            playpause.setBackground(getResources().getDrawable(R.drawable.play));
-        }
+        mPresenter.updatePlayPauseIcon(audioPlayer);
     }
 
+    @Override
+    public void updatePlayPauseIcon(SongStatus songStatus) {
+        switch (songStatus) {
+            case PLAYING:
+                playpause.setBackground(getResources().getDrawable(R.drawable.pause));
+                break;
+            default:
+                playpause.setBackground(getResources().getDrawable(R.drawable.play));
+                break;
+        }
+    }
 
     @Override
     public void showShuffleFeedback() {

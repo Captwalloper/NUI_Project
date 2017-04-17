@@ -108,7 +108,7 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
 
                         // The view may not be able to handle UI updates anymore
                         mView.setLoadingIndicator(false);
-                        showTask(song);
+                        showSong(song);
                     }
 
                     @Override
@@ -184,7 +184,7 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                new UseCase.UseCaseCallback<RepeatSong.ResponseValue>() {
                     @Override
                     public void onSuccess(RepeatSong.ResponseValue response) {
-                        openSong();
+
                     }
 
                     @Override
@@ -210,7 +210,7 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
                 });
     }
 
-    private void showTask(@NonNull Song song) {
+    private void showSong(@NonNull Song song) {
         String title = song.getTitle();
         String description = song.getDescription();
 
@@ -263,5 +263,12 @@ public class SongPlayerPresenter implements SongPlayerContract.Presenter {
         if (audioPlayer.getStatus(currentSong) == SongStatus.PLAYING) {
             mView.showSongProgress(progress);
         }
+    }
+
+    @Override
+    public void updatePlayPauseIcon(AudioPlayerContract audioPlayer) {
+        Song currentSong = mPlaylist.getCurrentSong();
+        SongStatus songStatus = audioPlayer.getStatus(currentSong);
+        mView.updatePlayPauseIcon(songStatus);
     }
 }

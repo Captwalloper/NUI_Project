@@ -1,8 +1,8 @@
 # Natural User Interaction Project - TunesMaster
 
 ## Collaborators:
-Raktima Das						Connor McCoy
-Manisha Dewal					Chaitra Yangandul
+<br>Raktima Das &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Connor McCoy
+<br>Manisha Dewal &nbsp;&nbsp;&nbsp;&nbsp; Chaitra Yangandul
 
 ## Summary
 TunesMaster is a gesture and voice control music player for android.

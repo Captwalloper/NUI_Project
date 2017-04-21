@@ -171,11 +171,11 @@ public class SongPlayerFragment extends Fragment implements SongPlayerContract.V
                 mPresenter.volumeUp();
             }
             public void onSwipeRight() {
-                mPresenter.nextSong();
+                mPresenter.lastSong();
                 Logger.get().log(new UserEvent(UserEvent.Source.Gesture, UserEvent.Action.Next));
             }
             public void onSwipeLeft() {
-                mPresenter.lastSong();
+                mPresenter.nextSong();
                 Logger.get().log(new UserEvent(UserEvent.Source.Gesture, UserEvent.Action.Last));
             }
             public void onSwipeBottom() {
